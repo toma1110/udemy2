@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS SRE intro hands-on monitoring foundation with CloudWatch Alarm, SNS, and Dashboard."
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: udemy-sre-sample
+    Description: Project name used for resource names.
+    AllowedPattern: "^[a-z0-9][a-z0-9-]{2,40}[a-z0-9]$"
+    ConstraintDescription: Use 4 to 42 lowercase letters, numbers, and hyphens.
+  NotificationEmail:
+    Type: String
+    Default: ""
+    Description: Optional email address for SNS notification subscription.
+    AllowedPattern: "^$|^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+    ConstraintDescription: Leave empty or enter a valid email address.
+  DashboardTitle:
+    Type: String
+    Default: Sample SRE Metric
+    Description: Title shown in the sample CloudWatch dashboard metric widget.
+
+Conditions:
+  HasNotificationEmail: !Not [!Equals [!Ref NotificationEmail, ""]]
+
+Resources:
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "${ProjectName}-alarm-topic"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Course
+          Value: sample-aws-sre-course
+
+  AlarmEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasNotificationEmail
+    Properties:
+      TopicArn: !Ref AlarmTopic
+      Protocol: email
+      Endpoint: !Ref NotificationEmail
+
+  SampleAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-sample-alarm"
+      AlarmDescription: "Sample alarm for Udemy AWS SRE monitoring hands-on."
+      Namespace: "UdemyAICompany/Sample"
+      MetricName: "SmokeTestValue"
+      Dimensions:
+        - Name: ProjectName
+          Value: !Ref ProjectName
+      Statistic: Average
+      Period: 60
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlarmTopic
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Course
+          Value: sample-aws-sre-course
+
+  MonitoringDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub "${ProjectName}-dashboard"
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "title": "${DashboardTitle}",
+                "region": "${AWS::Region}",
+                "metrics": [
+                  [ "UdemyAICompany/Sample", "SmokeTestValue", "ProjectName", "${ProjectName}" ]
+                ],
+                "stat": "Average",
+                "period": 60,
+                "view": "timeSeries"
+              }
+            },
+            {
+              "type": "text",
+              "x": 12,
+              "y": 0,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "markdown": "# AWS SRE Hands-on\\nCloudWatch Alarm, SNS Topic, and Dashboard are managed by CloudFormation."
+              }
+            }
+          ]
+        }
+
+Outputs:
+  AlarmTopicArn:
+    Description: SNS topic ARN for alarm notifications.
+    Value: !Ref AlarmTopic
+  SampleAlarmName:
+    Description: CloudWatch alarm name.
+    Value: !Ref SampleAlarm
+  DashboardName:
+    Description: CloudWatch dashboard name.
+    Value: !Ref MonitoringDashboard
