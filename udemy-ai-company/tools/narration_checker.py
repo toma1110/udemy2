@@ -200,7 +200,33 @@ def extract_texts(path: Path) -> list[tuple[str, str]]:
             texts.append((location, narration if isinstance(narration, str) else ""))
         return texts
 
-    return [("markdown", path.read_text(encoding="utf-8"))]
+    text = path.read_text(encoding="utf-8")
+    narration_blocks: list[tuple[str, str]] = []
+    current_heading = "markdown"
+    collecting = False
+    buffer: list[str] = []
+
+    for line in text.splitlines():
+        if line.startswith("## "):
+            current_heading = line.removeprefix("## ").strip() or current_heading
+        if line.strip() == "### Narration":
+            if collecting and buffer:
+                narration_blocks.append((current_heading, "\n".join(buffer).strip()))
+            collecting = True
+            buffer = []
+            continue
+        if collecting and line.startswith("### "):
+            narration_blocks.append((current_heading, "\n".join(buffer).strip()))
+            collecting = False
+            buffer = []
+            continue
+        if collecting:
+            buffer.append(line)
+
+    if collecting and buffer:
+        narration_blocks.append((current_heading, "\n".join(buffer).strip()))
+
+    return narration_blocks or [("markdown", text)]
 
 
 def check_text(text: str, path: Path, location: str) -> list[Issue]:
