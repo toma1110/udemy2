@@ -1,0 +1,222 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS SLO adoption course hands-on: CloudWatch alarms, dashboard, SNS, and optional Application Signals SLO."
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: udemy-slo-sample
+    Description: Project name used for resource names.
+    AllowedPattern: "^[a-z0-9][a-z0-9-]{2,40}[a-z0-9]$"
+    ConstraintDescription: Use 4 to 42 lowercase letters, numbers, and hyphens.
+  NotificationEmail:
+    Type: String
+    Default: ""
+    Description: Optional email address for SNS notification subscription.
+    AllowedPattern: "^$|^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+    ConstraintDescription: Leave empty or enter a valid email address.
+  DashboardTitle:
+    Type: String
+    Default: SLO Adoption Dashboard
+    Description: Title shown in the CloudWatch dashboard.
+  EnableApplicationSignalsSlo:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: Create an Application Signals SLO. This may create a service-linked role and can incur SLO charges.
+
+Conditions:
+  HasNotificationEmail: !Not [!Equals [!Ref NotificationEmail, ""]]
+  CreateApplicationSignalsSlo: !Equals [!Ref EnableApplicationSignalsSlo, "true"]
+
+Resources:
+  SloAlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "${ProjectName}-slo-topic"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Course
+          Value: aws-slo-adoption-course
+
+  SloEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasNotificationEmail
+    Properties:
+      TopicArn: !Ref SloAlarmTopic
+      Protocol: email
+      Endpoint: !Ref NotificationEmail
+
+  AvailabilityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-availability-slo-risk"
+      AlarmDescription: "Sample alarm for availability SLI dropping below the SLO threshold."
+      Namespace: "UdemyAICompany/SLO"
+      MetricName: "Availability"
+      Dimensions:
+        - Name: ProjectName
+          Value: !Ref ProjectName
+        - Name: Service
+          Value: sample-api
+      Statistic: Average
+      Period: 60
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 99
+      ComparisonOperator: LessThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref SloAlarmTopic
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Course
+          Value: aws-slo-adoption-course
+
+  LatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-latency-slo-risk"
+      AlarmDescription: "Sample alarm for p99 latency exceeding the SLO threshold."
+      Namespace: "UdemyAICompany/SLO"
+      MetricName: "Latency"
+      Dimensions:
+        - Name: ProjectName
+          Value: !Ref ProjectName
+        - Name: Service
+          Value: sample-api
+      ExtendedStatistic: p99
+      Period: 60
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 300
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref SloAlarmTopic
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Course
+          Value: aws-slo-adoption-course
+
+  SloDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub "${ProjectName}-dashboard"
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "text",
+              "x": 0,
+              "y": 0,
+              "width": 24,
+              "height": 3,
+              "properties": {
+                "markdown": "# ${DashboardTitle}\\nSample SLO dashboard for availability, latency, and error budget thinking."
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 3,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "title": "Availability SLI",
+                "region": "${AWS::Region}",
+                "metrics": [
+                  [ "UdemyAICompany/SLO", "Availability", "ProjectName", "${ProjectName}", "Service", "sample-api" ]
+                ],
+                "stat": "Average",
+                "period": 60,
+                "view": "timeSeries",
+                "yAxis": { "left": { "min": 95, "max": 100 } }
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12,
+              "y": 3,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "title": "Latency SLI p99",
+                "region": "${AWS::Region}",
+                "metrics": [
+                  [ "UdemyAICompany/SLO", "Latency", "ProjectName", "${ProjectName}", "Service", "sample-api", { "stat": "p99" } ]
+                ],
+                "period": 60,
+                "view": "timeSeries",
+                "annotations": {
+                  "horizontal": [
+                    { "label": "SLO threshold 300ms", "value": 300 }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+
+  OptionalLatencySlo:
+    Type: AWS::ApplicationSignals::ServiceLevelObjective
+    Condition: CreateApplicationSignalsSlo
+    Properties:
+      Name: !Sub "${ProjectName}-latency-slo"
+      Description: "Optional period-based SLO on a sample CloudWatch latency metric."
+      Sli:
+        SliMetric:
+          MetricDataQueries:
+            - MetricStat:
+                Period: 60
+                Metric:
+                  Namespace: "UdemyAICompany/SLO"
+                  MetricName: "Latency"
+                  Dimensions:
+                    - Name: ProjectName
+                      Value: !Ref ProjectName
+                    - Name: Service
+                      Value: sample-api
+                Stat: "p99"
+                Unit: "Milliseconds"
+              Id: "latency"
+              ReturnData: false
+            - Id: "latencyFinal"
+              ReturnData: true
+              Expression: "latency * 1"
+        MetricThreshold: 300
+        ComparisonOperator: "LessThanOrEqualTo"
+      Goal:
+        Interval:
+          RollingInterval:
+            DurationUnit: "DAY"
+            Duration: 1
+        AttainmentGoal: 99.0
+        WarningThreshold: 95.0
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Course
+          Value: aws-slo-adoption-course
+
+Outputs:
+  AlarmTopicArn:
+    Description: SNS topic ARN for SLO alarm notifications.
+    Value: !Ref SloAlarmTopic
+  AvailabilityAlarmName:
+    Description: CloudWatch alarm name for availability SLO risk.
+    Value: !Ref AvailabilityAlarm
+  LatencyAlarmName:
+    Description: CloudWatch alarm name for latency SLO risk.
+    Value: !Ref LatencyAlarm
+  DashboardName:
+    Description: CloudWatch dashboard name.
+    Value: !Ref SloDashboard
+  OptionalLatencySloArn:
+    Condition: CreateApplicationSignalsSlo
+    Description: Optional Application Signals SLO ARN.
+    Value: !Ref OptionalLatencySlo
