@@ -48,8 +48,16 @@ JP_READING_FIXES: list[tuple[re.Pattern[str], str]] = [
 
 
 EN_TO_KANA: list[tuple[str, str]] = [
+    ("Service Level Objective", "サービスレベルオブジェクティブ"),
+    ("Service Level Indicator", "サービスレベルインディケーター"),
+    ("Service Level Agreement", "サービスレベルアグリーメント"),
+    ("SLO Performance Report", "エスエルオーパフォーマンスレポート"),
+    ("SLO Recommendations", "エスエルオーレコメンデーション"),
+    ("Application Signals", "アプリケーションシグナル"),
     ("Cost Anomaly Detection", "コストアノマリーディテクション"),
     ("Simple Notification Service", "シンプルノティフィケーションサービス"),
+    ("request-based SLO", "リクエストベースドエスエルオー"),
+    ("period-based SLO", "ピリオドベースドエスエルオー"),
     ("AWS Systems Manager", "エーダブリューエスシステムズマネージャー"),
     ("AWS Incident Manager", "エーダブリューエスインシデントマネージャー"),
     ("CloudWatch Metrics", "クラウドウォッチメトリクス"),
@@ -85,6 +93,8 @@ EN_TO_KANA: list[tuple[str, str]] = [
     ("Prometheus", "プロメテウス"),
     ("PagerDuty", "ページャーデューティー"),
     ("Blameless", "ブレームレス"),
+    ("error budget", "エラーバジェット"),
+    ("burn rate", "バーンレート"),
     ("Section", "セクション"),
     ("API", "エーピーアイ"),
     ("api", "エーピーアイ"),
@@ -92,6 +102,9 @@ EN_TO_KANA: list[tuple[str, str]] = [
     ("ec2", "イーシーツー"),
     ("SNS", "エスエヌエス"),
     ("SRE", "エスアールイー"),
+    ("SLO", "エスエルオー"),
+    ("SLI", "エスエルアイ"),
+    ("SLA", "エスエルエー"),
     ("AWS", "エーダブリューエス"),
     ("IAM", "アイアム"),
 ]
@@ -202,11 +215,14 @@ def check_text(text: str, path: Path, location: str) -> list[Issue]:
         if pattern.search(text):
             issues.append(Issue(path, location, "A", "warn", reason, f"「{replacement}」に書き換えてください"))
 
+    normalized = normalize_for_voicevox(text)
+
     for rule, severity, pattern, message, suggestion in CHECKS:
+        if rule == "B" and not re.search(r"[A-Za-z][A-Za-z0-9_./:+-]*", normalized):
+            continue
         if pattern.search(text):
             issues.append(Issue(path, location, rule, severity, message, suggestion))
 
-    normalized = normalize_for_voicevox(text)
     leftovers = sorted(set(re.findall(r"[A-Za-z][A-Za-z0-9_./:+-]*", normalized)))
     if leftovers:
         issues.append(
