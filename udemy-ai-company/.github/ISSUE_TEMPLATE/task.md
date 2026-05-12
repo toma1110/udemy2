@@ -18,6 +18,9 @@ Reviewer AI:
 # Execution
 Priority:
 Status:
+Auto Execute: no
+Requires CEO Approval: no
+Cost Impact: none
 
 # Inputs
 Input Files:
@@ -28,12 +31,15 @@ Expected Output:
 
 # Quality Gate
 Definition of Done:
+Mission/Vision/Values Alignment:
 
 # Constraints
 Rules:
 - Planner ≠ Worker
 - Worker ≠ Reviewer
 - course_spec is source of truth
+- follow docs/MISSION_VISION_VALUES.md
+- AWS/billing-related execution requires CEO approval
 
 # Blocking
 Blocked By:

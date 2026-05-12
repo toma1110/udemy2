@@ -13,6 +13,7 @@ assignees: ""
 # Scope
 
 # Impact
+Mission/Vision/Values Impact:
 
 # Risks
 
@@ -20,6 +21,11 @@ assignees: ""
 CEO Approval:
 Approved By:
 Approval Date:
+
+# Automation Gate
+Auto Execute After Approval: no
+Requires CEO Approval:
+Cost Impact:
 
 # Implementation Plan
 
@@ -29,3 +35,5 @@ Approval Date:
 - approve
 - implementation
 - QA
+- follow docs/MISSION_VISION_VALUES.md
+- AWS/billing-related execution requires CEO approval

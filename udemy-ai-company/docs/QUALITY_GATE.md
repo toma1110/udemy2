@@ -6,6 +6,7 @@
 
 ## 企画
 
+- `docs/MISSION_VISION_VALUES.md` のミッション、ビジョン、バリューと矛盾していない
 - `course_spec.md` が存在する
 - Course Title、Target Audience、Prerequisites、Learning Objectivesが明記されている
 - Hands-on Scope、CloudFormation Scope、Cost Warning、Out of Scopeが明記されている
@@ -36,6 +37,10 @@
 
 - 動画手順とREADMEが一致している
 - スライドはGPT-Image2 PNG生成を前提としている
+- 最終採用するスライドPNGは、GPT-Image2生成物またはCEO承認済み例外である
+- `*_slide_generation_report.md` に Generation Mode、GPT-Image2出力元、プロンプト概要、後処理内容、contact sheet確認結果を記録している
+- ローカル描画（Pillow、HTML Canvas、SVG、手作業レイアウト等）は、明示された後処理またはCEO承認済み例外以外では最終スライド生成元にしない
+- 動画生成前に、直近承認済みセクションまたは指定リファレンスとのcontact sheet比較を行い、品質差があればBlockedにする
 - 図解はスライドPNG内に含まれている
 - 音声はVOICEVOXを前提としている
 - `tools/narration_checker.py` でナレーション品質を確認している
@@ -47,8 +52,12 @@
 
 - Worker != Reviewer
 - Planner != Worker
+- PM != Worker
+- PM != Reviewer
 - チケットにOwner AIとReviewer AIがある
 - change requestフローを順守している
+- `auto-execute` IssueはAI-PM-01が実行可否を判定している
+- AWS課金につながる作業はCEO承認の証跡がIssueに残っている
 - QAレポートが残っている
 
 ## 公開判定

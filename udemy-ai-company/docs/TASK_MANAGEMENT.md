@@ -8,11 +8,15 @@ GitHub Issueを制作会社の業務台帳として扱い、AIが半自律的に
 
 - すべての作業はIssueから開始する
 - 1チケット1成果物にする
+- `docs/MISSION_VISION_VALUES.md` と矛盾するチケットは開始しない
 - Owner AIを必須にする
 - Reviewer AIを必須にする
 - Owner AIとReviewer AIは別AIにする
 - `course_spec.md` と矛盾するチケットは開始しない
 - 変更はChange Requestから開始する
+- 自動実行したいIssueには `auto-execute` ラベルを付ける
+- AWS課金につながる作業は `approval-required` とし、CEO承認後に `ceo-approved` を付ける
+- AI-PM-01は `auto-execute` と承認状態を見て実行キューへ送る
 
 ## 1チケット1成果物
 
@@ -39,6 +43,21 @@ Owner AIは以下を行う。
 - 成果物を作成する
 - Definition of Doneを満たす証跡を残す
 - Reviewer AIへレビュー依頼する
+
+## AI-PM-01
+
+AI-PM-01はIssue変更を検知し、実行してよいタスクだけをOwner AIへ渡す責任を持つ。
+
+AI-PM-01は以下を行う。
+
+- `auto-execute` ラベル付きIssueの更新を検知する
+- Owner AIとReviewer AIが設定され、同一AIでないことを確認する
+- `course_spec.md` と矛盾する可能性があるIssueをBlockedにする
+- 課金影響があるIssueはCEO承認の有無を確認する
+- 実行可能Issueを `.pm_queue/` にキュー化し、必要に応じてAI実行コマンドへ渡す
+- 実行不可理由をIssueコメントに残す
+
+AI-PM-01は実装担当でもレビュー担当でもない。成果物の作成はOwner AI、承認はReviewer AIが行う。
 
 ## Reviewer AI
 
@@ -96,6 +115,15 @@ CEO判断が必要な場合は、Issueコメントで明確に依頼する。
 - `ready`
 - `done`
 
+自動化:
+
+- `pm`
+- `auto-execute`
+- `approval-required`
+- `ceo-approved`
+- `pm-queued`
+- `in-progress`
+
 ラベル作成はGitHub CLIが使える環境で以下を実行する。
 
 ```bash
@@ -115,4 +143,21 @@ CEO判断が必要な場合は、Issueコメントで明確に依頼する。
 - Dependencies
 - Expected Output
 - Definition of Done
+- Mission/Vision/Values Alignment
+- Auto Execute
+- Requires CEO Approval
+- Cost Impact
 - Blocked By
+
+## 課金承認ルール
+
+以下を含むIssueは、`ceo-approved` ラベルまたはIssue本文/コメントに明確なCEO承認があるまでAI-PM-01が自動実行しない。
+
+- AWS環境構築
+- CloudFormation stackのcreate、update、delete
+- `aws cloudformation deploy`
+- AWS Batch、Fargate、ECS、ECR、Lambda、VPC、RDS等の作成または更新
+- S3、CloudWatch、SNS、IAM等のリソース作成または長時間利用
+- コスト見積もりを超える可能性がある検証
+
+承認待ちのIssueは `approval-required` と `blocked` を付け、CEOに判断を依頼する。

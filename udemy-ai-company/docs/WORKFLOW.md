@@ -4,12 +4,18 @@ AI制作会社 v1 の標準状態遷移は以下です。
 
 `Backlog -> Planning -> Engineering -> Engineering Review -> Production -> Content Review -> Ready for Publish -> Published -> Analytics Review`
 
+全フェーズで、AI社員は `docs/MISSION_VISION_VALUES.md` のミッション、ビジョン、バリューと矛盾しない判断を行う。
+
+AI-PM-01は全フェーズ横断でGitHub Issueの変更を検知し、`auto-execute` ラベル付きIssueだけを自動実行キューへ送る。AWS課金につながる環境構築、デプロイ、CloudFormation stack作成/更新/削除、Fargate/Batch/ECR等は、CEO承認がIssueに残るまで自動実行しない。
+
 ## Backlog
 
 - 担当AI: AI-Ops-01
 - 入力: CEOの講座案、改善案、Change Request
 - 出力: Backlog Issue
 - 完了条件: Task ID、概要、優先度、Owner候補が記録されている
+
+AI-PM-01はBacklog Issueの更新を検知し、Owner AI、Reviewer AI、`Auto Execute`、`Requires CEO Approval` が不足していれば実行対象外にする。
 
 ## Planning
 
@@ -18,12 +24,16 @@ AI制作会社 v1 の標準状態遷移は以下です。
 - 出力: `course_spec.md`、章立て、Task分解、Impact Analysis
 - 完了条件: 対象者、学習目標、ハンズオン範囲、Out of Scopeが明記され、CEO承認がある
 
+AI-PM-01はPlanning完了後のTask Issueを監視し、`auto-execute` があり、Worker/Reviewer分離と承認条件を満たす場合だけ実行キューに入れる。
+
 ## Engineering
 
 - 担当AI: AI-Engineer-01
 - 入力: 承認済みTask、`course_spec.md`、CloudFormationルール
 - 出力: CloudFormationテンプレート、README、検証スクリプト
 - 完了条件: validate、create、update、smoke test、deleteの実行結果が記録されている
+
+CloudFormation stack作成/更新/削除、AWS Batch/Fargate、ECR push、その他AWSリソース作成を伴う検証はCEO承認後にだけ実行する。承認前はテンプレート編集、README編集、静的検証準備までに限定する。
 
 ## Engineering Review
 
