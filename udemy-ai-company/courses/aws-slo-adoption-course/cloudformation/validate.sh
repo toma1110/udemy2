@@ -6,8 +6,14 @@ TEMPLATE_FILE="${TEMPLATE_FILE:-${SCRIPT_DIR}/template.yaml}"
 STACK_NAME="${STACK_NAME:-aws-slo-adoption-dev-slo}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
 PROJECT_NAME="${PROJECT_NAME:-udemy-slo-sample}"
+SERVICE_NAME="${SERVICE_NAME:-sample-api}"
 NOTIFICATION_EMAIL="${NOTIFICATION_EMAIL:-}"
 DASHBOARD_TITLE="${DASHBOARD_TITLE:-SLO Adoption Dashboard}"
+AVAILABILITY_SLO_TARGET="${AVAILABILITY_SLO_TARGET:-99.9}"
+LATENCY_THRESHOLD_MS="${LATENCY_THRESHOLD_MS:-300}"
+ERROR_RATE_THRESHOLD_PERCENT="${ERROR_RATE_THRESHOLD_PERCENT:-1}"
+FAST_BURN_RATE_THRESHOLD="${FAST_BURN_RATE_THRESHOLD:-14}"
+SLOW_BURN_RATE_THRESHOLD="${SLOW_BURN_RATE_THRESHOLD:-2}"
 ENABLE_APPLICATION_SIGNALS_SLO="${ENABLE_APPLICATION_SIGNALS_SLO:-false}"
 ACTION="${1:-validate}"
 
@@ -47,8 +53,14 @@ deploy_stack() {
     --region "$AWS_REGION" \
     --parameter-overrides \
       "ProjectName=${PROJECT_NAME}" \
+      "ServiceName=${SERVICE_NAME}" \
       "NotificationEmail=${NOTIFICATION_EMAIL}" \
       "DashboardTitle=${DASHBOARD_TITLE}" \
+      "AvailabilitySloTarget=${AVAILABILITY_SLO_TARGET}" \
+      "LatencyThresholdMs=${LATENCY_THRESHOLD_MS}" \
+      "ErrorRateThresholdPercent=${ERROR_RATE_THRESHOLD_PERCENT}" \
+      "FastBurnRateThreshold=${FAST_BURN_RATE_THRESHOLD}" \
+      "SlowBurnRateThreshold=${SLOW_BURN_RATE_THRESHOLD}" \
       "EnableApplicationSignalsSlo=${ENABLE_APPLICATION_SIGNALS_SLO}" \
     --tags \
       "Course=aws-slo-adoption-course" \
@@ -75,13 +87,15 @@ update_stack() {
 }
 
 put_metrics() {
-  log "サンプルSLIメトリクスを投入します"
-  aws cloudwatch put-metric-data \
-    --namespace "UdemyAICompany/SLO" \
-    --region "$AWS_REGION" \
-    --metric-data \
-      "MetricName=Availability,Dimensions=[{Name=ProjectName,Value=${PROJECT_NAME}},{Name=Service,Value=sample-api}],Value=99.9,Unit=Percent" \
-      "MetricName=Latency,Dimensions=[{Name=ProjectName,Value=${PROJECT_NAME}},{Name=Service,Value=sample-api}],Value=120,Unit=Milliseconds"
+  local scenario="${1:-${SCENARIO:-good}}"
+
+  log "サンプルSLIメトリクスを投入します: scenario=${scenario}"
+  STACK_NAME="$STACK_NAME" \
+    AWS_REGION="$AWS_REGION" \
+    PROJECT_NAME="$PROJECT_NAME" \
+    SERVICE_NAME="$SERVICE_NAME" \
+    SCENARIO="$scenario" \
+    "${SCRIPT_DIR}/put_sample_metrics.sh"
 }
 
 smoke_test() {
@@ -113,25 +127,33 @@ full_validation() {
 
   validate_template
   create_stack
-  put_metrics
+  put_metrics good
   smoke_test
   DASHBOARD_TITLE="${DASHBOARD_TITLE} Updated"
   update_stack
+  put_metrics bad
   smoke_test
   delete_stack
 }
 
 usage() {
   cat <<USAGE
-Usage: $0 [validate|create|update|put-metrics|smoke|delete|full]
+Usage: $0 [validate|create|update|put-metrics|put-good|put-bad|smoke|delete|full]
 
 Environment variables:
   STACK_NAME                       Default: aws-slo-adoption-dev-slo
   AWS_REGION                       Default: us-east-1
   PROJECT_NAME                     Default: udemy-slo-sample
+  SERVICE_NAME                     Default: sample-api
   NOTIFICATION_EMAIL               Default: empty
   DASHBOARD_TITLE                  Default: SLO Adoption Dashboard
+  AVAILABILITY_SLO_TARGET          Default: 99.9
+  LATENCY_THRESHOLD_MS             Default: 300
+  ERROR_RATE_THRESHOLD_PERCENT     Default: 1
+  FAST_BURN_RATE_THRESHOLD         Default: 14
+  SLOW_BURN_RATE_THRESHOLD         Default: 2
   ENABLE_APPLICATION_SIGNALS_SLO   Default: false
+  SCENARIO                         Default for put-metrics: good
   TEMPLATE_FILE                    Default: ./template.yaml
 USAGE
 }
@@ -151,7 +173,13 @@ case "$ACTION" in
     update_stack
     ;;
   put-metrics)
-    put_metrics
+    put_metrics "${SCENARIO:-good}"
+    ;;
+  put-good)
+    put_metrics good
+    ;;
+  put-bad)
+    put_metrics bad
     ;;
   smoke)
     smoke_test

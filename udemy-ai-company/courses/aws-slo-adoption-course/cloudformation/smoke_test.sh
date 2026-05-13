@@ -52,11 +52,17 @@ log "CloudFormation Outputsを取得します: ${STACK_NAME}"
 TOPIC_ARN="$(stack_output AlarmTopicArn)"
 AVAILABILITY_ALARM_NAME="$(stack_output AvailabilityAlarmName)"
 LATENCY_ALARM_NAME="$(stack_output LatencyAlarmName)"
+ERROR_RATE_ALARM_NAME="$(stack_output ErrorRateAlarmName)"
+FAST_BURN_RATE_ALARM_NAME="$(stack_output FastBurnRateAlarmName)"
+SLOW_BURN_RATE_ALARM_NAME="$(stack_output SlowBurnRateAlarmName)"
 DASHBOARD_NAME="$(stack_output DashboardName)"
 
 assert_not_empty "AlarmTopicArn" "$TOPIC_ARN"
 assert_not_empty "AvailabilityAlarmName" "$AVAILABILITY_ALARM_NAME"
 assert_not_empty "LatencyAlarmName" "$LATENCY_ALARM_NAME"
+assert_not_empty "ErrorRateAlarmName" "$ERROR_RATE_ALARM_NAME"
+assert_not_empty "FastBurnRateAlarmName" "$FAST_BURN_RATE_ALARM_NAME"
+assert_not_empty "SlowBurnRateAlarmName" "$SLOW_BURN_RATE_ALARM_NAME"
 assert_not_empty "DashboardName" "$DASHBOARD_NAME"
 
 log "SNS Topicの存在を確認します: ${TOPIC_ARN}"
@@ -67,21 +73,25 @@ FOUND_TOPIC="$(aws sns get-topic-attributes \
   --output text)"
 assert_equals "$TOPIC_ARN" "$FOUND_TOPIC" "SNS Topicが見つかりません"
 
-log "Availability Alarmの存在を確認します: ${AVAILABILITY_ALARM_NAME}"
-FOUND_AVAILABILITY_ALARM="$(aws cloudwatch describe-alarms \
-  --alarm-names "$AVAILABILITY_ALARM_NAME" \
-  --region "$AWS_REGION" \
-  --query "MetricAlarms[0].AlarmName" \
-  --output text)"
-assert_equals "$AVAILABILITY_ALARM_NAME" "$FOUND_AVAILABILITY_ALARM" "Availability Alarmが見つかりません"
+assert_alarm_exists() {
+  local alarm_name="$1"
+  local label="$2"
 
-log "Latency Alarmの存在を確認します: ${LATENCY_ALARM_NAME}"
-FOUND_LATENCY_ALARM="$(aws cloudwatch describe-alarms \
-  --alarm-names "$LATENCY_ALARM_NAME" \
-  --region "$AWS_REGION" \
-  --query "MetricAlarms[0].AlarmName" \
-  --output text)"
-assert_equals "$LATENCY_ALARM_NAME" "$FOUND_LATENCY_ALARM" "Latency Alarmが見つかりません"
+  log "${label} Alarmの存在を確認します: ${alarm_name}"
+  local found_alarm
+  found_alarm="$(aws cloudwatch describe-alarms \
+    --alarm-names "$alarm_name" \
+    --region "$AWS_REGION" \
+    --query "MetricAlarms[0].AlarmName" \
+    --output text)"
+  assert_equals "$alarm_name" "$found_alarm" "${label} Alarmが見つかりません"
+}
+
+assert_alarm_exists "$AVAILABILITY_ALARM_NAME" "Availability"
+assert_alarm_exists "$LATENCY_ALARM_NAME" "Latency"
+assert_alarm_exists "$ERROR_RATE_ALARM_NAME" "ErrorRate"
+assert_alarm_exists "$FAST_BURN_RATE_ALARM_NAME" "FastBurnRate"
+assert_alarm_exists "$SLOW_BURN_RATE_ALARM_NAME" "SlowBurnRate"
 
 log "CloudWatch Dashboardの存在を確認します: ${DASHBOARD_NAME}"
 FOUND_DASHBOARD="$(aws cloudwatch get-dashboard \

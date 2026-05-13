@@ -14,9 +14,19 @@
 - ただし30日データや実アプリ計装が必要な機能は補講/デモとして扱う
 - VOICEVOX読み上げでは `SLO` を「エスエルオー」、`SLI` を「エスエルアイ」に統一する
 
+## ハンズオン
+
+CloudFormationハンズオンは [cloudformation/README.md](cloudformation/README.md) を参照してください。
+
+扱う内容:
+
+- CloudWatch Custom Metricsによる可用性、レイテンシ、エラー率のSLI
+- Metric Mathによるバーンレート
+- CloudWatch Alarm、Dashboard、SNS
+- Optional: Application Signals SLO
+
 ## 次の作業
 
-1. AI-QA-01が `course_spec.md` をレビューする
-2. 承認後、AI-Strategy-01が講義単位のTask Issueへ分解する
-3. AI-Engineer-01がCloudFormationハンズオン範囲を実装する
-4. AI-Production-01がスライド、台本、VOICEVOX素材を作る
+1. AI-QA-01が `qa/handson_cloudformation_validation_report.md` をレビューする
+2. CEOがAWSリソース作成コストを許容した場合、`cloudformation/README.md` に沿って `./validate.sh full` を実行する
+3. 実行結果をハンズオン検証レポートへ追記する
