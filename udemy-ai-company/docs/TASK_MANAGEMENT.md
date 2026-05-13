@@ -17,6 +17,9 @@ GitHub Issueを制作会社の業務台帳として扱い、AIが半自律的に
 - 自動実行したいIssueには `auto-execute` ラベルを付ける
 - AWS課金につながる作業は `approval-required` とし、CEO承認後に `ceo-approved` を付ける
 - AI-PM-01は `auto-execute` と承認状態を見て実行キューへ送る
+- AI-PM-01はCEO承認待ち以外のOpen Issueを `done` にしてcloseする
+- AI-Ops-01は定期監査でルール違反を検知し、監査Issueへ報告する
+- AI-Ops-01は `pm`、`approval-required`、`blocked` の不足など低リスクなラベル補正だけ自動実行できる
 
 ## 1チケット1成果物
 
@@ -70,6 +73,22 @@ Reviewer AIは以下を行う。
 - 実行確認または未実施理由を記録する
 - 差戻し理由を具体的に書く
 
+## AI-Ops-01 ルール監査
+
+AI-Ops-01は `tools/rule_auditor.py` で、Issue運用が会社ルールに沿っているかを定期確認する。
+
+監査で確認する項目:
+
+- Owner AI と Reviewer AI が設定され、同一でない
+- Definition of Done が記入されている
+- Mission/Vision/Values Alignment が記入されている
+- 講座成果物に関わるIssueが `course_spec.md` を参照している
+- 課金影響があるIssueがCEO承認ゲートを通っている
+- CEO承認待ち以外のOpen Issueが残っていない
+- Blocked Issueに理由が記録されている
+
+監査結果は `AI-Ops Rule Audit` Issueへコメントとして残す。AI-Ops-01は監査で検知した違反を勝手に実装、close、承認、公開しない。
+
 ## Blocked時の対応
 
 IssueがBlockedになったら、AI-Ops-01が以下を記録する。
@@ -80,6 +99,8 @@ IssueがBlockedになったら、AI-Ops-01が以下を記録する。
 - 次の確認期限
 
 CEO判断が必要な場合は、Issueコメントで明確に依頼する。
+
+CEO承認待ちとしてOpenに残すIssueには、`approval-required` と `blocked` を付ける。CEO承認待ちではないBlocked Issueは放置せず、AI-PM-01が自動クローズする。
 
 ## stale issue対応
 
@@ -118,6 +139,7 @@ CEO判断が必要な場合は、Issueコメントで明確に依頼する。
 自動化:
 
 - `pm`
+- `rule-audit`
 - `auto-execute`
 - `approval-required`
 - `ceo-approved`
@@ -161,3 +183,5 @@ CEO判断が必要な場合は、Issueコメントで明確に依頼する。
 - コスト見積もりを超える可能性がある検証
 
 承認待ちのIssueは `approval-required` と `blocked` を付け、CEOに判断を依頼する。
+
+CEO承認済みになったIssueは承認待ちではないため、Openに残さない。承認内容を実行する場合は、別のTask Issueとして作成する。

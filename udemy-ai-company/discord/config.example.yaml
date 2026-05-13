@@ -1,0 +1,37 @@
+# Copy this file outside the repository or point COMMAND_CENTER_CONFIG to your own file.
+# Secrets must be provided by environment variables, not by this file.
+
+discord:
+  # Optional. Set DISCORD_GUILD_ID for faster slash-command registration during development.
+  guild_id:
+
+github:
+  # Can be overridden by GITHUB_REPOSITORY.
+  repo: toma1110/udemy2
+  default_labels:
+    - pm
+    - ops
+
+notifications:
+  # Optional. Set DISCORD_NOTIFY_CHANNEL_ID to receive Issue update notifications.
+  channel_id:
+  poll_seconds: 60
+  state_file: /home/ubuntu/workspace/udemy2/udemy-ai-company/.pm_state/discord_issue_updates.json
+
+codex:
+  # Codex runs in /home/ubuntu/workspace/<workspace_environment>.
+  # Default is fixed to production. Future values: qa, research.
+  workspace_root: /home/ubuntu/workspace
+  workspace_environment: production
+  allowed_workspace_environments:
+    - production
+    - qa
+    - research
+  command: codex exec --sandbox danger-full-access --ask-for-approval never -
+  timeout_seconds: 7200
+  log_dir: /home/ubuntu/workspace/udemy2/udemy-ai-company/discord/logs/codex-runs
+  task_prompt_path: /home/ubuntu/workspace/udemy2/udemy-ai-company/discord/prompts/codex_task_prompt.md
+  approval_prompt_path: /home/ubuntu/workspace/udemy2/udemy-ai-company/discord/prompts/approval_request_prompt.md
+
+queue:
+  max_parallel_runs: 1

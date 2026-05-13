@@ -8,6 +8,10 @@ AI制作会社 v1 の標準状態遷移は以下です。
 
 AI-PM-01は全フェーズ横断でGitHub Issueの変更を検知し、`auto-execute` ラベル付きIssueだけを自動実行キューへ送る。AWS課金につながる環境構築、デプロイ、CloudFormation stack作成/更新/削除、Fargate/Batch/ECR等は、CEO承認がIssueに残るまで自動実行しない。
 
+AI-PM-01はOpen Issueを定期整理し、CEO承認待ちではないIssueを `done` にしてcloseする。Openに残してよいのは、`approval-required` 等でCEO承認待ちであることが明確なIssueだけである。
+
+AI-Ops-01は定期的に仕組みルール監査を行い、Owner/Reviewer分離、CEO承認ゲート、Issue必須項目、Source of Truth参照、PM自動クローズ方針が守られているかを確認する。監査結果は `AI-Ops Rule Audit` Issueへ記録し、軽微なラベル補正以外は報告に留める。
+
 ## Backlog
 
 - 担当AI: AI-Ops-01

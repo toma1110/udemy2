@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+.venv/
+.env
+.pm_state/
+discord/logs/codex-runs/*.log

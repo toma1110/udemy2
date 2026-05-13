@@ -1,0 +1,25 @@
+[Unit]
+Description=AI Company Discord Command Center
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/workspace/udemy2/udemy-ai-company/discord
+Environment=PYTHONUNBUFFERED=1
+Environment=GITHUB_REPOSITORY=toma1110/udemy2
+Environment=AI_COMPANY_WORKSPACE_ROOT=/home/ubuntu/workspace
+Environment=AI_COMPANY_WORKSPACE_ENV=production
+Environment=COMMAND_CENTER_MAX_PARALLEL_RUNS=1
+Environment=CODEX_EXEC_TIMEOUT_SECONDS=7200
+Environment="CODEX_EXEC_COMMAND=codex exec --sandbox danger-full-access --ask-for-approval never -"
+Environment=CODEX_RUN_LOG_DIR=/home/ubuntu/workspace/udemy2/udemy-ai-company/discord/logs/codex-runs
+EnvironmentFile=-/home/ubuntu/.config/ai-company/discord-command-center.env
+ExecStart=/home/ubuntu/workspace/udemy2/udemy-ai-company/discord/.venv/bin/python /home/ubuntu/workspace/udemy2/udemy-ai-company/discord/bot.py
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
