@@ -1,0 +1,22 @@
+{
+  "output": "udemy-ai-company/courses/aws-slo-adoption-course/video/promo_slo_adoption/promo_slo_adoption.30fps.mp4",
+  "duration": 91.359206,
+  "size": 5469449,
+  "faststart": true,
+  "streams": [
+    {
+      "codec_type": "video",
+      "codec_name": "h264",
+      "width": 1920,
+      "height": 1080,
+      "avg_frame_rate": "30/1"
+    },
+    {
+      "codec_type": "audio",
+      "codec_name": "aac",
+      "width": null,
+      "height": null,
+      "avg_frame_rate": "0/0"
+    }
+  ]
+}

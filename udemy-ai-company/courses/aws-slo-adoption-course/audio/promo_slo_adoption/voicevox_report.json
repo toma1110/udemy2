@@ -1,0 +1,50 @@
+{
+  "course_id": "aws-slo-adoption-course",
+  "lecture_id": "promo_slo_adoption",
+  "script_json": "udemy-ai-company/courses/aws-slo-adoption-course/scripts/promo_video_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-slo-adoption-course/audio/promo_slo_adoption",
+  "started_at": "2026-05-14T14:20:12Z",
+  "ended_at": "2026-05-14T14:21:42Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 1.1,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 10.613,
+      "size_bytes": 509484
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 12.981,
+      "size_bytes": 623148
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 13.952,
+      "size_bytes": 669740
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 16.533,
+      "size_bytes": 793644
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 13.205,
+      "size_bytes": 633900
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 13.195,
+      "size_bytes": 633388
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 10.859,
+      "size_bytes": 521260
+    }
+  ],
+  "audio_count": 7,
+  "total_duration_seconds": 91.339
+}

@@ -32,6 +32,8 @@
 - Google Drive URL: https://drive.google.com/file/d/1L4rjbl2zXEE0z3fML-xlttIBZxO_ghRy/view?usp=drivesdk
 - New Google Drive metadata: `courses/aws-slo-adoption-course/video/promo/drive_upload_gpt_image2.json`
 - New Google Drive URL: https://drive.google.com/file/d/15IlfcpRWIxstWpieUOuSHRkQsj3HU_xw/view?usp=drivesdk
+- SLO adoption repositioned metadata: `courses/aws-slo-adoption-course/video/promo_slo_adoption/drive_upload.json`
+- SLO adoption repositioned Google Drive URL: https://drive.google.com/file/d/12lIPKIb8RnDzZqzQQPuIb4FMw9JqLVZG/view?usp=drivesdk
 
 ## Validation
 
@@ -59,6 +61,7 @@
 - CEO確認用にGoogle Driveへアップロード済みです。
 - TASK-0120でGPT Image2版スライドへ再生成済みです。
 - TASK-0121で、コースタイトルとpromo台本をSLO導入・運用主語へ更新しました。既存MP4は自動更新されないため、旧タイトルが画面表示されるpromo動画は公開前に再レンダリング対象です。
+- TASK-0123でSLO導入・運用主語のpromo動画を再生成し、Google Driveへアップロード済みです。
 - 現時点ではUdemyへのアップロードは未実施です。
 
 ## Official References
