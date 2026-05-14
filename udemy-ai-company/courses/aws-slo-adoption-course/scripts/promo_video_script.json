@@ -1,0 +1,85 @@
+{
+  "title": "promo_video_script",
+  "purpose": "Udemy course promotional video",
+  "recommended_duration_seconds": 90,
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "SLO導入実践",
+      "message": "SLOを、説明できる状態から運用できる状態へ",
+      "narration": "サービスの信頼性を、なんとなくの監視ではなく、エスエルオーで説明できるようになりたい。そんな方向けの、エーダブリューエス実践コースです。",
+      "layout": "hero",
+      "visual_notes": [
+        "Course title",
+        "SLO to operations",
+        "AWS and SRE context"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "こんな悩みはありませんか",
+      "message": "監視はある。でも、判断基準が説明できない",
+      "narration": "アラームはあるのに、何を守っているのか説明しにくい。エスエルアイ、エスエルオー、エスエルエー、エラーバジェットの違いがあいまい。現場では、ここで手が止まりがちです。",
+      "layout": "problem",
+      "visual_notes": [
+        "Monitoring confusion",
+        "SLI/SLO/SLA/Error budget"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "このコースで扱うこと",
+      "message": "設計、計測、可視化、通知、説明まで一気通貫で学ぶ",
+      "narration": "このコースでは、エスエルアイの選び方から、エスエルオー目標、エラーバジェット、バーンレート通知までを、順番に整理します。概念で終わらせず、運用に使う形まで進めます。",
+      "layout": "value",
+      "visual_notes": [
+        "Design to operation flow",
+        "SLI/SLO/error budget/burn rate"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "AWSでSLOを具体化",
+      "message": "CloudWatch、SNS、Dashboardを低コスト構成で作る",
+      "narration": "教材ハンズオンでは、クラウドフォーメーションで、クラウドウォッチメトリクス、アラーム、エスエヌエス、ダッシュボードを作ります。目的はツール操作ではなく、エスエルオーを計測、可視化、通知へつなげる理解を固めることです。",
+      "layout": "handson",
+      "visual_notes": [
+        "CloudFormation to CloudWatch/SNS/Dashboard",
+        "validate create update smoke delete"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "AWSの現在形も押さえる",
+      "message": "Application SignalsのSLO機能は、制約も含めて扱う",
+      "narration": "さらに、クラウドウォッチアプリケーションシグナルズのエスエルオー機能も扱います。実アプリ計装やデータ期間が必要なところは、無理に作らず、使いどころと制約を分けて理解します。",
+      "layout": "aws",
+      "visual_notes": [
+        "CloudWatch Application Signals",
+        "Optional SLO path"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "対象者",
+      "message": "SRE、インフラ、バックエンド、運用改善に関わる人へ",
+      "narration": "対象は、エスアールイーを目指す方、インフラやバックエンドを担当している方、監視を次の段階へ進めたい方です。エーダブリューエスシーエルアイの基本操作ができれば進められます。",
+      "layout": "audience",
+      "visual_notes": [
+        "Target learner personas",
+        "AWS CLI prerequisite"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "受講後のゴール",
+      "message": "自分のサービスで最初のSLOを設計し、説明できる",
+      "narration": "受講後は、自分のサービスに合うエスエルアイを選び、エスエルオーとエラーバジェットを設計し、エーダブリューエス上で可視化と通知まで進める土台ができます。",
+      "layout": "close",
+      "visual_notes": [
+        "Course promise",
+        "Design first SLO for own service"
+      ]
+    }
+  ]
+}
