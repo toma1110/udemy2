@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "VID-002 hands-on: CloudWatch Alarm with SNS email notification"
+
+Parameters:
+  NotificationEmail:
+    Type: String
+    Default: ""
+    Description: "Optional email address for SNS notification. Leave empty to skip email subscription."
+    AllowedPattern: "^$|^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+    ConstraintDescription: "Enter a valid email address or leave empty."
+  AlarmThreshold:
+    Type: Number
+    Default: 1
+    MinValue: 1
+    Description: "Demo alarm threshold for the learning metric."
+
+Conditions:
+  HasNotificationEmail: !Not [!Equals [!Ref NotificationEmail, ""]]
+
+Resources:
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: "VID002 CloudWatch Alarm Notifications"
+      Tags:
+        - Key: Course
+          Value: "aws-cloudwatch-alarm-sns-course"
+        - Key: ManagedBy
+          Value: "CloudFormation"
+
+  AlarmTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref AlarmTopic
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudWatchAlarmPublish
+            Effect: Allow
+            Principal:
+              Service: cloudwatch.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref AlarmTopic
+            Condition:
+              StringEquals:
+                "aws:SourceAccount": !Ref AWS::AccountId
+              ArnLike:
+                "aws:SourceArn": !Sub "arn:${AWS::Partition}:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:*"
+
+  EmailSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasNotificationEmail
+    Properties:
+      Protocol: email
+      Endpoint: !Ref NotificationEmail
+      TopicArn: !Ref AlarmTopic
+
+  DemoAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "VID-002 demo alarm. Use SNS publish or optional set-alarm-state to test notifications."
+      Namespace: "UdemyDemo/CloudWatchAlarmSns"
+      MetricName: "DemoErrorCount"
+      Statistic: Sum
+      Period: 60
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: !Ref AlarmThreshold
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref AlarmTopic
+      OKActions:
+        - !Ref AlarmTopic
+      Tags:
+        - Key: Course
+          Value: "aws-cloudwatch-alarm-sns-course"
+        - Key: ManagedBy
+          Value: "CloudFormation"
+
+Outputs:
+  AlarmName:
+    Description: "Created CloudWatch alarm name."
+    Value: !Ref DemoAlarm
+  AlarmTopicArn:
+    Description: "SNS topic ARN used by the alarm."
+    Value: !Ref AlarmTopic
+  EmailSubscriptionCreated:
+    Description: "Whether an email subscription resource was requested. Email confirmation is still required."
+    Value: !If [HasNotificationEmail, "yes", "no"]

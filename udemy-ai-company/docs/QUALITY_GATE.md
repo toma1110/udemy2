@@ -54,6 +54,7 @@
 - 完成動画に表示する文字、タイトル、短いラベルもGPT-Image2生成である
 - GPT-Image2 source PNGを `slides/<section>-gpt-image2-sources/<lecture>/` に保存している
 - `*_slide_generation_report.md` に Generation Mode、GPT-Image2出力元、プロンプト概要、後処理内容、contact sheet確認結果を記録している
+- `docs/VIDEO_QUALITY_BASELINE.md` に従い、VID-001基準と比較した品質確認結果を記録している
 - ローカル描画（Pillow、HTML Canvas、SVG、手作業レイアウト等）は、下書き、storyboard確認、contact sheet作成、サイズ検証に限定している
 - ローカル描画のみのスライドPNGを完成動画に使っていない
 - ローカル文字合成したスライドPNGを完成動画に使っていない

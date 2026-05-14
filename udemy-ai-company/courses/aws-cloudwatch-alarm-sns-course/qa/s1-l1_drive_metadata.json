@@ -1,0 +1,24 @@
+{
+  "id": "147RojyDcPUL2ZI6HBtrw5crWCrkfJqIn",
+  "name": "vid002-cloudwatch-alarm-sns-s1-l1-gptimage2-text-20260514.mp4",
+  "trashed": false,
+  "parents": [
+    "1emxiqW5p04dQ9TJ_Q1c1HNWCsmI2TKzv"
+  ],
+  "webViewLink": "https://drive.google.com/file/d/147RojyDcPUL2ZI6HBtrw5crWCrkfJqIn/view?usp=drivesdk",
+  "permissions": [
+    {
+      "type": "anyone",
+      "role": "reader"
+    },
+    {
+      "type": "user",
+      "role": "owner"
+    },
+    {
+      "type": "user",
+      "role": "writer"
+    }
+  ],
+  "size": "10518827"
+}

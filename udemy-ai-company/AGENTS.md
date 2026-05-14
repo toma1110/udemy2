@@ -42,6 +42,7 @@
 - `docs/PM_AUTOMATION.md`
 - `docs/APPROVAL_POLICY.md`
 - `docs/PUBLIC_REPO_RULES.md`
+- `docs/VIDEO_QUALITY_BASELINE.md`
 - `docs/VOICEVOX_RULES.md`
 - 対象講座の `course_spec.md`
 
