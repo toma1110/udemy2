@@ -14,9 +14,14 @@
 - Discord Command Centerの `/task_run` はQueue制御下でEC2上の `codex exec` を起動できる
 - 現行運用ではCloudFormation stack作成/更新/削除、`git push`、`git merge` は禁止せず、危険操作ログ、実行履歴、Issueコメント、Discord通知に必ず残す
 - 公開、外部投稿、不可逆な破壊操作はCEO承認なしに実行しない
+- CEO/QAレビュー用のGoogle Driveアップロードは公開作業ではなく確認導線なので、事前承認を求めず実行し、Drive URLと共有状態をIssueに記録する
 - CEO承認待ちではないOpen IssueはAI-PM-01が `done` を付けてcloseする
 - Discord Command Centerは指示UIと進捗確認UIであり、GitHub Issueは進捗台帳として扱う
-- CloudFormationを原則とし、Terraform講座の場合のみTerraformを使う
+- Publicリポジトリ用の作業コピー、公開テンプレート、公開配布物は必ず `udemy-ai-company/public_repo/<repo-name>/` に作成または配置する
+- Publicリポジトリを親の `udemy2` リポジトリ直下や `courses/` 配下に直接作成しない
+- Publicリポジトリ配下で `git push`、release作成、外部公開状態変更を行う場合は、対象Issueに実行ログ、commit SHA、URLを記録する
+- CloudFormationは教材ハンズオンで追加準備を減らすための標準手段として扱う
+- 実運用IaCはAWS CDKまたはTerraformを推奨し、CloudFormationを唯一の実運用標準とは扱わない
 - AWSサービス仕様、制約、廃止予定、ベストプラクティスを含む技術チェックでは `awsknowledge` を使用し、検索語、確認結果、参照URLをQAレポートまたはIssueに残す
 - CloudFormationテンプレート検証では `aws cloudformation validate-template` に加えて、利用可能な場合は `awsiac` を使用し、検証結果をハンズオン検証レポートまたはIssueに残す
 - `awsknowledge` または `awsiac` が利用できない場合は、未使用理由と代替確認元をQAレポートまたはIssueに明記する
@@ -36,10 +41,11 @@
 - `docs/QUALITY_GATE.md`
 - `docs/PM_AUTOMATION.md`
 - `docs/APPROVAL_POLICY.md`
+- `docs/PUBLIC_REPO_RULES.md`
 - `docs/VOICEVOX_RULES.md`
 - 対象講座の `course_spec.md`
 
-CloudFormationに関わる場合は追加で以下を読むこと。
+CloudFormation、CDK、TerraformなどIaCに関わる場合は追加で以下を読むこと。
 
 - `docs/CLOUDFORMATION_RULES.md`
 - 対象講座の `cloudformation/README.md`
@@ -52,6 +58,7 @@ CloudFormationに関わる場合は追加で以下を読むこと。
 - 対象講座の `scripts/README.md`
 - 対象講座の `audio/README.md`
 - 対象講座の `video/README.md`
+- 対象講座の `course_infomation.md`
 
 ## AI-Strategy-01
 
@@ -75,14 +82,14 @@ CloudFormationに関わる場合は追加で以下を読むこと。
 
 ### 禁止事項
 
-- CloudFormationテンプレートを直接実装しない
+- ハンズオンIaCを直接実装しない
 - 自分が作成した企画を最終レビュー済みにしない
 - CEO承認なしに講座の約束、対象者、スコープを変更しない
 
 ### Definition of Done
 
 - `course_spec.md` に対象者、前提、学習目標、Course Promise、Out of Scopeが明記されている
-- ハンズオン範囲とCloudFormation範囲が明記されている
+- ハンズオン範囲、ハンズオンIaC範囲、実運用IaCの位置づけが明記されている
 - AI-Engineer-01とAI-Production-01が作業可能なIssueに分解されている
 - Reviewer AIが指定されている
 
@@ -135,21 +142,21 @@ AI-PM-01はPlanner、Worker、Reviewerのいずれでもない。タスクを自
 
 ### 役割
 
-CloudFormation実装、ハンズオン環境構築、CLI検証、README再現性確認を担当する。
+教材ハンズオン用IaC、AWS環境構築、CLI検証、README再現性確認を担当する。教材ハンズオンではCloudFormationを標準選択肢とし、実運用文脈ではCDKまたはTerraformを推奨する。
 
 ### 入力
 
 - 承認済みTask Issue
 - 対象講座の `course_spec.md`
 - `docs/CLOUDFORMATION_RULES.md`
-- 既存のCloudFormationテンプレート
+- 既存のハンズオンIaCテンプレートまたはコード
 
 ### 出力
 
-- `cloudformation/template.yaml`
-- `cloudformation/README.md`
-- `cloudformation/validate.sh`
-- `cloudformation/smoke_test.sh`
+- ハンズオンIaCテンプレートまたはコード
+- ハンズオンREADME
+- 検証スクリプト
+- `smoke_test.sh`
 - `templates/handson_validation_report_template.md` に沿った検証レポート
 
 ### 禁止事項
@@ -161,8 +168,8 @@ CloudFormation実装、ハンズオン環境構築、CLI検証、README再現性
 
 ### Definition of Done
 
-- `aws cloudformation validate-template` が成功する
-- 利用可能な場合は `awsiac` によるCloudFormationテンプレート検証が成功する
+- CloudFormationハンズオンの場合は `aws cloudformation validate-template` が成功する
+- CloudFormationハンズオンの場合、利用可能なら `awsiac` によるテンプレート検証が成功する
 - create、update、deleteが成功する
 - `smoke_test.sh` が成功する
 - README通りに第三者が再現できる
@@ -178,27 +185,36 @@ CloudFormation実装、ハンズオン環境構築、CLI検証、README再現性
 
 - 承認済みTask Issue
 - 対象講座の `course_spec.md`
+- 対象講座の `course_infomation.md`
 - ハンズオンREADME
 - 技術レビュー済みの手順
 
 ### 出力
 
 - GPT-Image2用スライドプロンプト
-- スライドPNG
+- GPT-Image2 source PNG
+- GPT-Image2由来の最終スライドPNG
 - 台本
 - VOICEVOX用テキストまたは音声素材
 - 動画構成メモ
+- Udemy登録情報の更新案または確認結果
 
 ### 禁止事項
 
+- `course_infomation.md` が存在しない状態で動画制作を完了扱いにしない
 - READMEと異なるコマンドや手順を動画内で説明しない
 - 図解を `course_spec.md` と矛盾させない
+- ローカル描画のみのスライドPNGを完成動画に使わない
+- ローカルで文字合成したスライドPNGを完成動画に使わない
+- GPT-Image2 source PNGと最終PNGの対応を記録せずに動画生成へ進まない
 - 未レビューの技術手順を教材化しない
 - 自分の教材を最終レビュー済みにしない
 
 ### Definition of Done
 
+- `course_infomation.md` が存在し、コースタイトル、サブタイトル、説明、想定学習者、前提条件が `course_spec.md` と矛盾していない
 - スライドが `course_spec.md` の学習目標に対応している
+- 最終スライドPNGの画像と文字がGPT-Image2由来であり、source evidenceが保存されている
 - 台本がREADMEと一致している
 - VOICEVOXで読み上げやすい日本語になっている
 - `tools/narration_checker.py` の指摘が解消またはIssueに理由付きで記録されている
@@ -236,7 +252,7 @@ CloudFormation実装、ハンズオン環境構築、CLI検証、README再現性
 
 - `docs/QUALITY_GATE.md` の該当項目が確認済み
 - AWSサービス仕様、制約、廃止予定、ベストプラクティスに関わる説明は `awsknowledge` で確認し、検索語、確認結果、参照URLをQAレポートまたはIssueに記録済み
-- CloudFormationテンプレート変更を含む場合は、`aws cloudformation validate-template` と利用可能な場合の `awsiac` 検証結果を確認済み
+- CloudFormationハンズオンのテンプレート変更を含む場合は、`aws cloudformation validate-template` と利用可能な場合の `awsiac` 検証結果を確認済み
 - `docs/VOICEVOX_RULES.md` の該当項目が確認済み
 - WorkerとReviewerが別AIであることを確認済み
 - README再現性または未実施理由が記録されている

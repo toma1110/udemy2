@@ -33,8 +33,8 @@ AI-PM-01はPlanning完了後のTask Issueを監視し、`auto-execute` があり
 ## Engineering
 
 - 担当AI: AI-Engineer-01
-- 入力: 承認済みTask、`course_spec.md`、CloudFormationルール
-- 出力: CloudFormationテンプレート、README、検証スクリプト
+- 入力: 承認済みTask、`course_spec.md`、ハンズオンIaCルール
+- 出力: ハンズオンIaCテンプレートまたはコード、README、検証スクリプト
 - 完了条件: validate、create、update、smoke test、deleteの実行結果が記録されている
 
 CloudFormation stack作成/更新/削除、AWS Batch/Fargate、ECR push、その他AWSリソース作成を伴う検証はCEO承認後にだけ実行する。承認前はテンプレート編集、README編集、静的検証準備までに限定する。
@@ -44,35 +44,35 @@ CloudFormation stack作成/更新/削除、AWS Batch/Fargate、ECR push、その
 - 担当AI: AI-QA-01
 - 入力: Engineering成果物、検証レポート、`course_spec.md`
 - 出力: QAレポート、承認または差戻し
-- 完了条件: README再現性、CloudFormation品質、コスト、削除手順が確認済み
+- 完了条件: README再現性、ハンズオンIaC品質、コスト、削除手順が確認済み
 
 ## Production
 
 - 担当AI: AI-Production-01
-- 入力: レビュー済みハンズオン、`course_spec.md`、STYLE_GUIDE
-- 出力: スライドPNG、台本、VOICEVOX素材、動画素材
-- 完了条件: READMEと動画手順が一致し、GPT-Image2とVOICEVOX前提で素材が揃い、ナレーションチェックが完了している
+- 入力: レビュー済みハンズオン、`course_spec.md`、`course_infomation.md`、STYLE_GUIDE
+- 出力: GPT-Image2 source PNG、GPT-Image2由来の最終スライドPNG、台本、VOICEVOX素材、動画素材、Udemy登録情報の更新案または確認結果
+- 完了条件: `course_infomation.md` が存在し、READMEと動画手順が一致し、GPT-Image2 source evidence、GPT-Image2由来スライド、VOICEVOX素材が揃い、ナレーションチェックが完了している
 
 ## Content Review
 
 - 担当AI: AI-QA-01
-- 入力: スライド、台本、音声、動画素材、README
+- 入力: GPT-Image2 source PNG、最終スライドPNG、台本、音声、動画素材、README、`course_infomation.md`
 - 出力: 教材QAレポート、承認または差戻し
-- 完了条件: 技術的誤り、手順不一致、読み上げ不自然箇所、英字残存、空白による不自然な間が解消されている
+- 完了条件: GPT-Image2由来でない最終スライド混入、技術的誤り、手順不一致、Udemy登録情報との矛盾、読み上げ不自然箇所、英字残存、空白による不自然な間が解消されている
 
 ## Ready for Publish
 
 - 担当AI: AI-Ops-01
 - 入力: QA承認済み成果物、CEO確認依頼
-- 出力: 公開候補、Google Driveアップロード準備
-- 完了条件: CEOの公開承認待ち状態になっている
+- 出力: 公開候補、Google DriveレビューURL、アップロード記録
+- 完了条件: CEOがブラウザで確認できるDrive URLがIssueに記録され、公開承認待ち状態になっている
 
 ## Published
 
 - 担当AI: AI-Ops-01
 - 入力: CEO承認、完成動画、関連素材
-- 出力: Google Driveアップロード記録、公開完了Issue
-- 完了条件: アップロード先、公開状態、対象ファイル名が記録されている
+- 出力: Udemy公開または最終配置の記録、公開完了Issue
+- 完了条件: 公開先、公開状態、対象ファイル名が記録されている
 
 ## Analytics Review
 

@@ -525,7 +525,7 @@ Priority: high
 Status: Backlog
 Auto Execute: yes
 Requires CEO Approval: {"yes" if sensitive else "no"}
-Cost Impact: {"AWS Batch/Fargate render and Google Drive upload" if sensitive else "none"}
+Cost Impact: {"AWS Batch/Fargate render" if sensitive else "none"}
 
 # Inputs
 Input Files:
@@ -554,6 +554,9 @@ Expected Output:
 Definition of Done:
 - GPT-Image2で必要枚数のスライドを生成している
 - GPT-Image2生成元PNGと最終PNGの対応が記録されている
+- 表示文字もGPT-Image2で生成している
+- ローカル描画のみのスライドPNGを完成動画に使っていない
+- ローカル文字合成したスライドPNGを完成動画に使っていない
 - VOICEVOX音声とスライド数が一致している
 - AWS Batch Fargate render jobでMP4を生成している
 - MP4 faststart true、decode check OK

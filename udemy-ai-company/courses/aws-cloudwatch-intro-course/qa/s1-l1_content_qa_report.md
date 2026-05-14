@@ -26,6 +26,10 @@
 | Script markdown and JSON exist | PASS |
 | Narration checker passed | PASS |
 | Slide PNG count equals script slide count | PASS |
+| GPT-Image2 source PNG count equals script slide count | PASS |
+| Final slide PNGs are GPT-Image2-derived | PASS |
+| Final visible text is GPT-Image2-generated | PASS |
+| Local text overlay absent from final slides | PASS |
 | VOICEVOX WAV count equals script slide count | PASS |
 | MP4 generated and decode-checked | PASS |
 | Worker and reviewer separated in reports | PASS |
@@ -40,11 +44,12 @@
 | Dashboard is described as a display surface, not storage | PASS |
 | Hands-on is reproducible without special setup | PASS |
 | Cost warning avoids hidden resource creation | PASS |
+| GPT-Image2 visual quality is suitable for Udemy preview | PASS |
 
 ## Residual Risk
 
 - Human audio spot check is recommended before Udemy publishing.
-- Slide PNGs were produced by a deterministic local renderer. Optional GPT-Image2 regeneration can be done later from the storyboard if a strict generated-image requirement is enforced.
+- Slide 004 to 007 include GPT-Image2-generated supporting UI text beyond the primary labels. It is visually coherent and was not locally edited.
 
 ## Approval
 

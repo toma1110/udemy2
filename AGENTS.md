@@ -12,10 +12,13 @@
 ========================================
 
 - AWS/SRE関連のUdemy講座を量産する
-- IaCは原則 CloudFormation を使う
-- Terraform講座を作る場合のみ Terraform を使う
+- 教材ハンズオンでは、受講者が追加ツールなしで再現しやすい場合に CloudFormation を使う
+- 実運用のIaC推奨は CDK または Terraform とする
 - 音声は当面 VOICEVOX を使う
-- スライドは GPT-Image2 で PNG 生成する
+- 完成動画に使うスライドは必ず GPT-Image2 由来のPNGにする
+- 完成動画に表示する文字も必ず GPT-Image2 に生成させる
+- ローカル描画のみのスライドは下書き・検証用に限り、完成動画には使わない
+- ローカル文字合成したスライドは完成動画には使わない
 - 図解はスライドPNG内に含める
 - 動画アップロードは Google Drive 一括アップロード方式
 - course_spec.md を唯一の真実（Source of Truth）とする
@@ -34,8 +37,14 @@ AI組織ルール
 - 全作業はチケット駆動
 - チケットには担当AIとレビュアーAIを必ず書く
 - チケットなし作業は禁止
+- GitHub Issueの自動実行はAI-PM-01が検知・判定する
+- AWS環境構築、CloudFormation stack作成/更新/削除、Fargate/Batch/ECR等の課金影響がある作業はCEO承認後にのみ実行する
 - 修正は直接変更禁止
 - change request → impact analysis → approve → implementation → QA の順
+- Publicリポジトリ用の作業コピー、公開テンプレート、公開配布物は必ず `udemy-ai-company/public_repo/<repo-name>/` に作成・配置する
+- Publicリポジトリを `/home/ubuntu/workspace/udemy2/<repo-name>` や `udemy-ai-company/courses/` 配下に直接作成しない
+- Publicリポジトリ運用の詳細は `udemy-ai-company/docs/PUBLIC_REPO_RULES.md` を参照する
+- 動画制作ルールの詳細は `udemy-ai-company/docs/GPT_IMAGE_RULES.md` を参照し、最終動画はGPT-Image2由来スライドだけで作る
 
 ========================================
 AI社員
@@ -47,6 +56,12 @@ AI-Strategy-01
 役割:
 企画
 高性能モデル
+
+AI-PM-01
+役割:
+GitHub Issue変更検知
+自動実行可否判定
+課金影響があるAWS作業のCEO承認ゲート管理
 
 AI-Engineer-01
 役割:
@@ -287,8 +302,8 @@ done
 
 必須:
 
-- 原則CloudFormation
-- Terraformは例外
+- CloudFormationは教材ハンズオン向けの再現手段
+- 実運用IaCはCDKまたはTerraform推奨
 - 初学者が読めるテンプレート
 - Parameters明確
 - Outputs明確
@@ -382,7 +397,7 @@ AWS SRE入門：CloudFormationで作る監視基盤ハンズオン
 
 - AIが自律的に動けるか
 - Worker/Reviewer分離されているか
-- CloudFormation前提か
+- CloudFormationをハンズオン用途に限定し、実運用IaCはCDK/Terraform推奨になっているか
 - GPT-Image2前提か
 - VOICEVOX前提か
 - GitHub Issueだけで運用できるか
