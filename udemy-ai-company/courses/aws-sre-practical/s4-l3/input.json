@@ -1,0 +1,18 @@
+{
+  "section": 4,
+  "lecture": 3,
+  "title": "Logs Insightsクエリ入門",
+  "duration_min": 12,
+  "learning_objectives": "CloudWatch Logs Insightsのクエリ言語を使って、エラーの検索・集計・可視化ができるようになる。",
+  "key_points": [
+    "Logs Insightsとは: ロググループに対してSQLライクなクエリを実行できる分析サービス",
+    "基本構文: fields / filter / stats / sort / limit の5大コマンド",
+    "エラー検索クエリ例: filter @message like /ERROR/ | sort @timestamp desc | limit 20",
+    "集計クエリ例: stats count(*) as errorCount by bin(5m) でタイムラインのエラー数を集計",
+    "JSONログの活用: filter level = 'ERROR' | stats count(*) by requestId",
+    "レイテンシ分析: stats avg(duration), max(duration), pct(duration, 99) by bin(1h)",
+    "複数ロググループへの同時クエリ（クロスアカウントも可能）",
+    "クエリ結果のダッシュボードへの追加: Logs Insights → Add to Dashboard"
+  ],
+  "notes": "クエリ例は実務でコピペして使えるレベルで充実させる。fields・filter・statsの3つを組み合わせれば大半のユースケースをカバーできることを伝える。JSON構造化ログとの相乗効果を強調する。"
+}

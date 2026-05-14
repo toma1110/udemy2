@@ -1,0 +1,18 @@
+{
+  "section": 9,
+  "lecture": 3,
+  "title": "よく使うコスト削減手法（Reserved/Spot/サイジング）",
+  "duration_min": 12,
+  "learning_objectives": "Reserved Instances・Savings Plans・Spot・適切なサイジングという主要なコスト削減手法の特徴を理解し、状況に応じて使い分けられるようになる。",
+  "key_points": [
+    "Reserved Instances（RI）: 1〜3年の予約で最大75%割引。安定したワークロードに最適",
+    "Savings Plans: RIより柔軟なコミットメント型割引。インスタンスファミリー変更もOK",
+    "Spot Instance: 最大90%割引だが中断リスクあり。バッチ処理・CI/CDに適している",
+    "Spot の中断対策: Spot Interruption Noticeで2分前に通知 → チェックポイント保存",
+    "ライトサイジング（Right Sizing）: 実際のCPU/メモリ使用率を見て過剰スペックを縮小",
+    "Compute Optimizer: 使用率データからRI推奨インスタンスタイプを自動提案",
+    "不要リソースの自動削除: AWS Config Rules で未使用EIP・空EBSを検出",
+    "スケジュールスケーリング: 開発環境を夜間・週末に自動停止してコストを削減"
+  ],
+  "notes": "RIとSavings Plansの違いを表で比較する。Spotの中断対策まで説明することでSpotを使いこなせる実践力をつける。Compute Optimizerは無料で使えるのに知られていないツールとして紹介。"
+}

@@ -25,7 +25,7 @@ GitHub Issueを制作会社の業務台帳として扱い、AIが半自律的に
 
 良い例:
 
-- CloudFormationテンプレートを作成する
+- ハンズオンIaCテンプレートまたはコードを作成する
 - ハンズオンREADMEを作成する
 - 第1章スライドPNGを生成する
 - 第1章台本を作成する
@@ -185,3 +185,5 @@ CEO承認待ちとしてOpenに残すIssueには、`approval-required` と `bloc
 承認待ちのIssueは `approval-required` と `blocked` を付け、CEOに判断を依頼する。
 
 CEO承認済みになったIssueは承認待ちではないため、Openに残さない。承認内容を実行する場合は、別のTask Issueとして作成する。
+
+Google DriveへのCEO/QAレビュー用アップロードは、課金承認対象ではない。動画をCEOが確認できるようにするための標準手順として、ローカルQA通過後に事前確認なしで実行し、Drive URLと共有状態をIssueに記録する。

@@ -1,0 +1,24 @@
+{
+  "id": "1W9zs32wa5a3jvomgK1aY8EMRpexz2de1",
+  "name": "s6-l2.mp4",
+  "trashed": false,
+  "parents": [
+    "1emxiqW5p04dQ9TJ_Q1c1HNWCsmI2TKzv"
+  ],
+  "webViewLink": "https://drive.google.com/file/d/1W9zs32wa5a3jvomgK1aY8EMRpexz2de1/view?usp=drivesdk",
+  "permissions": [
+    {
+      "type": "anyone",
+      "role": "reader"
+    },
+    {
+      "type": "user",
+      "role": "owner"
+    },
+    {
+      "type": "user",
+      "role": "writer"
+    }
+  ],
+  "size": "4806023"
+}

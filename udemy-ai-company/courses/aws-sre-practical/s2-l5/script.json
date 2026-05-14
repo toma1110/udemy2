@@ -1,0 +1,242 @@
+{
+  "section": 2,
+  "lecture": 5,
+  "title": "ハンズオン: サンプルWebアプリを本番想定でデプロイ",
+  "duration_min": 35,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# ハンズオン\n## サンプルWebアプリを本番想定でデプロイ\n\n**セクション2 / レクチャー5**\n\n> このハンズオンはセクション3〜7 すべての「土台」になります。\n> 一緒に丁寧に進めていきましょう！",
+      "narration": "このレクチャーへようこそ。今回はいよいよハンズオンです。AWS上にサンプルのWebアプリケーションをデプロイして、以降のセクションで使う環境を整えます。このハンズオンはセクション3から7まで、すべての学習の土台になる非常に重要な章です。少し長めですが、一つひとつ丁寧に進めていきますので、安心してついてきてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# 今回構築するアーキテクチャ\n\n**三層構成 + 可観測性** の組み合わせが本番運用の基本形です。\n\n> 各コンポーネントの役割を図で確認しましょう。",
+      "narration": "まず、今回構築するアーキテクチャ全体を確認しましょう。ユーザーのブラウザからのリクエストをALBが受け取り、EC2上のFlaskデモアプリに転送します。今回のアプリは、CloudFormationのUserDataで自動生成される、確率で5xxを返すスタブアプリです。RDS MySQLも作成しますが、今回のスタブアプリ自体はデータベースを使いません。RDSは後続セクションや拡張用に残している、と理解してください。ALBのアクセスログはS3に保存され、EC2のメトリクス、JSON形式のアプリログ、X-RayトレースはCloudWatch Agent経由で送信されます。本番で起きた問題をすばやく調査できる土台を、ここで一気に作ります。",
+      "diagram": {
+        "type": "architecture",
+        "data": {
+          "title": "本番想定 三層 + 可観測性 アーキテクチャ",
+          "main": [
+            {
+              "icon": "Web",
+              "label": "Internet",
+              "sub": "ユーザー",
+              "color": "lblue",
+              "conn": "HTTPS"
+            },
+            {
+              "icon": "ALB",
+              "label": "ALB",
+              "sub": "ロードバランサー",
+              "color": "orange",
+              "conn": "HTTP",
+              "id": "alb"
+            },
+            {
+              "icon": "EC2",
+              "label": "EC2",
+              "sub": "Flask Demo App\n:8080\n+CW Agent",
+              "color": "blue",
+              "conn": "HTTP",
+              "id": "ec2"
+            },
+            {
+              "icon": "RDS",
+              "label": "RDS MySQL",
+              "sub": "後続セクション用",
+              "color": "green"
+            }
+          ],
+          "obs": [
+            {
+              "icon": "S3",
+              "label": "S3",
+              "sub": "アクセスログ保存",
+              "color": "orange",
+              "from": "alb",
+              "conn": "アクセスログ"
+            },
+            {
+              "icon": "CW",
+              "label": "CloudWatch",
+              "sub": "メトリクス・ログ",
+              "color": "blue",
+              "from": "ec2",
+              "conn": "メトリクス/ログ"
+            },
+            {
+              "icon": "X",
+              "label": "X-Ray",
+              "sub": "分散トレーシング",
+              "color": "lblue",
+              "from": "ec2",
+              "conn": "トレース"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# 補足: この構成は学習用の最小構成\n\n今回の構成は、**本番運用で使う主要コンポーネントを学ぶための土台**です。\n\n## このハンズオンで学ぶこと\n- ALB / EC2 / RDS の三層構成\n- CloudWatch によるメトリクス・ログ収集\n- X-Ray によるトレース確認\n- S3 への ALB アクセスログ保存\n\n## 実案件では追加するもの\n- Auto Scaling / Multi-AZ / Private Subnet\n- HTTPS / Secrets Manager / バックアップ / 暗号化\n- アラーム / ダッシュボード / OpenTelemetry\n\n> まず最小構成で運用データの見方を理解し、必要に応じて本番レベルへ拡張します。",
+      "narration": "ここで一つ補足です。今回作る構成は、本番運用で使う主要なコンポーネントを学ぶための最小構成です。ALB、EC2、RDSの三層構成に、CloudWatch、X-Ray、S3アクセスログを組み合わせることで、運用データを見るための土台を作ります。ただし、実際の本番環境では、Auto ScalingやMulti-AZ、プライベートサブネット、HTTPS、シークレッツマネージャー、バックアップ、暗号化、アラーム、ダッシュボードなどを追加して、可用性とセキュリティを高めます。このハンズオンでは、まず最小構成で仕組みを理解し、後のセクションで本番運用に近づけていく、という位置づけで進めます。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_003_production_extension.png"
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# ⚠️ コストに関する注意事項\n\n## 推定費用の目安\n\n| リソース | 費用目安（月額） |\n|---|---|\n| EC2（t3.small） | 約 $15 |\n| RDS（db.t3.micro） | 約 $13 |\n| ALB | 約 $5〜 |\n| **合計目安** | **月 $20〜30 程度** |\n\n## 必ずやること ✅\n- ハンズオン終了後は **EC2・RDS を停止**する\n- セクション7終了後は **リソースを削除**する",
+      "narration": "作業を始める前に、必ずコストの注意事項を確認してください。今回作る環境は動かし続けると月に2,000円から3,000円程度かかります。ハンズオンが終わったら必ずEC2とRDSを停止してください。停止すれば費用はほぼゼロになります。そしてコース全体が終わったら、リソースを削除することも忘れずに。この点だけは必ず守ってください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# ステップ全体の流れ\n\n今回のハンズオンを4つのステップで進めます。",
+      "narration": "今回のハンズオンは4つのステップで進めます。まずCloudFormationで環境を自動構築します。この時点で、EC2、ALB、RDSだけでなく、Flaskデモアプリ、CloudWatch Agent、JSONログ転送、X-Rayトレース送信まで自動でセットアップされます。受講者側で行う作業は、スタック作成後の状態確認と、アプリのエラー率、ログ、トレース、ALBアクセスログの確認が中心です。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "ハンズオン ステップ概要",
+          "steps": [
+            {
+              "label": "STEP 1",
+              "sublabel": "CloudFormation\nで環境構築",
+              "style": "highlight"
+            },
+            {
+              "label": "STEP 2",
+              "sublabel": "デモアプリ\n自動生成",
+              "style": "normal"
+            },
+            {
+              "label": "STEP 3",
+              "sublabel": "メトリクス/\nJSONログ確認",
+              "style": "normal"
+            },
+            {
+              "label": "STEP 4",
+              "sublabel": "X-Ray\nトレース確認",
+              "style": "normal"
+            },
+            {
+              "label": "STEP 5",
+              "sublabel": "ALBログ＆\n動作確認",
+              "style": "normal"
+            },
+            {
+              "label": "STEP 6",
+              "sublabel": "後片付け",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# STEP 1: CloudFormationで環境を自動構築\n\n## やること\n1. AWSコンソール → **CloudFormation** を開く\n2. 「スタックの作成」→「テンプレートファイルのアップロード」を選択\n3. 配布テンプレート `01-base-infrastructure.yaml` をアップロード\n4. スタック名: `sre-handson-base` と入力して作成\n\n## 自動で作成・設定されるもの\n- VPC / サブネット / セキュリティグループ\n- EC2（t3.small） + RDS（db.t3.micro）\n- ALB + ターゲットグループ（EC2へ **8080** で転送）\n- Flaskデモアプリ / CloudWatch Agent / X-Rayトレース送信\n- IAMロール（CloudWatch / X-Ray 権限付き）\n\n> 詳細コマンドはGitHubリポジトリの `CLI_COMMANDS.md` を参照",
+      "narration": "STEP 1です。CloudFormationのテンプレートを使って環境を一括構築します。アップロードするファイル名は、01-base-infrastructure.yamlです。このテンプレートで、VPC、EC2、RDS、ALB、IAMロールに加えて、EC2上のFlaskデモアプリ、CloudWatch Agent、X-Rayトレース送信まで自動で設定されます。作成完了まで数分待ち、ステータスがクリエイト・コンプリートになることを確認しましょう。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_005_cloudformation.png"
+        }
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# STEP 2: デモアプリの起動を確認\n\n## アプリはEC2のUserDataで自動生成済み\n\n手動作業は不要です。\n\n```bash\n# EC2へSession Managerで接続した場合の確認例\nsudo systemctl status sre-demo-app\ncurl http://localhost:8080/\ncurl http://localhost:8080/api/data\ncurl http://localhost:8080/api/process\n```\n\n## エンドポイント\n- `/` : 常に200を返す\n- `/api/data` : **20%** の確率で500を返す\n- `/api/process` : **15%** の確率で500、10%の確率で遅延\n\n> ALB経由ではポート80、EC2上ではアプリが **8080** で待ち受けます",
+      "narration": "STEP 2では、デモアプリの起動を確認します。このアプリはEC2のUserDataで自動生成されるため、git clone、pip install、環境変数設定、手動起動は不要です。アプリは8080番ポートで待ち受けます。ルートパスは常に200を返し、/api/dataは20パーセントの確率で500を返します。/api/processは15パーセントの確率で500を返し、一部のリクエストでは遅延も発生します。この意図的なエラーにより、後続のダッシュボードやアラームでエラー率の変化を体感できます。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_006_flask_deploy.png"
+        }
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# STEP 3: CloudWatch Agentの状態を確認\n\n## Agent設定はCloudFormationで完了済み\n\n```bash\nsudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \\\n  -a status\n```\n\n## 送信されるデータ\n- `mem_used_percent` : メモリ使用率\n- `disk_used_percent` : ディスク使用率\n- アプリログ: `/var/log/todo-app.log`\n- ロググループ: `/aws/ec2/sre-handson/webapp`\n- X-Rayトレース: CloudWatch Agent の `traces` セクション経由\n\n> `-a query` ではなく **`-a status`** で状態を確認します",
+      "narration": "STEP 3はCloudWatch Agentの状態確認です。Agentのインストールや設定は、CloudFormationで完了済みです。確認コマンドでは、amazon-cloudwatch-agent-ctlの-a statusを使います。Agentはメモリ使用率、ディスク使用率、アプリログ、そしてX-Rayトレース送信をまとめて担当します。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_007_cwagent_metrics.png"
+        }
+      }
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# STEP 4: JSONログとエラー率を確認\n\n## CloudWatch Logsで確認するロググループ\n\n`/aws/ec2/sre-handson/webapp`\n\n## ログの特徴\n```json\n{\"requestId\":\"...\",\"path\":\"/api/data\",\"status\":500,\"duration\":123}\n```\n\n## 確認例\n```bash\n# ALB DNS名に対して複数回アクセス\nfor i in {1..20}; do curl -s -o /dev/null -w \"%{http_code}\\n\" \\\n  http://<ALB-DNS-NAME>/api/data; done\n```\n\n> 20%前後で500が返るため、5xx率ウィジェットやアラームの確認がしやすくなります",
+      "narration": "STEP 4では、CloudWatch LogsにJSON形式のアプリログが届いていることを確認します。ロググループ名は、/aws/ec2/sre-handson/webappです。ログにはrequestId、path、status、durationなどが含まれます。/api/dataを何度か叩くと、およそ20パーセントの確率で500が返ります。これにより、後続のLogs Insights、ダッシュボード、アラームの学習で、実際にエラー率が動く様子を確認できます。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_008_cloudwatch_logs.png"
+        }
+      }
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# STEP 5: X-Rayトレースを確認\n\n## X-Ray連携も自動設定済み\n\n- Flaskアプリには X-Ray middleware を組み込み済み\n- IAMロールには X-Ray 書き込み・読み取り権限を付与済み\n- トレース送信は **X-Ray daemonではなく CloudWatch Agent** が担当\n\n## 確認場所\n1. AWSコンソール → X-Ray\n2. サービスマップを開く\n3. ALB経由でアクセスしたリクエストのトレースを確認\n\n> `systemctl start xray` は不要です",
+      "narration": "STEP 5ではX-Rayのトレースを確認します。X-Ray middlewareはFlaskアプリに組み込み済みで、IAMロールにも必要な権限が付いています。重要なのは、現在の構成ではX-Rayデーモンを手動で起動しないことです。トレース送信はCloudWatch Agentのtracesセクションが担当します。ALB経由で何度かアクセスしたあと、X-Rayのサービスマップを開いて、リクエストの流れが表示されることを確認しましょう。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_009_xray_trace.png"
+        }
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# STEP 6: ALBアクセスログのS3保存設定\n\n## やること\n1. AWSコンソール → **EC2** → **ロードバランサー**を開く\n2. `sre-handson-alb` を選択 → 「属性の編集」\n3. 「アクセスログ」を **有効化**\n4. S3バケット名を指定（例: `sre-handson-alb-logs-<あなたのアカウントID>`）\n\n## ALBアクセスログで分かること\n- クライアントIPアドレス\n- レスポンスタイム（ms単位）\n- HTTPステータスコード\n- ターゲットへの転送時間\n\n> S3はAWSのオブジェクトストレージ（ファイル置き場）です。\n> ログ保存コストは非常に安価（数円〜数十円/月）です。",
+      "narration": "STEP 6はALBのアクセスログをS3に保存する設定です。ALBのコンソールから「アクセスログ」を有効にして、保存先のS3バケットを指定するだけで完了します。S3はAWSのファイル置き場サービスです。アクセスログにはクライアントのIPアドレス、レスポンスタイム、HTTPステータスコードなどが記録されます。これがセクション4以降のアクセス分析で大いに役立ちます。保存コストも月数円程度と非常に安価です。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_010_alb_s3_logs.png"
+        }
+      }
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# 動作確認: すべてつながっているか確認しよう\n\n## チェックリスト\n\n| 確認項目 | 確認場所 |\n|---|---|\n| ALB経由でデモアプリにアクセスできる | ALBのDNS名をブラウザで開く |\n| `/api/data` で5xxが一定割合で返る | curlを複数回実行 |\n| メモリ・ディスクメトリクスが届いている | CloudWatch → メトリクス → CWAgent |\n| JSONアプリログが届いている | CloudWatch Logs → `/aws/ec2/sre-handson/webapp` |\n| X-Rayトレースが表示される | X-Ray → サービスマップ |\n| ALBアクセスログがS3に保存されている | S3バケットを確認 |\n\n> すべてチェックできれば、セクション3以降の準備完了です",
+      "narration": "最後に動作確認です。ALB経由でデモアプリにアクセスできるか、/api/dataを複数回叩くと一定割合で5xxが返るか、CloudWatchにメモリとディスクのメトリクスが届いているか、/aws/ec2/sre-handson/webappにJSONログが届いているか、X-Rayのサービスマップにトレースが表示されているか、S3にALBアクセスログが保存されているかを確認してください。これらが確認できれば、セクション3以降の学習準備は完了です。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_011_verification.png"
+        }
+      }
+    },
+    {
+      "slide_number": 13,
+      "marp_content": "# ⚠️ 作業後は必ずリソースを停止しましょう\n\n## 停止手順\n\n```\n1. EC2コンソール → インスタンスを選択\n   → 「インスタンスの状態」→「停止」\n\n2. RDSコンソール → DBインスタンスを選択\n   → 「アクション」→「停止」\n   （最大7日間停止。7日後に自動起動されるので注意）\n```\n\n## ⚠️ RDSの注意点\n- RDSは停止から **7日後に自動的に再起動**されます\n- 長期間使わない場合は **削除（スナップショット取得後）** を推奨\n\n> 次回ハンズオンを再開する際は EC2・RDS を「起動」すれば続きから始められます",
+      "narration": "ハンズオンが終わったら必ずEC2とRDSを停止してください。EC2はインスタンスの状態メニューから「停止」を選ぶだけです。RDSも同様に停止できますが、注意点があります。RDSは停止してから7日後に自動的に再起動してしまいます。長期間使わないときはスナップショットを取ってから削除することをおすすめします。次回ハンズオンを再開するときは、EC2とRDSを起動するだけで続きから始められます。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_012_shutdown.png"
+        }
+      }
+    },
+    {
+      "slide_number": 14,
+      "marp_content": "# このレクチャーのまとめ\n\n## 今回作ったもの\n\n- **ALB + EC2(Flaskデモアプリ) + RDS MySQL** の学習環境\n- 確率で5xxを返すデモアプリ（UserDataで自動生成）\n- **CloudWatch Agent / CloudWatch Logs / X-Ray** による可観測性の土台\n- JSONログ: `/aws/ec2/sre-handson/webapp`\n- **S3** への ALB アクセスログ保存\n\n> 次のセクション3では、この環境を使って\n> **CloudWatchによるメトリクス監視** を深掘りします",
+      "narration": "今回のレクチャーのまとめです。ALB、EC2上のFlaskデモアプリ、RDS MySQLを含む学習環境をCloudFormationで作成しました。RDSは後続セクションや拡張用に残していますが、今回のデモアプリ自体はデータベースを使いません。アプリは確率で5xxを返すため、エラー率、ログ、トレース、アラームの学習に向いた環境になっています。次のセクション3では、この環境を使ってCloudWatchによるメトリクス監視を深掘りしていきます。",
+      "diagram": {
+        "type": "external_png",
+        "data": {
+          "path": "assets/slide_013_aws_architecture.png"
+        }
+      }
+    }
+  ]
+}

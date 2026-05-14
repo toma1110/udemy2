@@ -1,0 +1,661 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Udemy AI Company render worker on AWS Batch with ECS Fargate. No always-on ECS service or NAT Gateway."
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: udemy-render
+    Description: Lowercase project name used for resource names.
+    AllowedPattern: "^[a-z0-9][a-z0-9-]{2,32}[a-z0-9]$"
+    ConstraintDescription: Use 4 to 34 lowercase letters, numbers, and hyphens.
+  ArtifactBucketName:
+    Type: String
+    Default: ""
+    Description: Optional globally unique S3 bucket name. Leave empty to let CloudFormation generate one.
+    AllowedPattern: "^$|^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
+    ConstraintDescription: Leave empty or provide a valid S3 bucket name.
+  JobSize:
+    Type: String
+    Default: vcpu4-memory8gb
+    Description: Fargate job size for render jobs.
+    AllowedValues:
+      - vcpu4-memory8gb
+      - vcpu4-memory16gb
+      - vcpu8-memory16gb
+  MaxvCpus:
+    Type: Number
+    Default: 8
+    MinValue: 4
+    MaxValue: 64
+    Description: Maximum vCPUs AWS Batch can run concurrently in this compute environment.
+  EphemeralStorageGiB:
+    Type: Number
+    Default: 50
+    MinValue: 21
+    MaxValue: 200
+    Description: Fargate ephemeral storage for each render job. The first 20 GiB is included by Fargate.
+  LogRetentionDays:
+    Type: Number
+    Default: 14
+    AllowedValues:
+      - 1
+      - 3
+      - 5
+      - 7
+      - 14
+      - 30
+      - 60
+      - 90
+    Description: CloudWatch Logs retention in days.
+  JobTimeoutSeconds:
+    Type: Number
+    Default: 3600
+    MinValue: 600
+    MaxValue: 21600
+    Description: Default timeout for a render job attempt.
+  BuildComputeType:
+    Type: String
+    Default: BUILD_GENERAL1_MEDIUM
+    Description: CodeBuild compute type for building and pushing the render worker image.
+    AllowedValues:
+      - BUILD_GENERAL1_SMALL
+      - BUILD_GENERAL1_MEDIUM
+      - BUILD_GENERAL1_LARGE
+
+Mappings:
+  JobSizeMap:
+    vcpu4-memory8gb:
+      Vcpu: "4"
+      Memory: "8192"
+    vcpu4-memory16gb:
+      Vcpu: "4"
+      Memory: "16384"
+    vcpu8-memory16gb:
+      Vcpu: "8"
+      Memory: "16384"
+
+Conditions:
+  HasArtifactBucketName: !Not [!Equals [!Ref ArtifactBucketName, ""]]
+
+Resources:
+  RenderVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.42.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-vpc"
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-igw"
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderVpcGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref RenderVpc
+      InternetGatewayId: !Ref RenderInternetGateway
+
+  RenderPublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref RenderVpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: 10.42.0.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-public-a"
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderPublicSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref RenderVpc
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: 10.42.16.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-public-b"
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderPublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RenderVpc
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-public-rt"
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderPublicDefaultRoute:
+    Type: AWS::EC2::Route
+    DependsOn: RenderVpcGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RenderPublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref RenderInternetGateway
+
+  RenderPublicSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref RenderPublicSubnetA
+      RouteTableId: !Ref RenderPublicRouteTable
+
+  RenderPublicSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref RenderPublicSubnetB
+      RouteTableId: !Ref RenderPublicRouteTable
+
+  RenderSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub "${ProjectName} Batch Fargate render jobs. No inbound access."
+      VpcId: !Ref RenderVpc
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow outbound access for S3, ECR, CloudWatch Logs, and package-free runtime calls.
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-render-sg"
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !If [HasArtifactBucketName, !Ref ArtifactBucketName, !Ref AWS::NoValue]
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-temp-render-inputs
+            Status: Enabled
+            Prefix: tmp/
+            ExpirationInDays: 14
+          - Id: abort-incomplete-multipart-uploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+        - Key: Purpose
+          Value: udemy-render-artifacts
+
+  RenderRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "${ProjectName}-worker"
+      EmptyOnDelete: true
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: MUTABLE
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep the latest 10 render worker images",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 10
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+        - Key: Purpose
+          Value: udemy-render-worker
+
+  VoicevoxRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "${ProjectName}-voicevox-worker"
+      EmptyOnDelete: true
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: MUTABLE
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep the latest 5 VOICEVOX worker images",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 5
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+        - Key: Purpose
+          Value: udemy-voicevox-worker
+
+  RenderLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/batch/${ProjectName}/render"
+      RetentionInDays: !Ref LogRetentionDays
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+        - Key: Purpose
+          Value: udemy-render-logs
+
+  VoicevoxLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/batch/${ProjectName}/voicevox"
+      RetentionInDays: !Ref LogRetentionDays
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+        - Key: Purpose
+          Value: udemy-voicevox-logs
+
+  RenderJobExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-batch-execution-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderJobRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-batch-job-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: render-artifact-bucket-access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: ListRenderArtifactBucket
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource: !GetAtt RenderArtifactBucket.Arn
+              - Sid: ReadWriteRenderArtifacts
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:AbortMultipartUpload
+                Resource: !Sub "${RenderArtifactBucket.Arn}/*"
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderWorkerBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-codebuild-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: render-worker-image-build
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: WriteCodeBuildLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${ProjectName}-worker-build"
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${ProjectName}-worker-build:*"
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${ProjectName}-voicevox-build"
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${ProjectName}-voicevox-build:*"
+              - Sid: ReadBuildSource
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                Resource: !Sub "${RenderArtifactBucket.Arn}/build-source/*"
+              - Sid: GetEcrAuthorizationToken
+                Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: "*"
+              - Sid: PushRenderWorkerImage
+                Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:BatchGetImage
+                  - ecr:CompleteLayerUpload
+                  - ecr:DescribeRepositories
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:InitiateLayerUpload
+                  - ecr:PutImage
+                  - ecr:UploadLayerPart
+                Resource:
+                  - !GetAtt RenderRepository.Arn
+                  - !GetAtt VoicevoxRepository.Arn
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+
+  RenderWorkerBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "${ProjectName}-worker-build"
+      Description: Build and push the Udemy render worker image to ECR.
+      ServiceRole: !GetAtt RenderWorkerBuildRole.Arn
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Source:
+        Type: S3
+        Location: !Sub "${RenderArtifactBucket}/build-source/worker-source.zip"
+        BuildSpec: !Sub |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - echo "Logging in to ECR"
+                - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com"
+                - IMAGE_URI="${RenderRepository.RepositoryUri}:${!IMAGE_TAG}"
+                - echo "Building $IMAGE_URI"
+            build:
+              commands:
+                - docker build --platform linux/amd64 -t "$IMAGE_URI" .
+            post_build:
+              commands:
+                - docker push "$IMAGE_URI"
+                - echo "$IMAGE_URI" > image-uri.txt
+      Environment:
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/standard:7.0
+        ComputeType: !Ref BuildComputeType
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: IMAGE_TAG
+            Type: PLAINTEXT
+            Value: latest
+      TimeoutInMinutes: 60
+      QueuedTimeoutInMinutes: 60
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub "/aws/codebuild/${ProjectName}-worker-build"
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+        - Key: Purpose
+          Value: udemy-render-worker-build
+
+  VoicevoxWorkerBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "${ProjectName}-voicevox-build"
+      Description: Build and push the Udemy VOICEVOX worker image to ECR.
+      ServiceRole: !GetAtt RenderWorkerBuildRole.Arn
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Source:
+        Type: S3
+        Location: !Sub "${RenderArtifactBucket}/build-source/voicevox-source.zip"
+        BuildSpec: !Sub |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - echo "Logging in to ECR"
+                - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com"
+                - IMAGE_URI="${VoicevoxRepository.RepositoryUri}:${!IMAGE_TAG}"
+                - echo "Building $IMAGE_URI"
+            build:
+              commands:
+                - docker build --platform linux/amd64 -t "$IMAGE_URI" .
+            post_build:
+              commands:
+                - docker push "$IMAGE_URI"
+                - echo "$IMAGE_URI" > image-uri.txt
+      Environment:
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/standard:7.0
+        ComputeType: !Ref BuildComputeType
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: IMAGE_TAG
+            Type: PLAINTEXT
+            Value: latest
+      TimeoutInMinutes: 60
+      QueuedTimeoutInMinutes: 60
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub "/aws/codebuild/${ProjectName}-voicevox-build"
+      Tags:
+        - Key: ManagedBy
+          Value: ai-company-v1
+        - Key: Purpose
+          Value: udemy-voicevox-worker-build
+
+  RenderComputeEnvironment:
+    Type: AWS::Batch::ComputeEnvironment
+    Properties:
+      ComputeEnvironmentName: !Sub "${ProjectName}-fargate-ce"
+      Type: MANAGED
+      State: ENABLED
+      ComputeResources:
+        Type: FARGATE
+        MaxvCpus: !Ref MaxvCpus
+        Subnets:
+          - !Ref RenderPublicSubnetA
+          - !Ref RenderPublicSubnetB
+        SecurityGroupIds:
+          - !Ref RenderSecurityGroup
+      Tags:
+        ManagedBy: ai-company-v1
+        Purpose: udemy-render-worker
+
+  RenderJobQueue:
+    Type: AWS::Batch::JobQueue
+    Properties:
+      JobQueueName: !Sub "${ProjectName}-queue"
+      JobQueueType: ECS_FARGATE
+      Priority: 10
+      State: ENABLED
+      ComputeEnvironmentOrder:
+        - Order: 1
+          ComputeEnvironment: !Ref RenderComputeEnvironment
+      Tags:
+        ManagedBy: ai-company-v1
+        Purpose: udemy-render-worker
+
+  RenderJobDefinition:
+    Type: AWS::Batch::JobDefinition
+    Properties:
+      JobDefinitionName: !Sub "${ProjectName}-worker"
+      Type: container
+      PlatformCapabilities:
+        - FARGATE
+      PropagateTags: true
+      Parameters:
+        manifest_s3_uri: ""
+      RetryStrategy:
+        Attempts: 2
+      Timeout:
+        AttemptDurationSeconds: !Ref JobTimeoutSeconds
+      ContainerProperties:
+        Image: !Sub "${RenderRepository.RepositoryUri}:latest"
+        Command:
+          - "--manifest-s3-uri"
+          - "Ref::manifest_s3_uri"
+        ExecutionRoleArn: !GetAtt RenderJobExecutionRole.Arn
+        JobRoleArn: !GetAtt RenderJobRole.Arn
+        EphemeralStorage:
+          SizeInGiB: !Ref EphemeralStorageGiB
+        FargatePlatformConfiguration:
+          PlatformVersion: LATEST
+        NetworkConfiguration:
+          AssignPublicIp: ENABLED
+        RuntimePlatform:
+          CpuArchitecture: X86_64
+          OperatingSystemFamily: LINUX
+        ResourceRequirements:
+          - Type: VCPU
+            Value: !FindInMap [JobSizeMap, !Ref JobSize, Vcpu]
+          - Type: MEMORY
+            Value: !FindInMap [JobSizeMap, !Ref JobSize, Memory]
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref RenderLogGroup
+            awslogs-region: !Ref AWS::Region
+            awslogs-stream-prefix: render
+      Tags:
+        ManagedBy: ai-company-v1
+        Purpose: udemy-render-worker
+
+  VoicevoxJobDefinition:
+    Type: AWS::Batch::JobDefinition
+    Properties:
+      JobDefinitionName: !Sub "${ProjectName}-voicevox-worker"
+      Type: container
+      PlatformCapabilities:
+        - FARGATE
+      PropagateTags: true
+      Parameters:
+        manifest_s3_uri: ""
+      RetryStrategy:
+        Attempts: 2
+      Timeout:
+        AttemptDurationSeconds: !Ref JobTimeoutSeconds
+      ContainerProperties:
+        Image: !Sub "${VoicevoxRepository.RepositoryUri}:latest"
+        Command:
+          - "--manifest-s3-uri"
+          - "Ref::manifest_s3_uri"
+        ExecutionRoleArn: !GetAtt RenderJobExecutionRole.Arn
+        JobRoleArn: !GetAtt RenderJobRole.Arn
+        EphemeralStorage:
+          SizeInGiB: !Ref EphemeralStorageGiB
+        FargatePlatformConfiguration:
+          PlatformVersion: LATEST
+        NetworkConfiguration:
+          AssignPublicIp: ENABLED
+        RuntimePlatform:
+          CpuArchitecture: X86_64
+          OperatingSystemFamily: LINUX
+        ResourceRequirements:
+          - Type: VCPU
+            Value: !FindInMap [JobSizeMap, !Ref JobSize, Vcpu]
+          - Type: MEMORY
+            Value: !FindInMap [JobSizeMap, !Ref JobSize, Memory]
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref VoicevoxLogGroup
+            awslogs-region: !Ref AWS::Region
+            awslogs-stream-prefix: voicevox
+      Tags:
+        ManagedBy: ai-company-v1
+        Purpose: udemy-voicevox-worker
+
+Outputs:
+  ArtifactBucketName:
+    Description: S3 bucket for render input manifests and output files.
+    Value: !Ref RenderArtifactBucket
+  RepositoryUri:
+    Description: ECR repository URI for the render worker image.
+    Value: !GetAtt RenderRepository.RepositoryUri
+  VoicevoxRepositoryUri:
+    Description: ECR repository URI for the VOICEVOX worker image.
+    Value: !GetAtt VoicevoxRepository.RepositoryUri
+  JobQueueName:
+    Description: AWS Batch job queue name.
+    Value: !Sub "${ProjectName}-queue"
+  JobQueueArn:
+    Description: AWS Batch job queue ARN.
+    Value: !Ref RenderJobQueue
+  JobDefinitionArn:
+    Description: AWS Batch render job definition ARN with revision.
+    Value: !Ref RenderJobDefinition
+  VoicevoxJobDefinitionArn:
+    Description: AWS Batch VOICEVOX job definition ARN with revision.
+    Value: !Ref VoicevoxJobDefinition
+  LogGroupName:
+    Description: CloudWatch Logs group for render worker logs.
+    Value: !Ref RenderLogGroup
+  VoicevoxLogGroupName:
+    Description: CloudWatch Logs group for VOICEVOX worker logs.
+    Value: !Ref VoicevoxLogGroup
+  BuildProjectName:
+    Description: CodeBuild project name for building the render worker image.
+    Value: !Ref RenderWorkerBuildProject
+  VoicevoxBuildProjectName:
+    Description: CodeBuild project name for building the VOICEVOX worker image.
+    Value: !Ref VoicevoxWorkerBuildProject
+  VpcId:
+    Description: VPC created for Fargate render jobs.
+    Value: !Ref RenderVpc
+  PublicSubnetIds:
+    Description: Public subnets used by Fargate jobs.
+    Value: !Join [",", [!Ref RenderPublicSubnetA, !Ref RenderPublicSubnetB]]

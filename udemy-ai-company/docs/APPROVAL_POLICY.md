@@ -8,15 +8,22 @@ The current EC2 operation model allows Codex to run with full working permission
 
 - CloudFormation stack create, update, delete, or deploy
 - AWS operations required by the approved task scope
+- Google Drive uploads for CEO/QA review, including anyone-reader sharing in the configured review folder
 - `git push`
 - `git merge`
 
 ## Always Requires Human Approval
 
 - Publishing course content
-- Google Drive public sharing changes for final materials
+- Changing, replacing, or deleting final approved Google Drive materials
 - External posting outside the repository
 - Irreversible destructive operations outside the approved task scope
+
+## Google Drive Review Uploads
+
+Google Drive is the normal review surface for CEO and QA video checks. If a video has passed local build validation and the task is for CEO/QA review, Codex must upload it to the configured Google Drive folder without asking for prior CEO approval, save `drive_upload.json`, and comment the Drive URL on the Issue.
+
+This review upload is not a publish action. Udemy publishing, external posting, or modifying final approved Drive assets still requires explicit CEO approval.
 
 ## Approval Record
 

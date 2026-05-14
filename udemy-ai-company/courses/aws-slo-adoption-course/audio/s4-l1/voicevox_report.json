@@ -1,0 +1,13 @@
+{
+  "script_json": "udemy-ai-company/courses/aws-slo-adoption-course/scripts/s4-l1_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s4-l1",
+  "slides": 1,
+  "duration": 17.429333333333332,
+  "audio": [
+    {
+      "slide_number": 6,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s4-l1/slide_006.wav",
+      "duration_sec": 17.429333333333332
+    }
+  ]
+}

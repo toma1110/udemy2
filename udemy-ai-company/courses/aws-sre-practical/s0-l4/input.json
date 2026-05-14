@@ -1,0 +1,19 @@
+{
+  "section": 0,
+  "lecture": 4,
+  "title": "AWSアカウント・環境セットアップ",
+  "duration_min": 15,
+  "learning_objectives": "コースを進めるために必要なAWS環境をセットアップし、ハンズオンを安全に行える状態にする。",
+  "key_points": [
+    "AWSアカウント作成（無料枠で十分）",
+    "IAMユーザー作成とMFA設定（rootアカウント直接使用の危険性）",
+    "IAMポリシー: AdministratorAccessを付与（学習用）",
+    "AWS CLIのインストールと設定（aws configure）",
+    "リージョンの選択: ap-northeast-1（東京）を使う理由",
+    "無料枠の範囲と課金防止のアラート設定（AWS Budgets で月次予算アラートを設定。詳しい手順はセクション9で扱う）",
+    "AWS CloudShellまたはローカル環境のどちらでも進められる（Cloud9は2025年7月EOL済み）",
+    "CloudShellとは: マネジメントコンソール上で使えるブラウザベースのターミナル。AWS CLI込み・追加費用なし",
+    "セットアップ確認: EC2コンソールを開いてみる"
+  ],
+  "notes": "実際にAWSを操作するハンズオン系レクチャー。スクリーンキャプチャ的な説明になるが、スライドはフロー図を使って手順を明示する。課金防止の注意点を強調する。Cloud9はEOLのためCloudShellを推奨。CloudShellはマネコン右上のアイコンから起動でき、AWS CLI・Python・Gitが最初から入っている。"
+}

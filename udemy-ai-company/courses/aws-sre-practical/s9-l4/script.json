@@ -1,0 +1,241 @@
+{
+  "section": 9,
+  "lecture": 4,
+  "title": "ハンズオン: コストアラートを設定する",
+  "duration_min": 15,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# ハンズオン: コストアラートを設定する\n\n## 予算超過・異常課金を自動検知する仕組みを作ろう\n\n**Section 9 / Lecture 4**",
+      "narration": "このレクチャーはハンズオン形式です。AWS Budgets とコストアノマリーディテクションを実際に設定して、予算の超過や異常な課金を自動で検知できる仕組みを一緒に作っていきましょう。設定自体はとてもシンプルで、15分あれば完了します。コスパ最高のハンズオンですので、ぜひ手を動かしながら進めてください。",
+      "diagram": null,
+      "image": {
+        "style": "title",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 1 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, title layout, crisp Japanese typography.\nText (verbatim): # ハンズオン: コストアラートを設定する\n\n## 予算超過・異常課金を自動検知する仕組みを作ろう\n\n**Section 9 / Lecture 4**\nNotes for narration context: このレクチャーはハンズオン形式です。AWS Budgetsとコストアノマリーディテクションを実際に設定して、予算の超過や異常な課金を自動で検知できる仕組みを一緒に作っていきましょう。設定自体はとてもシンプルで、15分あれば完了します。コスパ最高のハンズオンですので、ぜひ手を動かしながら進めてください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "bd1375b655ad880d",
+        "path": "slides_gpt_image2/slide_001.png"
+      }
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# 今日のハンズオン全体像\n\n設定する内容は大きく **2つ** です。\n\n図で全体の流れを確認しましょう。",
+      "narration": "まず今日やることを整理します。設定するのは2つです。1つ目がエーダブリューエスバジェッツで月20ドルの予算アラート、2つ目がコストアノマリーディテクションで異常課金の検知です。2つの仕組みを、それぞれ独立して設定していきます。順番に進めていきましょう。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "ハンズオン全体像",
+          "steps": [
+            {
+              "label": "① AWS Budgets",
+              "sublabel": "月$20予算アラート",
+              "style": "highlight"
+            },
+            {
+              "label": "② Cost Anomaly Detection",
+              "sublabel": "異常課金の自動検知",
+              "style": "highlight"
+            }
+          ],
+          "current": 0
+        }
+      },
+      "image": {
+        "style": "agenda",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 2 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, agenda layout, crisp Japanese typography.\nText (verbatim): # 今日のハンズオン全体像\n\n設定する内容は大きく **2つ** です。\n\n図で全体の流れを確認しましょう。\nNotes for narration context: まず今日やることを整理します。設定するのは2つです。1つ目がエーダブリューエスバジェッツで月20ドルの予算アラート、2つ目がコストアノマリーディテクションで異常課金の検知です。これがセクション0で予告していた課金アラートの実装になります。それぞれ独立して設定できますので、順番に進めていきましょう。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "e912f20f734a75d4",
+        "path": "slides_gpt_image2/slide_002.png"
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# 手順① AWS Budgets を開く\n\n**コンソール操作**\n\n1. AWSマネジメントコンソールにログイン\n2. 右上の **アカウント名** をクリック\n3. **「請求とコスト管理」** を選択\n4. 左メニューから **「Budgets」** をクリック\n5. **「予算を作成」** ボタンを押す\n\n> 💡 検索バーで「Budgets」と入力しても素早く開けます",
+      "narration": "では実際に操作していきましょう。まずAWSマネジメントコンソールにログインしてください。画面みぎうえのアカウント名をクリックすると「請求とコスト管理」というメニューが出てきます。これを選択して、左側のメニューからBudgetsを開きます。画面中央に「予算を作成」ボタンが表示されますので、それをクリックしてください。検索バーでBudgetsと入力しても素早く移動できますよ。",
+      "diagram": null,
+      "image": {
+        "style": "checklist",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 3 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, checklist layout, crisp Japanese typography.\nText (verbatim): # 手順① AWS Budgets を開く\n\n**コンソール操作**\n\n1. AWSマネジメントコンソールにログイン\n2. 右上の **アカウント名** をクリック\n3. **「請求とコスト管理」** を選択\n4. 左メニューから **「Budgets」** をクリック\n5. **「予算を作成」** ボタンを押す\n\n> 💡 検索バーで「Budgets」と入力しても素早く開けます\nNotes for narration context: では実際に操作していきましょう。まずAWSマネジメントコンソールにログインしてください。画面みぎうえのアカウント名をクリックすると「請求とコスト管理」というメニューが出てきます。これを選択して、左側のメニューからBudgetsを開きます。画面中央に「予算を作成」ボタンが表示されますので、それをクリックしてください。検索バーでBudgetsと入力しても素早く移動できますよ。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "af40cd31ca2c939f",
+        "path": "slides_gpt_image2/slide_003.png"
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# 手順② 予算の種類と金額を設定する\n\n**設定値（テンプレートを使用）**\n\n| 項目 | 設定値 |\n|------|--------|\n| テンプレート | 月次コスト予算 |\n| 予算名 | `monthly-cost-budget` |\n| 予算額 | **$20.00** |\n| 通知先メール | 自分のメールアドレス |\n\n**ポイント: 段階的な通知を設定**\n- **80%** 到達時（$16相当）→ 警告メール\n- **100%** 到達時（$20相当）→ 超過メール",
+      "narration": "予算作成では「テンプレートを使用」を選び「月次コスト予算」を選択します。予算名はわかりやすい名前をつけておきましょう。予算額は今回$20に設定します。通知先は自分のメールアドレスを入力してください。重要なのが段階的な通知の設定です。80%つまり$16に達した時点で警告メール、100%の$20を超えた時点で超過メールが届くように設定します。早めに気づける仕組みがポイントです。",
+      "diagram": null,
+      "image": {
+        "style": "checklist",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 4 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, checklist layout, crisp Japanese typography.\nText (verbatim): # 手順② 予算の種類と金額を設定する\n\n**設定値（テンプレートを使用）**\n\n| 項目 | 設定値 |\n|------|--------|\n| テンプレート | 月次コスト予算 |\n| 予算名 | `monthly-cost-budget` |\n| 予算額 | **$20.00** |\n| 通知先メール | 自分のメールアドレス |\n\n**ポイント: 段階的な通知を設定**\n- **80%** 到達時（$16相当）→ 警告メール\n- **100%** 到達時（$20相当）→ 超過メール\nNotes for narration context: 予算作成では「テンプレートを使用」を選び「月次コスト予算」を選択します。予算名はわかりやすい名前をつけておきましょう。予算額は今回$20に設定します。通知先は自分のメールアドレスを入力してください。重要なのが段階的な通知の設定です。80%つまり$16に達した時点で警告メール、100%の$20を超えた時点で超過メールが届くように設定します。早めに気づける仕組みがポイントです。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "0fa10fe048f546d5",
+        "path": "slides_gpt_image2/slide_004.png"
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# 手順③ Cost Anomaly Detection のモニターを作成\n\n**Cost Anomaly Detection とは？**\n機械学習を使って「いつもと違う異常な課金パターン」を自動で検知するサービスです。\n\n**操作手順**\n\n1. 左メニューから **「Cost Anomaly Detection」** を選択\n2. **「モニターを作成」** をクリック\n3. モニタータイプ: **「AWSのサービス」** を選択\n4. モニター名: `service-anomaly-monitor`\n5. **「次へ」** をクリック",
+      "narration": "次にコストアノマリーディテクションを設定します。これは機械学習を使って「いつもと違う異常な課金パターン」を自動で検知してくれるサービスです。予算アラートが「上限を超えたら通知」するのに対して、こちらは「急に増えた」という変化を検知できるのが特徴です。左メニューからコストアノマリーディテクションを開き、モニターを作成します。モニタータイプはAWSのサービス単位を選んでください。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 5 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, concept layout, crisp Japanese typography.\nText (verbatim): # 手順③ Cost Anomaly Detection のモニターを作成\n\n**Cost Anomaly Detection とは？**\n機械学習を使って「いつもと違う異常な課金パターン」を自動で検知するサービスです。\n\n**操作手順**\n\n1. 左メニューから **「Cost Anomaly Detection」** を選択\n2. **「モニターを作成」** をクリック\n3. モニタータイプ: **「AWSのサービス」** を選択\n4. モニター名: `service-anomaly-monitor`\n5. **「次へ」** をクリック\nNotes for narration context: 次にコストアノマリーディテクションを設定します。これは機械学習を使って「いつもと違う異常な課金パターン」を自動で検知してくれるサービスです。予算アラートが「上限を超えたら通知」するのに対して、こちらは「急に増えた」という変化を検知できるのが特徴です。左メニューからコストアノマリーディテクションを開き、モニターを作成します。モニタータイプはAWSのサービス単位を選んでください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "0fb4d77a5c5f11f4",
+        "path": "slides_gpt_image2/slide_005.png"
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# 手順④ 異常検出のしきい値を設定する\n\n**アラートサブスクリプションの設定**\n\n| 項目 | 設定値 |\n|------|--------|\n| サブスクリプション名 | `anomaly-alert` |\n| しきい値タイプ | 絶対値 **または** 相対値 |\n| 絶対値しきい値 | **$5 以上** の異常を検知 |\n| 相対値しきい値 | **前日比 30% 以上** の増加 |\n| 通知方法 | **Eメール**（直接入力可能） |\n\n> ⚠️ SNS Topicを使う場合は事前にTopicを作成しておく必要があります",
+      "narration": "続いてアラートのしきい値を設定します。しきい値には2種類あります。絶対値は「$5以上の異常コストが発生したら通知」、相対値は「前日比30%以上コストが増えたら通知」です。両方設定することで見逃しを減らせます。通知方法はEメールを選べばSNS Topicを作らなくても直接メールアドレスを入力できて簡単です。SNS Topicを使いたい場合は事前にTopicを作成しておく必要があります。",
+      "diagram": null,
+      "image": {
+        "style": "checklist",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 6 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, checklist layout, crisp Japanese typography.\nText (verbatim): # 手順④ 異常検出のしきい値を設定する\n\n**アラートサブスクリプションの設定**\n\n| 項目 | 設定値 |\n|------|--------|\n| サブスクリプション名 | `anomaly-alert` |\n| しきい値タイプ | 絶対値 **または** 相対値 |\n| 絶対値しきい値 | **$5 以上** の異常を検知 |\n| 相対値しきい値 | **前日比 30% 以上** の増加 |\n| 通知方法 | **Eメール**（直接入力可能） |\n\n> ⚠️ SNS Topicを使う場合は事前にTopicを作成しておく必要があります\nNotes for narration context: 続いてアラートのしきい値を設定します。しきい値には2種類あります。絶対値は「$5以上の異常コストが発生したら通知」、相対値は「前日比30%以上コストが増えたら通知」です。両方設定することで見逃しを減らせます。通知方法はEメールを選べばSNS Topicを作らなくても直接メールアドレスを入力できて簡単です。SNS Topicを使いたい場合は事前にTopicを作成しておく必要があります。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "d6a8a97a13645b76",
+        "path": "slides_gpt_image2/slide_006.png"
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# 手順⑤ SNS Topic と Email 通知の接続（補足）\n\n**SNS（Simple Notification Service）とは？**\n通知を一元管理・配信するサービスです。メール・Slack・Lambdaなどに柔軟に転送できます。\n\n**SNS Topic を使う場合の流れ**",
+      "narration": "SNS TopicをEmail通知に接続する方法も補足として説明します。SNSとはSimple Notification Serviceの略で、通知を一元管理して様々な宛先に転送できるサービスです。コストアノマリーディテクションからSNS Topicに通知を送り、そのTopicからメールアドレスに転送するイメージです。Eメールを直接入力する方法より手順は増えますが、後からSlackやLambdaにも通知先を拡張できる柔軟な構成になります。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "SNS Topic 経由の通知フロー",
+          "steps": [
+            {
+              "label": "Cost Anomaly Detection",
+              "desc": "異常を検知してSNSへ送信",
+              "color": "orange"
+            },
+            {
+              "label": "SNS Topic を作成",
+              "desc": "コンソール → SNS → トピック → 「作成」",
+              "color": "blue"
+            },
+            {
+              "label": "Eメールサブスクリプションを追加",
+              "desc": "TopicにEmailプロトコルで通知先を登録",
+              "color": "blue"
+            },
+            {
+              "label": "確認メールを承認",
+              "desc": "届いたメールの「Confirm subscription」をクリック",
+              "color": "green"
+            },
+            {
+              "label": "通知テスト",
+              "desc": "Cost Anomaly Detectionの設定に戻りTopicを選択",
+              "color": "green"
+            }
+          ]
+        }
+      },
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 7 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, concept layout, crisp Japanese typography.\nText (verbatim): # 手順⑤ SNS Topic と Email 通知の接続（補足）\n\n**SNS（Simple Notification Service）とは？**\n通知を一元管理・配信するサービスです。メール・Slack・Lambdaなどに柔軟に転送できます。\n\n**SNS Topic を使う場合の流れ**\nNotes for narration context: SNS TopicをEmail通知に接続する方法も補足として説明します。SNSとはSimple Notification Serviceの略で、通知を一元管理して様々な宛先に転送できるサービスです。コストアノマリーディテクションからSNS Topicに通知を送り、そのTopicからメールアドレスに転送するイメージです。Eメールを直接入力する方法より手順は増えますが、後からSlackやLambdaにも通知先を拡張できる柔軟な構成になります。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "0d1da639e82ebe16",
+        "path": "slides_gpt_image2/slide_007.png"
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# 手順⑥ コスト配分タグを有効化する\n\n**コスト配分タグとは？**\nEC2やRDSなどのリソースに付けた「タグ」をコスト集計のキーとして使う設定です。\n「どのプロジェクトにいくらかかっているか」が可視化できます。\n\n**操作手順**\n\n1. 「請求とコスト管理」→ **「コスト配分タグ」**\n2. タグ一覧から有効化したいタグを選択\n   - 例: `Project`、`Environment`、`Owner`\n3. **「有効化」** ボタンをクリック\n\n> ⏰ 有効化後、タグがコストに反映されるまで **最大24時間** かかります",
+      "narration": "続いてコストエクスプローラーでコスト配分タグを有効化する手順です。コスト配分タグとは、EC2やRDSなどのリソースに付けたタグをコスト集計のキーとして使う設定のことです。たとえばProjectタグやEnvironmentタグを有効化しておくと、プロジェクト別・環境別のコストをコストエクスプローラーで確認できるようになります。有効化してから反映されるまで最大24時間かかるので、早めに設定しておくことをおすすめします。",
+      "diagram": null,
+      "image": {
+        "style": "checklist",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 8 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, checklist layout, crisp Japanese typography.\nText (verbatim): # 手順⑥ コスト配分タグを有効化する\n\n**コスト配分タグとは？**\nEC2やRDSなどのリソースに付けた「タグ」をコスト集計のキーとして使う設定です。\n「どのプロジェクトにいくらかかっているか」が可視化できます。\n\n**操作手順**\n\n1. 「請求とコスト管理」→ **「コスト配分タグ」**\n2. タグ一覧から有効化したいタグを選択\n   - 例: `Project`、`Environment`、`Owner`\n3. **「有効化」** ボタンをクリック\n\n> ⏰ 有効化後、タグがコストに反映されるまで **最大24時間** かかります\nNotes for narration context: 続いてコストエクスプローラーでコスト配分タグを有効化する手順です。コスト配分タグとは、EC2やRDSなどのリソースに付けたタグをコスト集計のキーとして使う設定のことです。たとえばProjectタグやEnvironmentタグを有効化しておくと、プロジェクト別・環境別のコストをコストエクスプローラーで確認できるようになります。有効化してから反映されるまで最大24時間かかるので、早めに設定しておくことをおすすめします。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "6ec53256582a1ebb",
+        "path": "slides_gpt_image2/slide_008.png"
+      }
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# 設定後の確認ポイント\n\n設定が完了したら、以下を確認しましょう。\n\n**Before / After で比較してみます。**",
+      "narration": "設定が完了したら、Before・Afterで何が変わったかを確認しましょう。設定前は課金に気づかず月末に請求書を見て驚く状態でしたが、設定後は段階的なアラートと異常検知によって問題が起きたタイミングで通知が届くようになります。これだけで運用の安心感がまったく変わりますよ。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "設定前 vs 設定後",
+          "left": {
+            "label": "設定前（Before）",
+            "items": [
+              "月末に請求書を見て初めて気づく",
+              "どのサービスが高いか不明",
+              "異常課金に気づくのが遅れる",
+              "コスト増加の原因調査に時間がかかる"
+            ]
+          },
+          "right": {
+            "label": "設定後（After）",
+            "items": [
+              "80%/100%で段階的にメール通知",
+              "タグでサービス・プロジェクト別に把握",
+              "$5超 or 前日比30%増で即座に検知",
+              "Cost Explorerでタグ別分析が可能"
+            ]
+          }
+        }
+      },
+      "image": {
+        "style": "comparison",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 9 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, comparison layout, crisp Japanese typography.\nText (verbatim): # 設定後の確認ポイント\n\n設定が完了したら、以下を確認しましょう。\n\n**Before / After で比較してみます。**\nNotes for narration context: 設定が完了したら、Before・Afterで何が変わったかを確認しましょう。設定前は課金に気づかず月末に請求書を見て驚く状態でしたが、設定後は段階的なアラートと異常検知によって問題が起きたタイミングで通知が届くようになります。これだけで運用の安心感がまったく変わりますよ。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "a41a3ef7e3c16e62",
+        "path": "slides_gpt_image2/slide_009.png"
+      }
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# このレクチャーのまとめ\n\n## 今日設定した2つの仕組み\n\n1. **AWS Budgets** で月次予算アラートを設定した\n   → 80%・100%の段階通知でコスト超過を事前に検知\n\n2. **Cost Anomaly Detection** で異常課金を自動検知できる仕組みを作った\n   → 機械学習が「いつもと違う課金パターン」を検知してくれる\n\n> 💬 セクション0で予告した課金アラートはこれで完成です\n> 💬 コスト管理は「仕組みを作って自動化する」ことが習慣化の近道です",
+      "narration": "お疲れ様でした。今日のレクチャーのまとめです。2つの仕組みを設定しました。1つ目はエーダブリューエスバジェッツで月次予算の段階的アラート、2つ目はコストアノマリーディテクションで機械学習による異常課金の自動検知です。これで課金アラートの仕組みは完成です。コスト管理は「仕組みを作って自動化する」ことが習慣化の一番の近道です。ぜひ今日の設定を活かして安心してエーダブリューエスを使ってください。",
+      "diagram": null,
+      "image": {
+        "style": "summary",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 10 for a Japanese AWS SRE course hands-on about setting cost alerts.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, summary layout, crisp Japanese typography.\nText (verbatim): # このレクチャーのまとめ\n\n## 今日設定した2つの仕組み\n\n1. **AWS Budgets** で月次予算アラートを設定した\n   → 80%・100%の段階通知でコスト超過を事前に検知\n\n2. **Cost Anomaly Detection** で異常課金を自動検知できる仕組みを作った\n   → 機械学習が「いつもと違う課金パターン」を検知してくれる\n\n> 💬 セクション0で予告した課金アラートはこれで完成です\n> 💬 コスト管理は「仕組みを作って自動化する」ことが習慣化の近道です\nNotes for narration context: お疲れ様でした。今日のレクチャーのまとめです。2つの仕組みを設定しました。1つ目はエーダブリューエスバジェッツで月次予算の段階的アラート、2つ目はコストアノマリーディテクションで機械学習による異常課金の自動検知です。セクション0で予告していた課金アラートの実装もこれで完了です。コスト管理は「仕組みを作って自動化する」ことが習慣化の一番の近道です。ぜひ今日の設定を活かして安心してエーダブリューエスを使ってください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T10:07:39+00:00",
+        "revision": 1,
+        "source_hash": "fb4d6228a52f44a1",
+        "path": "slides_gpt_image2/slide_010.png"
+      }
+    }
+  ]
+}

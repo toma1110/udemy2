@@ -55,6 +55,8 @@ AWS SRE入門：CloudFormationで作る監視基盤ハンズオン
 
 ## CloudFormation Scope
 
+この範囲は教材ハンズオン用です。受講者が追加ツールを用意せずREADME通りに再現できるようにCloudFormationを使います。実運用IaCではCDKまたはTerraformを使う前提で考えます。
+
 対象リソース:
 
 - `AWS::CloudWatch::Alarm`

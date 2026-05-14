@@ -1,0 +1,21 @@
+[Unit]
+Description=AI-PM-01 GitHub Issue watcher for udemy2
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+Environment=HOME=/home/ubuntu
+Environment=PATH=/home/ubuntu/.npm-global/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=PYTHONUNBUFFERED=1
+Environment=PM_WATCHER_REPO=toma1110/udemy2
+Environment=PM_WATCHER_POLL_SECONDS=60
+WorkingDirectory=/home/ubuntu/workspace/udemy2/udemy-ai-company
+ExecStart=/home/ubuntu/workspace/udemy2/udemy-ai-company/scripts/run_pm_watcher.sh
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

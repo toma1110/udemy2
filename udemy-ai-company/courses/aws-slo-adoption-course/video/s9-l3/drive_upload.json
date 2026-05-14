@@ -1,0 +1,24 @@
+{
+  "id": "1HOu3lunMzJSjo0IpKKPcnS6y2tEr0Bzd",
+  "name": "s9-l3.mp4",
+  "trashed": false,
+  "parents": [
+    "1emxiqW5p04dQ9TJ_Q1c1HNWCsmI2TKzv"
+  ],
+  "webViewLink": "https://drive.google.com/file/d/1HOu3lunMzJSjo0IpKKPcnS6y2tEr0Bzd/view?usp=drivesdk",
+  "permissions": [
+    {
+      "type": "anyone",
+      "role": "reader"
+    },
+    {
+      "type": "user",
+      "role": "owner"
+    },
+    {
+      "type": "user",
+      "role": "writer"
+    }
+  ],
+  "size": "5170809"
+}

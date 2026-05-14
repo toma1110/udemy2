@@ -1,6 +1,6 @@
 # sample-aws-sre-course
 
-このサンプル講座は、AWS SRE入門向けにCloudFormationで低コストな監視基盤を作るハンズオンです。
+このサンプル講座は、AWS SRE入門向けにCloudFormationで低コストな監視基盤を作るハンズオンです。CloudFormationは教材ハンズオンの再現性を高めるために使い、実運用IaCではCDKまたはTerraformを推奨します。
 
 ## Source of Truth
 

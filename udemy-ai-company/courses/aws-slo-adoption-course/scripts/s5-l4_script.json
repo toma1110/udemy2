@@ -1,0 +1,96 @@
+{
+  "title": "s5-l4_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "smoke testでSLO基盤を確認する",
+      "message": "README通りに再現できるかを機械的に見る",
+      "narration": "このレクチャーでは、スモークテストでエスエルオー基盤を確認します。目的は、画面で見て作れた気がする、で終わらせないことです。リードミー通りに作った結果を、コマンドで再現確認します。",
+      "visual_notes": [
+        "Smoke test as reproducibility gate",
+        "README -> command -> resource existence",
+        "Not just visual confirmation"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "smoke testの役割",
+      "message": "最低限の存在確認を自動化する",
+      "narration": "スモークテストは、詳細な負荷試験ではありません。最低限の存在確認です。スタックの出力を取得し、エスエヌエス、アラーム、ダッシュボードが本当に存在するかを確認します。",
+      "visual_notes": [
+        "Scope: existence checks",
+        "Not load testing",
+        "Outputs as source for checks"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "Outputsを取得する",
+      "message": "テスト対象の名前をCloudFormationから読む",
+      "narration": "テストでは、まずクラウドフォーメーションのアウトプッツを読みます。手で名前を入力すると間違いやすいため、スタックから取得します。これにより、テンプレートで作った対象をそのまま検証できます。",
+      "visual_notes": [
+        "describe-stacks",
+        "OutputKey lookup",
+        "Topic ARN, alarm names, dashboard name"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "SNS Topicを確認する",
+      "message": "通知先が存在するかを見る",
+      "narration": "最初の確認対象は、エスエヌエストピックです。アウトプッツから取得したトピック識別子を使い、属性を取得できるかを確認します。ここが失敗する場合は、通知の出口が作れていません。",
+      "visual_notes": [
+        "get-topic-attributes",
+        "Expected TopicArn equals actual TopicArn",
+        "Notification path checkpoint"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "Alarmを確認する",
+      "message": "AvailabilityとLatencyの2本を確認する",
+      "narration": "次に、アラームを確認します。アベイラビリティ用とレイテンシ用の二本です。アラーム名で検索し、期待した名前が返ってくるかを見ます。ここで、通知条件の入口が存在することを確認できます。",
+      "visual_notes": [
+        "describe-alarms",
+        "Availability alarm",
+        "Latency alarm",
+        "AlarmName equality check"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "Dashboardを確認する",
+      "message": "可視化の入口も確認対象に入れる",
+      "narration": "最後に、ダッシュボードを確認します。ダッシュボード名で取得できれば、可視化の入口が作れています。アラームだけでなく、見る場所も確認対象に含めることで、運用の流れに近づきます。",
+      "visual_notes": [
+        "get-dashboard",
+        "DashboardName check",
+        "Visualization gate"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "失敗したら切り分ける",
+      "message": "Output、権限、リージョン、スタック状態を見る",
+      "narration": "失敗した場合は、順番に切り分けます。アウトプッツが空ではないか。権限が足りているか。リージョンが合っているか。スタックが作成完了になっているか。いきなりテンプレート全体を疑わず、確認点を分けます。",
+      "visual_notes": [
+        "Troubleshooting checklist",
+        "Outputs empty",
+        "IAM permission",
+        "Region mismatch",
+        "Stack status"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ: README再現性を確認する",
+      "message": "ハンズオン品質は、smoke testで底上げする",
+      "narration": "まとめです。スモークテストは、ハンズオンの再現性を守るための最低限の品質ゲートです。次のレクチャーでは、スタック更新と削除まで確認し、作ったものを安全に片づけます。",
+      "visual_notes": [
+        "Smoke test pass as quality gate",
+        "Arrow to update and delete",
+        "README reproducibility"
+      ]
+    }
+  ]
+}

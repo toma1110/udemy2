@@ -1,0 +1,89 @@
+{
+  "title": "見るべき指標と見せるべき指標",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "見るべき指標と見せるべき指標",
+      "message": "運用担当とマネジメントでは、必要な粒度が違う",
+      "narration": "このセクションでは、エスエルオーダッシュボードを作ります。最初に大事なのは、見るべき指標と見せるべき指標を分けることです。運用担当は原因調査のために細かい情報が必要です。一方で、マネジメントには判断に必要な要約が必要です。",
+      "visual_notes": [
+        "Section 7 intro",
+        "operator vs management dashboards",
+        "different granularity"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "運用担当が見るもの",
+      "message": "悪化に気づき、原因にたどるための指標",
+      "narration": "運用担当向けには、悪化を見つけて原因にたどる情報が必要です。現在のエスエルアイ、エスエルオー達成率、バーンレート、失敗件数、関連する内部メトリクスを並べます。目的は、次の調査行動に進めることです。",
+      "visual_notes": [
+        "Operator dashboard",
+        "SLI/SLO/burn/internal metrics",
+        "diagnosis path"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "マネジメントが見るもの",
+      "message": "状態、リスク、判断を短く伝える",
+      "narration": "マネジメント向けには、細かいメトリクスよりも、状態、リスク、判断材料が重要です。今月の達成状況、残りエラーバジェット、主な消費理由、リリース判断への影響を短くまとめます。数字は、意思決定のために使います。",
+      "visual_notes": [
+        "Management report",
+        "status/risk/decision",
+        "simple summary"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "分けないと起きる問題",
+      "message": "細かすぎると伝わらず、粗すぎると調査できない",
+      "narration": "一枚のダッシュボードにすべてを詰め込むと、どちらにも使いにくくなります。細かすぎると意思決定者には伝わりません。粗すぎると運用担当は原因を調べられません。用途ごとに画面を分けるほうが、結果的に使われます。",
+      "visual_notes": [
+        "Overloaded dashboard problem",
+        "too detailed vs too summary"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "共通で必要な3つ",
+      "message": "SLO達成率、残り予算、バーンレート",
+      "narration": "どの相手にも共通して必要なのは、エスエルオー達成率、残りエラーバジェット、バーンレートの三つです。達成率は今の状態、残り予算は余裕、バーンレートは悪化の速度を表します。この三つを起点に、粒度を変えて表示します。",
+      "visual_notes": [
+        "Common metrics",
+        "attainment/remaining/burn rate"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "表示の順番",
+      "message": "結論、詳細、原因候補の順に置く",
+      "narration": "画面の並びも重要です。最初に結論として、正常か危険かを見せます。次に、達成率や残り予算を置きます。最後に、原因候補となる内部メトリクスへ進めるようにします。上から下へ、判断から調査へ流れる構成です。",
+      "visual_notes": [
+        "Dashboard hierarchy",
+        "status -> details -> diagnosis"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "更新頻度も分ける",
+      "message": "即時対応とレビューでは、見る時間軸が違う",
+      "narration": "更新頻度も相手によって変わります。オンコールは今の数分を見ます。週次レビューでは、数日から一週間の傾向を見ます。月次報告では、期間全体の達成状況を見ます。時間軸を分けることで、同じ数字の意味が整理されます。",
+      "visual_notes": [
+        "Time horizons",
+        "on-call weekly monthly"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ",
+      "message": "運用向けと意思決定向けを分けて設計する",
+      "narration": "まとめです。エスエルオーダッシュボードは、一枚ですべてを解決しようとしないことが大切です。運用担当には調査できる粒度を、マネジメントには判断できる要約を用意します。次は、運用担当向けダッシュボードを具体化します。",
+      "visual_notes": [
+        "Summary",
+        "operator vs decision dashboard",
+        "next hands-on"
+      ]
+    }
+  ]
+}

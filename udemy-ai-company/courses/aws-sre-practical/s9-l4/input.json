@@ -1,0 +1,17 @@
+{
+  "section": 9,
+  "lecture": 4,
+  "title": "ハンズオン: コストアラートを設定する",
+  "duration_min": 15,
+  "learning_objectives": "AWS Budgets と Cost Anomaly Detection を実際に設定し、予算超過・異常課金を自動検知できる仕組みを構築できるようになる。",
+  "key_points": [
+    "ハンズオン全体像: 月$20の予算アラート + Cost Anomaly Detectionの設定",
+    "手順① AWS Budgets を開く（月次コスト予算の作成）",
+    "手順② 予算額と通知先（メールアドレス）を設定（80%/100%で段階的に通知）",
+    "手順③ Cost Anomaly Detection のモニターを作成（AWS サービス単位）",
+    "手順④ 異常検出のしきい値設定（$5以上 or 前日比30%以上）",
+    "手順⑤ SNS TopicとEmail通知の接続",
+    "手順⑥ Cost Explorerでコスト配分タグを有効化する手順"
+  ],
+  "notes": "s0-l4 で予告したコスト管理アラートをここで実装する（AWS Budgets + Cost Anomaly Detection の2本立て。旧来の CloudWatch Billing Alarm は採用しない）。コスト管理の習慣化がこのセクションのゴール。全ハンズオンの中でも設定が簡単でコスパが高い内容。"
+}

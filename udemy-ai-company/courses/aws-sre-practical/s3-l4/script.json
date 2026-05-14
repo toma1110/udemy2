@@ -1,0 +1,195 @@
+{
+  "section": 3,
+  "lecture": 4,
+  "title": "ハンズオン: ダッシュボードを作る",
+  "duration_min": 20,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "---\ntheme: default\npaginate: true\n---\n\n# ハンズオン: ダッシュボードを作る\n\n### EC2・ALB・5xxエラー率を一画面に集約しよう\n\n**Section 3 – Lecture 4**\n\n> 前提: セクション2 L5でデプロイしたデモアプリが起動していること",
+      "narration": "このレクチャーへようこそ。今回はハンズオン形式で、CloudWatchのダッシュボードを実際に作っていきます。EC2、ALB、CloudWatch Agentで取得したメモリ使用率に加えて、今回特に重要なのがALBの5xxエラー率です。セクション2のL5で作ったデモアプリは、/api/dataで約20パーセントの確率で500を返すため、エラー率ウィジェットの動きを体感しながら学べます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "---\n\n# このレクチャーでやること\n\n手順の全体像を確認しましょう\n",
+      "narration": "まず、このレクチャー全体の流れを確認します。大きく5つのステップで進めます。最初にダッシュボードの概要とウィジェットの種類を押さえて、そのあと実際の作成手順を①〜④の順に進めます。最後に共有方法とコストについても触れますので、実務に持ち帰りやすい内容になっています。それでは早速始めていきましょう。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "ハンズオンの全体フロー",
+          "steps": [
+            {
+              "label": "概要",
+              "sublabel": "ウィジェットの種類",
+              "style": "highlight"
+            },
+            {
+              "label": "手順①",
+              "sublabel": "ダッシュボード作成",
+              "style": "normal"
+            },
+            {
+              "label": "手順②",
+              "sublabel": "EC2 CPU追加",
+              "style": "normal"
+            },
+            {
+              "label": "手順③",
+              "sublabel": "ALB 5xx率追加",
+              "style": "normal"
+            },
+            {
+              "label": "手順④",
+              "sublabel": "メモリ使用率追加",
+              "style": "normal"
+            },
+            {
+              "label": "共有・コスト",
+              "sublabel": "運用ポイント",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "---\n\n# CloudWatch Dashboards とは？\n\n**複数のメトリクスをまとめて1画面で監視できる仕組みです**\n\n### 配置できるウィジェットの種類\n\n| ウィジェット | 用途 |\n|---|---|\n| **Line** | 時系列グラフ（CPU推移など） |\n| **Number** | 現在値を大きく表示 |\n| **Alarm Status** | アラームの赤/緑を一覧表示 |\n| **Bar** | 期間比較に便利 |\n| **Text** | 注釈・メモを自由記述 |",
+      "narration": "CloudWatch Dashboardsとは、複数のメトリクスやアラームを1つの画面にまとめて表示できる機能です。配置できるウィジェットには主に5種類あります。時系列の推移を見たいときはLineグラフ、現在値をひと目で確認したいときはNumberウィジェットが便利です。アラームの状態をまとめて把握したい場合はAlarm Statusウィジェットを使います。用途に合わせて組み合わせるのがポイントです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "---\n\n# 手順① ダッシュボードの新規作成\n\n**CloudWatchコンソール → Dashboards → ダッシュボードの作成**\n",
+      "narration": "では実際に操作していきましょう。まずAWSマネジメントコンソールを開き、CloudWatchのサービスページに移動します。左メニューの「Dashboards」をクリックして、「ダッシュボードの作成」ボタンを押してください。名前には「webapp-dashboard」のように、運用対象がわかる名前をつけておくと管理しやすいです。名前を入力したら「作成」ボタンをクリックします。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "ダッシュボード新規作成の手順",
+          "steps": [
+            {
+              "label": "① CloudWatchコンソールを開く",
+              "desc": "AWSコンソール → CloudWatch を選択",
+              "color": "blue"
+            },
+            {
+              "label": "② 左メニュー「Dashboards」をクリック",
+              "desc": "サイドバーの Dashboards を選択",
+              "color": "blue"
+            },
+            {
+              "label": "③「ダッシュボードの作成」をクリック",
+              "desc": "右上のオレンジのボタン",
+              "color": "orange"
+            },
+            {
+              "label": "④ 名前を入力して「作成」",
+              "desc": "例: webapp-dashboard",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "---\n\n# 手順② EC2のCPU使用率をLine Chartで追加\n\n**ウィジェットタイプ: Line / メトリクス: CPUUtilization**\n",
+      "narration": "ダッシュボードが作成されると、ウィジェット追加のダイアログが自動で表示されます。ウィジェットタイプは「Line」を選んでください。次にメトリクスの選択画面で「EC2」→「Per-インスタンスメトリクス」と進み、s2-l5で作成したインスタンスの「CPUUtilization」にチェックを入れます。グラフのタイトルを「EC2 CPU使用率」に変更しておくと、後から見たときにわかりやすくなりますよ。最後に「ウィジェットの作成」をクリックします。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "EC2 CPUウィジェット追加手順",
+          "steps": [
+            {
+              "label": "① ウィジェットタイプで「Line」を選択",
+              "desc": "時系列グラフで推移を確認できる",
+              "color": "blue"
+            },
+            {
+              "label": "② メトリクス選択: EC2 → Per-Instance Metrics",
+              "desc": "名前空間: AWS/EC2",
+              "color": "blue"
+            },
+            {
+              "label": "③ 対象インスタンスの CPUUtilization にチェック",
+              "desc": "s2-l5で作成したインスタンスを選ぶ",
+              "color": "orange"
+            },
+            {
+              "label": "④ タイトルを「EC2 CPU使用率」に変更して作成",
+              "desc": "右上のタイトル欄から編集可能",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "---\n\n# 手順③ ALBの5xxエラー率を追加\n\n**RequestCount と HTTPCode_Target_5XX_Count から割合を作ります**\n\n### ポイント\n\n- 名前空間: `AWS/ApplicationELB`\n- **RequestCount**: 全リクエスト数\n- **HTTPCode_Target_5XX_Count**: ターゲットが返した5xx件数\n- Metric Math: `100 * 5xx / requestCount`\n- `/api/data` を連続実行すると、20%前後の5xx率を確認できます\n\n> 件数だけでなく、割合として見ると影響度を判断しやすくなります",
+      "narration": "次にALB、つまりApplication Load Balancerの5xxエラー率を追加します。使うメトリクスはRequestCountとHTTPCode_Target_5XX_Countです。5xx件数だけを見るのではなく、Metric Mathで100かける5xx件数わるリクエスト数、という式を作り、割合として表示します。セクション2で作ったデモアプリの/api/dataを連続で叩くと、20パーセント前後のエラー率が見えるはずです。このウィジェットが、今回のダッシュボードの主役です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "---\n\n# 手順④ メモリ使用率ウィジェットを追加\n\n**CloudWatch Agentが収集したカスタムメトリクスを使います**\n\n### 操作ポイント\n\n- 名前空間: **`CWAgent`**（デフォルト設定の場合）\n- メトリクス名: `mem_used_percent`\n- インスタンスIDでフィルタして対象を絞る\n\n> ⚠️ CloudWatch AgentがEC2にインストール済みであること  \n> （セクション3 L2の設定が完了していること）",
+      "narration": "4つ目のウィジェットとして、メモリ使用率を追加します。メモリはAWSの標準メトリクスには含まれていないため、CloudWatch Agentが収集したカスタムメトリクスを使います。名前空間は「CWAgent」、メトリクス名は「mem_used_percent」を選択してください。インスタンスIDでフィルタリングして対象を絞り込むのがポイントです。セクション3のL2でAgentの設定が完了していることを確認してから進めてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "---\n\n# ここまでの完成イメージ\n\n**5xx率を中心にしたダッシュボード**\n\n```\n┌──────────────────────┬──────────────────────┐\n│  ALB 5xxエラー率      │  ALB RequestCount     │\n│  [Line グラフ]        │  [Line グラフ]        │\n├──────────────────────┼──────────────────────┤\n│  ALB ResponseTime     │  EC2 CPU使用率         │\n│  [Line グラフ]        │  [Line グラフ]        │\n├──────────────────────┴──────────────────────┤\n│  メモリ使用率                                  │\n└──────────────────────────────────────────────┘\n```\n\n> `/api/data` を叩いて、5xx率が動くことを確認しましょう",
+      "narration": "ここまでの操作が完了すると、5xxエラー率を中心にしたダッシュボードができあがります。ALBの5xxエラー率、リクエスト数、レスポンスタイム、EC2のCPU使用率、メモリ使用率を一画面で確認できる状態です。/api/dataを連続で叩いて、5xx率のグラフが実際に動くことを確認してください。編集が終わったら、みぎうえの保存ボタンを忘れずにクリックしましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "---\n\n# ダッシュボードの共有方法\n\n**3つの方法があります**\n",
+      "narration": "ダッシュボードが完成したら、チームへの共有方法も知っておきましょう。3つの方法があります。1つ目はコンソールリンクの共有で、同じAWSアカウントへのアクセス権を持つメンバーにURLを伝えるだけです。2つ目はスナップショットURLで、ダッシュボードの現在の状態を画像として共有できます。AWSアカウントを持たない人にも見せられる便利な方法です。3つ目はGrafanaとの連携で、より高度な可視化が必要な場合に使います。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "ダッシュボード共有: 主な方法",
+          "left": {
+            "label": "AWSアカウントあり",
+            "items": [
+              "コンソールリンク共有",
+              "同一アカウントのメンバーに有効",
+              "IAM権限で閲覧制御が可能",
+              "URLをコピーして送るだけ"
+            ]
+          },
+          "right": {
+            "label": "AWSアカウントなし / 外部共有",
+            "items": [
+              "Snapshot URL共有",
+              "期限付きの静的URLを生成",
+              "AWSアカウント不要で閲覧可能",
+              "Grafana連携でさらに高度な可視化も"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "---\n\n# 自動ダッシュボードも活用しよう\n\n**Container Insights / Lambda Insights**\n\n### 自動生成ダッシュボードとは？\n\n- ECSやEKS、Lambdaなどを使っている場合、**設定するだけで自動的にダッシュボードが生成される**機能です\n\n| サービス | 自動ダッシュボード |\n|---|---|\n| ECS / EKS | Container Insights |\n| Lambda | Lambda Insights |\n| EC2 Auto Scaling | Fleet Manager |\n\n> CloudWatch → Insights から確認できます",
+      "narration": "CloudWatchには、手動でウィジェットを追加しなくても自動でダッシュボードを生成してくれる機能もあります。ECSやEKSコンテナ環境ではContainer Insights、Lambda関数ではLambda Insightsという機能がそれに当たります。それぞれ有効化するだけで、CPU・メモリ・エラー率などがまとめて可視化されます。今後コンテナやサーバーレスに移行する際は、ぜひ活用してみてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "---\n\n# ダッシュボードのコスト\n\n**ダッシュボード自体の料金体系を確認しておきましょう**\n\n| ダッシュボード数 | 料金 |\n|---|---|\n| 最初の **3つ** まで | **無料** |\n| 4つ目以降 | **$3 / 月 / ダッシュボード** |\n\n### ✅ コスト最適化のヒント\n\n- サービス単位でダッシュボードを統合する\n- 用途が似ているウィジェットは1枚にまとめる\n- 不要になったダッシュボードは削除する",
+      "narration": "最後にコストについて確認しておきましょう。CloudWatchダッシュボードは最初の3つまでは無料で使えます。4つ目以降は1つにつき月3ドルの料金が発生します。小規模な構成であれば無料枠で十分なケースが多いですが、マイクロサービスなど環境が増えてくると注意が必要です。サービス単位で統合したり、不要なダッシュボードを定期的に削除するなど、シンプルな運用を心がけましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "---\n\n# まとめ\n\n### このレクチャーで学んだこと\n\n1. **CloudWatch Dashboardsの基本**  \n   Line・Number・Alarm Statusなど用途別ウィジェットを使い分けることで、必要な情報を一画面に集約できる\n\n2. **EC2・ALB・カスタムメトリクスの追加手順**  \n   名前空間（`AWS/EC2` / `AWS/ApplicationELB` / `CWAgent`）を意識してメトリクスを選択することが重要\n\n3. **共有・コスト・自動ダッシュボードの活用**  \n   Snapshot URLでアカウント外への共有も可能。無料枠は3つまでなので、統合・整理を意識して運用しよう\n\n> 次のレクチャーでは **CloudWatch Alarms** を設定して、異常を自動で検知する仕組みを作ります",
+      "narration": "今回のレクチャーのまとめです。1点目は、CloudWatch Dashboardsではウィジェットの種類を用途に合わせて使い分けることで、複数のメトリクスを効率よく一画面に集約できるということです。2点目は、EC2・ALB・カスタムメトリクスを追加する際には名前空間の選択がポイントになるということです。3点目は、ダッシュボードの共有にはSnapshot URLが便利で、コストは3つまで無料、それ以降は月3ドルという点を覚えておきましょう。次のレクチャーでは、異常を自動で検知するCloudWatch Alarmsの設定を行います。お疲れ様でした！",
+      "diagram": null
+    }
+  ]
+}

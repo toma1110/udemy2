@@ -1,0 +1,19 @@
+{
+  "section": 2,
+  "lecture": 3,
+  "title": "AWSのオブザーバビリティサービス全体像",
+  "duration_min": 10,
+  "learning_objectives": "AWSが提供するオブザーバビリティ関連サービスの全体像を把握し、本コースで学ぶサービスがどこに位置するかを理解する。",
+  "key_points": [
+    "CloudWatch: AWS標準の監視・オブザーバビリティハブ（Metrics / Logs / Alarms / Dashboards）",
+    "AWS X-Ray: 分散トレーシングサービス",
+    "AWS CloudTrail: APIコールの監査ログ（セキュリティ・コンプライアンス向け）",
+    "Amazon OpenSearch Service: ログの大規模検索・分析",
+    "AWS Managed Grafana: メトリクスの可視化ダッシュボード",
+    "本コースの対象: CloudWatch 中心 + X-Ray 入門まで",
+    "OpenTelemetry (OTel): ベンダー非依存の計装標準。CNCF管理で業界標準になりつつある",
+    "ADOT (AWS Distro for OpenTelemetry): AWSがサポートするOTelのディストリビューション。CloudWatch・X-Ray・S3へデータ送信可能",
+    "サードパーティとの比較: Datadog / Prometheus + Grafana / OpenTelemetry との位置づけ"
+  ],
+  "notes": "短いレクチャー（10分）なのでサービス一覧の俯瞰に徹する。深掘りは後続レクチャーで行う。受講者が『どのサービスが何をするか』を全体像として掴めれば十分。diagram でサービスマップを見せると効果的。OpenTelemetryはPrometheus+Grafanaより主流になりつつあり、ADOTはAWSネイティブサービスとの統合を担う重要な選択肢として説明する。"
+}

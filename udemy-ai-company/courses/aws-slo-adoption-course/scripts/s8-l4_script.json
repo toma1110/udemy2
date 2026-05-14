@@ -1,0 +1,86 @@
+{
+  "title": "s8-l4_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "リリース判断とエラーバジェット",
+      "message": "信頼性の余白を見て、出す、絞る、止めるを決める",
+      "narration": "このレクチャーでは、エラーバジェットをリリース判断に使う考え方を扱います。信頼性の余白が十分なら進める。余白が少なければ小さく出す。急速に悪化しているなら安定化を優先する。このように判断を分けます。",
+      "visual_notes": [
+        "Release decision and error budget",
+        "ship, limit, pause"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "リリース前に見る数字",
+      "message": "残り予算、消費速度、直近の障害を見る",
+      "narration": "リリース前には、三つの数字を見ます。残りエラーバジェットは十分か。バーンレート、つまり消費速度は高すぎないか。直近で大きな障害が続いていないか。この三つを見ると、このリリースを進めてよいかを判断しやすくなります。",
+      "visual_notes": [
+        "Remaining budget",
+        "burn rate",
+        "recent incidents"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "余白が十分な場合",
+      "message": "通常リリースを継続し、監視を強める",
+      "narration": "余白が十分な場合は、通常どおりリリースを進めやすい状態です。ただし、出したあとに見ないわけではありません。リリース直後のエラー率、レイテンシ、ユーザー影響を見て、想定外の悪化があればすぐ戻れるようにします。",
+      "visual_notes": [
+        "Continue release",
+        "watch after release"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "余白が少ない場合",
+      "message": "スコープを絞り、段階的に出す",
+      "narration": "余白が少ない場合は、リリースを小さくします。対象ユーザーを絞る、機能を分ける、変更量を減らす、ロールバック手順を確認する。全部止める前に、リスクを下げて出す選択肢を検討します。",
+      "visual_notes": [
+        "Reduce scope",
+        "phased rollout"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "消費が速い場合",
+      "message": "新機能より、安定化と原因調査を優先する",
+      "narration": "エラーバジェットの消費が速い場合は、新機能より安定化を優先します。今の悪化が続くと、短期間で目標違反に近づくためです。原因が分かるまで大きな変更を避け、監視、切り分け、修正に集中します。",
+      "visual_notes": [
+        "High burn rate",
+        "stabilize before shipping"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "判断基準を事前に決める",
+      "message": "リリース前に、継続、縮小、停止の条件を合意する",
+      "narration": "判断基準は、リリース当日に初めて決めると揉めやすくなります。残り予算が十分なら継続。少ないなら縮小。消費速度が高いなら停止して安定化。このような条件を、開発、運用、ピーエムで事前に合意しておきます。",
+      "visual_notes": [
+        "Decision table",
+        "continue, reduce, pause"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "リリース後に確認する",
+      "message": "出したあと、予算とユーザー影響がどう変わったかを見る",
+      "narration": "リリース後は、出して終わりではありません。予算の減り方が変わったか。特定の機能で悪化していないか。アラームや問い合わせが増えていないかを見ます。結果を次の判断基準に反映します。",
+      "visual_notes": [
+        "Post-release review",
+        "budget and user impact"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ",
+      "message": "余白を見て、小さく出し、レビューへ戻す",
+      "narration": "まとめです。エラーバジェットは、リリースを止めるためだけの数字ではありません。余白があれば進める。少なければ小さく出す。消費が速ければ安定化を優先する。そしてリリース後に結果を見る。この流れで、信頼性と開発速度を両立しやすくなります。",
+      "visual_notes": [
+        "Summary",
+        "budget, scope, stabilize, review"
+      ]
+    }
+  ]
+}

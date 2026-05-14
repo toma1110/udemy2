@@ -31,11 +31,16 @@
 | --- | ---: |
 | Slides | 11 |
 | Audio files | 11 |
-| Duration seconds | 187.401247 |
-| Size bytes | 10518827 |
+| Duration seconds | 187.252245 |
+| Size bytes | 10513350 |
 | FPS | 1 |
 | Faststart | true |
 | Dynamic video | false |
+
+## Pronunciation Fix
+
+- `初学者` は `しょがくしゃ` に変更
+- Existing GPT-Image2 slide PNG files were reused without regeneration.
 
 ## Decode Checks
 

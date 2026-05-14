@@ -3,8 +3,8 @@
   "lecture_id": "s1-l1",
   "script_json": "udemy-ai-company/courses/aws-cloudwatch-alarm-sns-course/scripts/s1-l1_script.json",
   "audio_dir": "udemy-ai-company/courses/aws-cloudwatch-alarm-sns-course/audio/s1-l1",
-  "started_at": "2026-05-14T12:19:33Z",
-  "ended_at": "2026-05-14T12:23:52Z",
+  "started_at": "2026-05-14T22:37:04Z",
+  "ended_at": "2026-05-14T22:40:05Z",
   "status": "pass",
   "speaker_id": 3,
   "speed_scale": 1.1,
@@ -31,8 +31,8 @@
     },
     {
       "slide_number": 5,
-      "duration_seconds": 16.085,
-      "size_bytes": 772140
+      "duration_seconds": 15.936,
+      "size_bytes": 764972
     },
     {
       "slide_number": 6,
@@ -66,5 +66,5 @@
     }
   ],
   "audio_count": 11,
-  "total_duration_seconds": 187.381
+  "total_duration_seconds": 187.232
 }

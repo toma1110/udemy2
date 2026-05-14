@@ -16,8 +16,8 @@ AI-PM-01がGitHub Issueの変更を検知し、承認条件を満たすチケッ
 
 - AWS SRE入門
 - CloudFormationハンズオン
+- 実運用IaCとしてのCDK/Terraformの位置づけ
 - CloudWatch、SNS、IAM、ログ、監視、アラート、運用改善
-- Terraform講座は例外的にTerraformを利用する
 
 ## Source of Truth
 
@@ -25,7 +25,7 @@ AI-PM-01がGitHub Issueの変更を検知し、承認条件を満たすチケッ
 
 以下は `course_spec.md` と矛盾してはいけない。
 
-- CloudFormationテンプレート
+- ハンズオンIaCテンプレートまたはコード
 - ハンズオンREADME
 - スライド
 - 台本
@@ -36,7 +36,7 @@ AI-PM-01がGitHub Issueの変更を検知し、承認条件を満たすチケッ
 ## 標準成果物
 
 - 講座仕様書
-- CloudFormationテンプレート
+- ハンズオンIaCテンプレートまたはコード
 - ハンズオンREADME
 - 検証スクリプト
 - スライドPNG
@@ -46,6 +46,18 @@ AI-PM-01がGitHub Issueの変更を検知し、承認条件を満たすチケッ
 - 動画ファイル
 - QAレポート
 - Google Driveアップロード記録
+
+## Publicリポジトリ配置
+
+Publicリポジトリ用の作業コピー、公開テンプレート、公開配布物は `udemy-ai-company/public_repo/<repo-name>/` に配置する。
+
+例:
+
+- `udemy-ai-company/public_repo/sre-slo-introduction-cfn-templates`
+
+`courses/` は講座制作のSource of Truthと制作素材を置く場所であり、Publicリポジトリそのものは置かない。Publicリポジトリへ反映する内容は、講座側の `course_spec.md`、ハンズオンREADME、QAレポートと整合している必要がある。
+
+詳細ルールは `docs/PUBLIC_REPO_RULES.md` を正とする。
 
 ## 成功条件
 

@@ -46,8 +46,12 @@
 ## 教材
 
 - 動画制作前に対象講座の `course_infomation.md` が存在する
+- 動画制作前に対象講座の `course_curriculum.md` が存在する
 - `course_infomation.md` にUdemy登録時に必要なコースタイトル、サブタイトル、説明、学習目標、前提条件、対象者、コース画像方針が記載されている
 - `course_infomation.md` の内容が `course_spec.md`、動画内容、ハンズオン範囲、VOICEVOX/AI利用表記と矛盾していない
+- `course_curriculum.md` に全レクチャーのセクション番号、レクチャー番号、タイトル、レクチャー完了後に身についていること、ハンズオン有無が記載されている
+- ハンズオンがあるレクチャーでは `course_curriculum.md` にPublicRepo URLが記載され、READMEまたは配布物と一致している
+- `course_curriculum.md` が `docs/CURRICULUM_RULES.md` に従っている
 - 動画手順とREADMEが一致している
 - スライドはGPT-Image2 PNG生成を前提としている
 - 完成動画に使う最終スライドPNGは必ずGPT-Image2由来である

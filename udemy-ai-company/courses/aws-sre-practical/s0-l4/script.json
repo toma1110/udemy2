@@ -1,0 +1,242 @@
+{
+  "section": 0,
+  "lecture": 4,
+  "title": "AWSアカウント・環境セットアップ",
+  "duration_min": 10,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# AWSアカウント・環境セットアップ\n\n## ハンズオンを安全に始める準備を整えます\n\nアカウント作成やIAMユーザー作成の細かい手順は、Amazon公式ハンズオンに任せます。",
+      "narration": "このレクチャーでは、コースを進めるためのAWS環境を整えます。アカウント作成やIAMユーザー作成の細かい画面操作は、Amazon公式ハンズオンに任せます。ここでは、安全に進めるための考え方と、コースで使うCloudShell、課金アラート、動作確認に集中します。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# 今日やること\n\n## 公式手順に任せる部分と、このコースで確認する部分を分けます",
+      "narration": "今日の流れは4つです。まず公式ハンズオンで済ませる範囲を確認します。次にrootアカウントを日常利用しない理由を押さえます。そのうえでCloudShellを推奨環境として準備し、最後に課金アラートと動作確認を行います。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "環境セットアップの流れ",
+          "steps": [
+            {
+              "label": "STEP 1",
+              "sublabel": "公式手順で作成",
+              "style": "highlight"
+            },
+            {
+              "label": "STEP 2",
+              "sublabel": "安全方針を確認",
+              "style": "normal"
+            },
+            {
+              "label": "STEP 3",
+              "sublabel": "CloudShellを使う",
+              "style": "normal"
+            },
+            {
+              "label": "STEP 4",
+              "sublabel": "課金と接続確認",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# 公式ハンズオンに任せること\n\n## 画面操作はAmazon公式の最新手順で進めましょう",
+      "narration": "AWSアカウントの作成、IAMユーザーの作成、MFAの有効化は、画面変更の影響を受けやすい部分です。そのため、このコース内で細かいクリック手順を固定するより、Amazon公式ハンズオンの最新手順を見るほうが安全です。このレクチャーでは、作った後にどう使うべきかを確認します。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "公式手順に任せる範囲",
+          "subtitle": "画面操作は最新のAmazon公式ハンズオンで確認します",
+          "cards": [
+            {
+              "icon": "cloud",
+              "title": "AWSアカウント作成",
+              "text": "メール・支払い情報など"
+            },
+            {
+              "icon": "lock",
+              "title": "IAMユーザー作成",
+              "text": "学習用ユーザーを用意"
+            },
+            {
+              "icon": "shield",
+              "title": "MFA有効化",
+              "text": "多要素認証を必ず設定"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# rootアカウントは日常利用しない\n\n## 最初の設定だけに使い、普段はIAMユーザーで操作します",
+      "narration": "rootアカウントは、AWSアカウント全体に対して最も強い権限を持ちます。流出した場合の影響が大きいため、日常作業には使いません。初期設定が終わったら、MFAを有効化し、普段の操作はIAMユーザーで行う。この基本方針だけは必ず守りましょう。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "rootとIAMユーザーの使い分け",
+          "left": {
+            "label": "rootアカウント",
+            "items": [
+              "全権限を持つ",
+              "初期設定と重要操作だけ",
+              "MFAを必ず有効化",
+              "日常作業には使わない"
+            ]
+          },
+          "right": {
+            "label": "IAMユーザー",
+            "items": [
+              "普段の学習操作で使う",
+              "権限を後から調整できる",
+              "操作ログを追いやすい",
+              "学習用アカウントとして管理"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# CLI環境はCloudShellを推奨\n\n## ブラウザだけで使えるため、環境差分が少なくなります",
+      "narration": "このコースではCloudShellをおすすめします。マネジメントコンソールみぎうえのアイコンから開けるブラウザ上のターミナルで、AWS CLI、Python、Gitが最初から入っています。インストール作業やアクセスキー管理を減らせるので、学習用の環境として扱いやすいです。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "CloudShellを推奨する理由",
+          "subtitle": "ローカルPCの状態に左右されず、すぐにAWS CLIを試せます",
+          "cards": [
+            {
+              "icon": "monitor",
+              "title": "ブラウザ完結",
+              "text": "インストール作業なし"
+            },
+            {
+              "icon": "gear",
+              "title": "CLI入り",
+              "text": "AWS CLIが利用可能"
+            },
+            {
+              "icon": "server",
+              "title": "開発ツール入り",
+              "text": "PythonとGitも利用可能"
+            },
+            {
+              "icon": "shield",
+              "title": "鍵管理を削減",
+              "text": "アクセスキー配布を避けやすい"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# CloudShellで作業する\n\n## ブラウザだけでAWS CLIを使える環境を準備します",
+      "narration": "このコースではCloudShellを使って作業を進めます。CloudShellはブラウザから起動でき、AWS CLIも最初から利用できます。追加の環境構築がほとんど不要なので、ハンズオンを始めやすいのが利点です。セッションが切れることはあるため、作業中のメモや重要なコマンドは手元にも残しておくと安心です。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "CloudShellとローカル環境",
+          "left": {
+            "label": "CloudShell（推奨）",
+            "items": [
+              "ブラウザで起動",
+              "AWS CLIが最初から使える",
+              "学習環境をそろえやすい",
+              "セッション切れに注意"
+            ]
+          },
+          "right": {
+            "label": "ローカル環境",
+            "items": [
+              "CLIのインストールが必要",
+              "認証情報の管理が必要",
+              "IDE連携はしやすい",
+              "慣れている人向け"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# 課金アラートは必ず設定する\n\n## 無料枠でも、消し忘れ対策は必要です",
+      "narration": "次に課金アラートです。AWSはリソースを消し忘れると課金が続くことがあります。無料枠で進める場合でも、エーダブリューエスバジェッツで予算アラートを必ず設定しましょう。目安として10ドルなど低めのしきい値を置き、想定外の請求に早く気づける状態にしておきます。詳しい設定手順はセクション9のハンズオンで扱います。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "課金事故を防ぐ基本",
+          "subtitle": "学習環境ほど、早めに気づける仕組みを先に置きます",
+          "cards": [
+            {
+              "icon": "chart",
+              "title": "Billingを確認",
+              "text": "請求状況を見る習慣"
+            },
+            {
+              "icon": "check",
+              "title": "低めのしきい値",
+              "text": "例：10ドルで通知"
+            },
+            {
+              "icon": "shield",
+              "title": "メール通知",
+              "text": "早めに気づく"
+            },
+            {
+              "icon": "gear",
+              "title": "消し忘れ確認",
+              "text": "演習後にリソース確認"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# CloudShellで動作確認\n\n```bash\naws sts get-caller-identity\n```\n\n## アカウントIDと実行ユーザーが見えればOKです",
+      "narration": "最後にCloudShellで動作確認をします。コマンドは、aws sts get-caller-identityです。アカウントIDと実行ユーザーが表示されれば、CLIからAWSに接続できています。読み上げでは、ゲット コーラー アイデンティティと呼びます。細かいJSONの意味は、ここでは気にしなくて大丈夫です。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "接続確認の流れ",
+          "steps": [
+            {
+              "label": "CloudShellを開く",
+              "desc": "コンソール右上から起動",
+              "color": "blue"
+            },
+            {
+              "label": "コマンドを実行",
+              "desc": "aws sts get-caller-identity",
+              "color": "blue"
+            },
+            {
+              "label": "Accountを確認",
+              "desc": "アカウントIDが表示される",
+              "color": "green"
+            },
+            {
+              "label": "Arnを確認",
+              "desc": "実行ユーザーが分かる",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# まとめ\n\n1. アカウント作成・IAM作成はAmazon公式ハンズオンに任せる\n2. rootは日常利用せず、IAMユーザーとMFAを使う\n3. CLIはCloudShellを推奨する\n4. 課金アラートと接続確認を先に済ませる\n\n> 次から運用設計の本編に入ります",
+      "narration": "このレクチャーのまとめです。アカウント作成やIAMユーザー作成は、Amazon公式ハンズオンの最新手順に任せます。rootは日常利用せず、IAMユーザーとMFAを使いましょう。CLI環境はCloudShellを推奨します。そして、課金アラートと接続確認を先に済ませてから、次の運用設計の本編に進みます。",
+      "diagram": null
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "script_json": "courses/aws-slo-adoption-course/scripts/promo_video_script.json",
+  "audio_dir": "courses/aws-slo-adoption-course/audio/promo",
+  "slides": 7,
+  "duration": 87.98933333333333,
+  "audio": [
+    {
+      "slide_number": 1,
+      "wav_path": "courses/aws-slo-adoption-course/audio/promo/slide_001.wav",
+      "duration_sec": 10.496
+    },
+    {
+      "slide_number": 2,
+      "wav_path": "courses/aws-slo-adoption-course/audio/promo/slide_002.wav",
+      "duration_sec": 12.981333333333334
+    },
+    {
+      "slide_number": 3,
+      "wav_path": "courses/aws-slo-adoption-course/audio/promo/slide_003.wav",
+      "duration_sec": 13.952
+    },
+    {
+      "slide_number": 4,
+      "wav_path": "courses/aws-slo-adoption-course/audio/promo/slide_004.wav",
+      "duration_sec": 13.322666666666667
+    },
+    {
+      "slide_number": 5,
+      "wav_path": "courses/aws-slo-adoption-course/audio/promo/slide_005.wav",
+      "duration_sec": 13.205333333333334
+    },
+    {
+      "slide_number": 6,
+      "wav_path": "courses/aws-slo-adoption-course/audio/promo/slide_006.wav",
+      "duration_sec": 13.173333333333334
+    },
+    {
+      "slide_number": 7,
+      "wav_path": "courses/aws-slo-adoption-course/audio/promo/slide_007.wav",
+      "duration_sec": 10.858666666666666
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "section": 5,
+  "lecture": 4,
+  "title": "SNS通知の設定（メール・Slack連携）",
+  "duration_min": 12,
+  "learning_objectives": "Amazon SNSを使ったアラート通知の仕組みを理解し、メールおよびSlack/Chatbotへの通知を設定できるようになる。",
+  "key_points": [
+    "Amazon SNSとは: Pub/Subメッセージングサービス。CloudWatch AlarmのアクションとしてTopicを指定",
+    "SNS Topicの作成とサブスクリプション（メールアドレスの登録）",
+    "Slack連携方法①: AWS Chatbot を使った公式連携（推奨）",
+    "AWS Chatbot の設定手順: Slack ワークスペース認証 → チャンネル指定 → SNS Topic 紐付け",
+    "Slack連携方法②: Lambda + SNS でカスタムフォーマットの通知を送る",
+    "通知メッセージのカスタマイズ: CloudWatch Alarm の詳細リンクを含める",
+    "PagerDuty / Opsgenie 連携: SNS → Webhook でオンコール管理ツールへ",
+    "通知のルーティング設計: 重要度に応じてP1はSMS+Slack、P2はSlackのみなど"
+  ],
+  "notes": "AWS ChatbotはAWS公式のSlack連携方法として積極的に紹介する。LambdaカスタムはSlashコマンドやリッチフォーマットが必要な場合の選択肢として補足する。"
+}

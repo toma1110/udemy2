@@ -1,0 +1,18 @@
+{
+  "section": 4,
+  "lecture": 2,
+  "title": "ログの構造化（JSON形式のすすめ）",
+  "duration_min": 10,
+  "learning_objectives": "非構造化ログと構造化ログの違いを理解し、JSON形式でログを出力することのメリットと実装方法を説明できるようになる。",
+  "key_points": [
+    "非構造化ログの問題: テキスト解析が複雑・Logs Insightsで検索しにくい",
+    "構造化ログ（JSON）のメリット: フィールド単位で検索・集計・フィルタが容易",
+    "最低限含めるべきフィールド: timestamp / level / message / requestId / userId",
+    "Pythonでの実装例: python-json-loggerライブラリの使い方",
+    "Node.jsでの実装例: pinoライブラリによる構造化ログ",
+    "Lambdaでの構造化ログ: Powertools for AWS Lambda (Python/TS) の活用",
+    "ログレベルの使い分け: DEBUG / INFO / WARN / ERROR / FATAL",
+    "個人情報・機密情報のマスキング: パスワード・カード番号をログに出さない設計"
+  ],
+  "notes": "「なぜ構造化するのか」を先に動機付けしてから実装に入る。Powertools for AWS LambdaはAWSが公式推奨するライブラリなので積極的に紹介する。セキュリティ観点でのマスキングも必ず触れる。"
+}

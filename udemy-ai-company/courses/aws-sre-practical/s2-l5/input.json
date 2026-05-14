@@ -1,0 +1,17 @@
+{
+  "section": 2,
+  "lecture": 5,
+  "title": "ハンズオン: サンプルWebアプリを本番想定でデプロイ",
+  "duration_min": 35,
+  "learning_objectives": "以降のセクション（3〜7）で使うサンプルWebアプリをAWS上に本番想定の構成でデプロイし、CloudWatch・X-Rayとの連携設定まで完了させる。CloudFormation一発デプロイで EC2 上のFlaskデモアプリ・CW Agent・X-Rayトレース送信まで自動セットアップされる構成。",
+  "key_points": [
+    "ハンズオン構成: EC2（App, ポート8080） + RDS（MySQL, 後続セクション用に残置） + ALB の三層構成",
+    "サンプルアプリ: 確率で5xxを返すFlaskデモアプリ（CFN UserDataで自動生成・git clone不要）。/api/data は20%、/api/process は15%で500を返す",
+    "CloudWatch Agent は CloudFormation で自動セットアップ。メモリ・ディスクメトリクス + JSONログ + X-Rayトレースを送信",
+    "CloudWatch Logs ロググループは `/aws/ec2/sre-handson/webapp` に統一。アプリログは JSON 形式（requestId / status / duration 付き）",
+    "X-Ray は X-Ray daemon ではなく CloudWatch Agent の traces セクション経由で送信。Flask には X-Ray middleware を組み込み済み",
+    "ALBのアクセスログをS3に保存する設定（コンソール手順）",
+    "動作確認: ブラウザ・curl からアクセス → 約20%で 5xx → CloudWatch メトリクス・JSONログ・X-Rayトレースが届くことを確認（CW Agent ステータスは `-a status`）"
+  ],
+  "notes": "このハンズオンはセクション3以降の全てのベースになる重要な章。丁寧に進める。CloudFormationテンプレート（01-base-infrastructure.yaml）で環境構築を自動化し、手順の複雑さを下げる。新アプリは確率的に 5xx を返すため、後続のダッシュボード・アラーム・SLI/SLO の体感学習に直結する。コスト注意: RDS・EC2は使い終わったら停止するよう案内する。推定費用目安（月$20〜30程度）も明示。"
+}

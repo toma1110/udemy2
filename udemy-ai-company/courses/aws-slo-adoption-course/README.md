@@ -6,9 +6,12 @@
 
 [course_spec.md](course_spec.md) を唯一の真実として扱います。
 
+Udemy登録ページへ転記する情報は [course_infomation.md](course_infomation.md) にまとめます。動画制作時は、この登録情報が存在し、コース内容、AI/VOICEVOX利用表記、ハンズオン範囲と矛盾していないことを確認します。
+
 ## 制作方針
 
-- CloudFormationを原則とする
+- ハンズオンでは、追加ツールなしで再現しやすいようにCloudFormationを使う
+- 実運用IaCではCDKまたはTerraformを推奨する
 - SLOは概念だけでなく、計測、可視化、通知、組織導入まで扱う
 - CloudWatch Application Signalsの現行SLO機能を扱う
 - ただし30日データや実アプリ計装が必要な機能は補講/デモとして扱う

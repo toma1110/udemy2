@@ -42,7 +42,7 @@ Rules:
 - Planner ≠ Worker
 - Worker ≠ Reviewer
 - course_spec is source of truth
-- CloudFormationを原則とする
+- 本ハンズオンでは、追加ツールなしで再現しやすいようにCloudFormationを使う
 - AWSリソース作成はコスト注意を明記する
 
 # Blocking

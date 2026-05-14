@@ -1,0 +1,89 @@
+{
+  "title": "バーンレートとは何か",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "バーンレートとは何か",
+      "message": "エラーバジェットを、予定より何倍の速さで使っているか",
+      "narration": "このレクチャーでは、バーンレートを扱います。バーンレートは、エラーバジェットを予定より何倍の速さで使っているかを表す数字です。残り予算だけではなく、今の消費速度を見ることで、対応の緊急度を判断しやすくなります。",
+      "visual_notes": [
+        "Burn rate definition",
+        "budget tank with speed meter",
+        "倍速表現"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "1倍の意味",
+      "message": "期間ちょうどで予算を使い切るペース",
+      "narration": "バーンレート一倍は、対象期間が終わるタイミングで、ちょうどエラーバジェットを使い切るペースです。月間予算を一か月で使い切る速度なので、理論上は目標ぴったりです。ただし、常に一倍に張り付いているなら余裕はありません。",
+      "visual_notes": [
+        "1x burn rate",
+        "month-long budget timeline",
+        "normal pace"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "14倍の意味",
+      "message": "月間予算を、約2日で使い切るペース",
+      "narration": "バーンレート十四倍なら、月間のエラーバジェットを約二日で使い切るペースです。これは、月末まで待つ判断ではありません。短時間で続けば、すぐに目標違反へ近づくため、対応優先度を上げるサインになります。",
+      "visual_notes": [
+        "14x burn rate",
+        "30 days / 14 = about 2 days",
+        "urgent indicator"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "失敗率から計算する",
+      "message": "実際の失敗率 ÷ 許容失敗率",
+      "narration": "計算は、実際の失敗率を、エスエルオーで許容した失敗率で割ります。許容失敗率が〇点一パーセントで、今の失敗率が一パーセントなら、バーンレートは十倍です。許容ペースの十倍で予算を使っている、という意味になります。",
+      "visual_notes": [
+        "actual failure rate / allowed failure rate",
+        "0.1% -> 1.0% = 10x"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "残量だけでは遅い",
+      "message": "まだ残っていても、急速に減っているなら危険",
+      "narration": "残量だけを見ると、判断が遅れることがあります。まだ七十パーセント残っていても、今の速度が高ければ、数時間後には大きく減っているかもしれません。バーンレートは、この急な悪化を早く見つけるための指標です。",
+      "visual_notes": [
+        "Remaining budget vs burn speed",
+        "compare slow drain and fast drain"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "バーンレートとアラート",
+      "message": "単発の失敗ではなく、予算消費の速さで通知する",
+      "narration": "バーンレートを使うと、単発エラーではなく、エラーバジェットの消費速度でアラートを設計できます。少しのエラーでも長く続けば問題になりますし、短時間でも強い悪化なら急ぎます。重要なのは、ユーザー体験への影響と緊急度を合わせることです。",
+      "visual_notes": [
+        "Burn-rate alert flow",
+        "short burst vs sustained issue",
+        "budget-aware alerting"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "使いどころ",
+      "message": "オンコール、リリース判断、週次レビューで使う",
+      "narration": "バーンレートは、オンコールだけの数字ではありません。オンコールでは緊急度判断に使い、リリース判断では一時停止や継続の根拠に使います。週次レビューでは、どの時間帯に予算を使ったかを振り返る材料になります。",
+      "visual_notes": [
+        "Use cases",
+        "on-call/release/review cards"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ",
+      "message": "バーンレートは、エラーバジェット消費の速度",
+      "narration": "まとめです。バーンレートは、実際の失敗率を許容失敗率で割った数字です。一倍なら予定通り、十倍なら許容ペースの十倍で予算を使っています。次は、短期窓と長期窓を組み合わせて、ノイズと見逃しを減らす方法を見ます。",
+      "visual_notes": [
+        "Summary",
+        "definition/formula/next windows"
+      ]
+    }
+  ]
+}

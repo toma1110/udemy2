@@ -1,0 +1,18 @@
+{
+  "section": 3,
+  "lecture": 5,
+  "title": "ハンズオン: カスタムメトリクスを送信する",
+  "duration_min": 20,
+  "learning_objectives": "AWS CLIとPythonスクリプトを使ってカスタムメトリクスをCloudWatchに送信し、ダッシュボードで確認できるようになる。",
+  "key_points": [
+    "AWS CLIでPutMetricDataを送信するコマンド例",
+    "Pythonのboto3でカスタムメトリクスを送信するスクリプト",
+    "ハンズオン手順① boto3でアプリのエラーカウントを送信",
+    "ハンズオン手順② CloudShellからCLIで送信して確認",
+    "ハンズオン手順③ ダッシュボードにカスタムメトリクスを追加",
+    "CloudWatch Agentの設定ファイル（JSON）でメモリ収集を有効化する手順",
+    "Embedded Metrics Format (EMF): Python/Node.jsのサンプルコード",
+    "ADOTコレクター経由での送信: OpenTelemetry SDKで計装してADOTがCloudWatchへ転送する流れ"
+  ],
+  "notes": "CloudShellを使って実際に手を動かす内容。boto3のサンプルコードは動作確認済みのシンプルなものを使う。ADOTはs2-l3で概念を学んだので、ここで実際の流れを簡単に示す。コードが多いのでスライドよりコードブロックを活用する。"
+}

@@ -1,0 +1,59 @@
+[
+  {"section": 0, "lecture": 1, "title": "このコースで何を学ぶか", "duration_min": 5},
+  {"section": 0, "lecture": 2, "title": "このコースが解決する悩み", "duration_min": 5},
+  {"section": 0, "lecture": 3, "title": "受講者に必要な前提知識", "duration_min": 5},
+  {"section": 0, "lecture": 4, "title": "AWSアカウント・環境セットアップ", "duration_min": 15},
+
+  {"section": 1, "lecture": 1, "title": "「構築できる」と「運用できる」は別スキル", "duration_min": 10},
+  {"section": 1, "lecture": 2, "title": "本番環境でよく起きる問題パターン", "duration_min": 15},
+  {"section": 1, "lecture": 3, "title": "SREとは何か・DevOpsとの違い", "duration_min": 15},
+  {"section": 1, "lecture": 4, "title": "信頼性を数値で語る文化", "duration_min": 10},
+  {"section": 1, "lecture": 5, "title": "このコースの学習ロードマップ", "duration_min": 10},
+
+  {"section": 2, "lecture": 1, "title": "監視とオブザーバビリティの違い", "duration_min": 15},
+  {"section": 2, "lecture": 2, "title": "メトリクス・ログ・トレースの3本柱", "duration_min": 15},
+  {"section": 2, "lecture": 3, "title": "AWSのオブザーバビリティサービス全体像", "duration_min": 10},
+  {"section": 2, "lecture": 4, "title": "「何が起きているか」を知るための設計思想", "duration_min": 15},
+  {"section": 2, "lecture": 5, "title": "ハンズオン: サンプルWebアプリを本番想定でデプロイ", "duration_min": 35},
+
+  {"section": 3, "lecture": 1, "title": "CloudWatch Metricsの基本", "duration_min": 15},
+  {"section": 3, "lecture": 2, "title": "標準メトリクスとカスタムメトリクスの違い", "duration_min": 10},
+  {"section": 3, "lecture": 3, "title": "見るべきメトリクス一覧（CPU/メモリ/DB/ALB）", "duration_min": 15},
+  {"section": 3, "lecture": 4, "title": "ハンズオン: ダッシュボードを作る", "duration_min": 30},
+  {"section": 3, "lecture": 5, "title": "ハンズオン: カスタムメトリクスを送信する", "duration_min": 20},
+
+  {"section": 4, "lecture": 1, "title": "CloudWatch Logsの基本とロググループ設計", "duration_min": 15},
+  {"section": 4, "lecture": 2, "title": "ログの構造化（JSON形式のすすめ）", "duration_min": 10},
+  {"section": 4, "lecture": 3, "title": "Logs Insightsクエリ入門", "duration_min": 15},
+  {"section": 4, "lecture": 4, "title": "ハンズオン: Logs Insightsでエラーを探す", "duration_min": 25},
+  {"section": 4, "lecture": 5, "title": "ハンズオン: CloudWatch Logsメトリクスフィルター", "duration_min": 15},
+
+  {"section": 5, "lecture": 1, "title": "良いアラートと悪いアラートの違い", "duration_min": 15},
+  {"section": 5, "lecture": 2, "title": "アラート疲れ（Alert Fatigue）を防ぐ設計", "duration_min": 15},
+  {"section": 5, "lecture": 3, "title": "CloudWatch Alarmsの仕組み", "duration_min": 10},
+  {"section": 5, "lecture": 4, "title": "SNS通知の設定（メール・Slack連携）", "duration_min": 10},
+  {"section": 5, "lecture": 5, "title": "ハンズオン: アラートを設計してSlackに飛ばす", "duration_min": 30},
+
+  {"section": 6, "lecture": 1, "title": "SLI（Service Level Indicator）とは", "duration_min": 15},
+  {"section": 6, "lecture": 2, "title": "SLO（Service Level Objective）の設計方法", "duration_min": 15},
+  {"section": 6, "lecture": 3, "title": "エラーバジェットとは何か・使い方", "duration_min": 15},
+  {"section": 6, "lecture": 4, "title": "ハンズオン: 自分のサービスのSLOを設計する", "duration_min": 25},
+
+  {"section": 7, "lecture": 1, "title": "インシデントのライフサイクル", "duration_min": 15},
+  {"section": 7, "lecture": 2, "title": "初動対応のプレイブック", "duration_min": 15},
+  {"section": 7, "lecture": 3, "title": "AWS Runbook / Systems Managerの活用", "duration_min": 15},
+  {"section": 7, "lecture": 4, "title": "ハンズオン: 模擬インシデント対応演習", "duration_min": 35},
+
+  {"section": 8, "lecture": 1, "title": "責任追及しないポストモーテムの文化", "duration_min": 10},
+  {"section": 8, "lecture": 2, "title": "ポストモーテムの書き方・テンプレート", "duration_min": 15},
+  {"section": 8, "lecture": 3, "title": "ワーク: 模擬インシデントのポストモーテムを書く", "duration_min": 25},
+
+  {"section": 9, "lecture": 1, "title": "AWS料金の仕組みとよくある罠", "duration_min": 15},
+  {"section": 9, "lecture": 2, "title": "Cost Explorer・Cost Anomaly Detectionの使い方", "duration_min": 15},
+  {"section": 9, "lecture": 3, "title": "よく使うコスト削減手法（Reserved/Spot/サイジング）", "duration_min": 15},
+  {"section": 9, "lecture": 4, "title": "ハンズオン: コストアラートを設定する", "duration_min": 15},
+
+  {"section": 10, "lecture": 1, "title": "このコースで学んだことの総整理", "duration_min": 10},
+  {"section": 10, "lecture": 2, "title": "次に学ぶべきこと（SOA・DevOps Pro・Terraform）", "duration_min": 10},
+  {"section": 10, "lecture": 3, "title": "運用改善を続けるためのマインドセット", "duration_min": 10}
+]

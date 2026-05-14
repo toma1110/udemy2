@@ -17,6 +17,10 @@
 - Worker != Reviewer:
 - `course_spec.md` consistency:
 - Technical accuracy:
+- `awsknowledge` 検索語/確認結果/参照URL:
+- `awsknowledge` 未使用理由（利用不可の場合）:
+- `awsiac` CloudFormation検証結果（テンプレート変更時）:
+- `awsiac` 未使用理由（利用不可の場合）:
 - README consistency:
 - VOICEVOX narration check:
 - VOICEVOX listening check:

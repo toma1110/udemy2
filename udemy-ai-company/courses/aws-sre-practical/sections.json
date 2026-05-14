@@ -1,0 +1,57 @@
+[
+  {
+    "section": 0,
+    "title": "はじめに",
+    "objective": "このコースの目的・対象者・学習範囲を理解し、AWS環境をセットアップできる"
+  },
+  {
+    "section": 1,
+    "title": "SREの基礎知識",
+    "objective": "SREとDevOpsの違いを説明でき、信頼性を数値で表現する考え方と本番環境で起きやすい問題パターンを理解できる"
+  },
+  {
+    "section": 2,
+    "title": "オブザーバビリティ入門",
+    "objective": "監視とオブザーバビリティの違いを説明でき、メトリクス・ログ・トレースの役割を理解してサンプルアプリをAWSにデプロイできる"
+  },
+  {
+    "section": 3,
+    "title": "メトリクス監視（CloudWatch Metrics）",
+    "objective": "CloudWatch Metricsで標準・カスタムメトリクスを収集し、ダッシュボードを作成して主要リソースの状態を可視化できる"
+  },
+  {
+    "section": 4,
+    "title": "ログ管理（CloudWatch Logs）",
+    "objective": "CloudWatch Logsでログを収集・構造化し、Logs Insightsでエラーを検索・分析してメトリクスフィルターを設定できる"
+  },
+  {
+    "section": 5,
+    "title": "アラート設計（CloudWatch Alarms）",
+    "objective": "Alert Fatigueを防ぐアラート設計の原則を理解し、CloudWatch AlarmとSNSを使ってSlackへ通知を飛ばせる"
+  },
+  {
+    "section": 6,
+    "title": "SLI / SLO / エラーバジェット",
+    "objective": "SLI・SLO・エラーバジェットの概念を説明でき、自分のサービスに合ったSLOを設計して運用に活用できる"
+  },
+  {
+    "section": 7,
+    "title": "インシデント対応",
+    "objective": "インシデントのライフサイクルと初動対応手順を理解し、AWS Systems Managerを活用した模擬障害対応を実践できる"
+  },
+  {
+    "section": 8,
+    "title": "ポストモーテム（障害振り返り）",
+    "objective": "責任追及しないポストモーテムの文化を理解し、テンプレートに沿って再発防止策まで含めた振り返り文書を書ける"
+  },
+  {
+    "section": 9,
+    "title": "コスト最適化",
+    "objective": "AWSの料金体系を理解し、Cost ExplorerやCost Anomaly Detectionを使ってコスト異常を検知・削減できる"
+  },
+  {
+    "section": 10,
+    "title": "まとめと次のステップ",
+    "objective": "コース全体の学習内容を整理し、SOA・DevOps Pro・Terraformなど次に取り組むべきスキルと学習パスを描ける"
+  }
+]

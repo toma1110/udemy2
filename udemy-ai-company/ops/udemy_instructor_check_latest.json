@@ -1,0 +1,152 @@
+{
+  "checked_at": "2026-05-14T11:56:38.800936+00:00",
+  "base_url": "https://www.udemy.com",
+  "course_filter": null,
+  "summary": {
+    "questions": {
+      "total_unique": 2,
+      "by_status_filter": {
+        "unread": 0,
+        "unanswered": 2,
+        "unresponded": 0,
+        "no_instructor_response": 0
+      }
+    },
+    "message_threads": {
+      "total_unique": 0,
+      "by_status_filter": {
+        "unread": 0
+      }
+    },
+    "reviews": {
+      "total_unique": 2,
+      "by_status_filter": {
+        "unresponded": 2
+      }
+    },
+    "total_unique": 4
+  },
+  "items": {
+    "questions": [
+      {
+        "category": "questions",
+        "status_filter": "unanswered",
+        "id": "x01bKcSLi9C1TWIjHjGRjSasQ==",
+        "title": "環境構築について",
+        "course": "【AWS SRE実践】構築から運用へ - CloudWatch・SLO・インシデント対応まで現場で使えるスキルを習得",
+        "user": "",
+        "created": "2026-05-03T12:50:53Z",
+        "modified": "2026-05-07T23:41:44Z",
+        "url": "",
+        "raw": {
+          "_class": "question",
+          "id": "x01bKcSLi9C1TWIjHjGRjSasQ==",
+          "created": "2026-05-03T12:50:53Z",
+          "title": "環境構築について",
+          "body": "<p><br></p><p>お世話になっております。</p><p>現在、講座の環境構築を進めておりますが、いくつか手順どおりに進める中で詰まった箇所がございましたため、確認と共有をさせていただきます。</p><p>環境構築は後続の講座を進めるために必要な前提と認識しておりますが、現状ですと個人で調査して解消・設定する箇所が複数あり、最終的に自分が構築した環境が講座の想定環境と一致しているのか少し不安に感じております。</p><p>確認した内容は以下のとおりです。</p><p><br></p><p><strong>1. CloudWatch Agent の確認コマンドについて</strong></p><p>CLI_COMMANDS.md では以下のようなコマンドになっておりました。</p><p>sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \\</p><p>-a query -m ec2 -c default</p><p>ただ、-a query は利用できず、実際には以下のように status で確認できました。</p><p>sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a status</p><p><br></p><p><strong>2. X-Ray daemon のインストールについて</strong></p><p>以下のコマンドではインストールできませんでした。</p><p><br></p><p>sudo yum install -y aws-xray-daemon</p><p><br></p><p>そのため、AWS公式のX-Ray daemon RPMを取得し、dnfでローカルRPMとしてインストールしました。</p><p><br></p><p>Amazon Linux 2023 の場合、この進め方で講座の想定環境と合っていますでしょうか。</p><p><br></p><p><strong>3. X-Ray のトレース確認コマンドについて</strong></p><p>以下のコマンド実行時、最初は権限不足で実行できませんでした。</p><p>aws xray get-trace-summaries \\</p><p>--start-time $(date -u -d '1 hour ago' +%s) \\</p><p>--end-time $(date -u +%s) \\</p><p>--region ap-northeast-1</p><p>IAMロールに追加で読み取り権限が必要でした。<br>こちらの権限付与も講座の範囲に含まれる想定でしたでしょうか。<br>もしそうであれば、事前にどのIAMポリシーや権限を付与する必要があるのか記載があると大変助かります。</p><p><br></p><p><strong>4. CloudWatch Logs のロググループ名について</strong></p><p>以下のコマンドでは /aws/ec2/myapp が指定されておりました。</p><p>aws logs describe-log-streams \\</p><p>--log-group-name /aws/ec2/myapp \\</p><p>--region ap-northeast-1</p><p>ただ、講座内の構成では以下のロググループ名ではないかと思いました。</p><p>/aws/ec2/sre-handson/webapp</p><p>こちらはどちらが正しい想定でしょうか。</p><p><br></p><p><strong>5. ログストリーム作成について</strong></p><p>CLI_COMMANDS.md 内にログストリーム作成に関する記載が見当たりませんでした。<br>環境構築の段階では不要で、この後のセクションでCloudWatch Agent等により自動作成される想定でしょうか。</p><p>もし後続セクションで作成される前提であれば、その旨を講座内で補足いただけるとありがたいです。<br>すでに説明済みでしたら申し訳ございません。</p><p><br></p><p><strong>6. ALB経由でToDoリストが表示されなかった件</strong></p><p>ブラウザ上でToDoリストが表示されませんでしたが、以下の設定で解消しました。</p><p>ターゲットグループのターゲットポートを 5000 に設定</p><p>EC2のセキュリティグループに、ALBのセキュリティグループからのカスタムTCP 5000 を許可</p><p>この設定が講座の想定と合っているか確認したいです。</p><p><br></p><p><strong>7. RDSのDB名について</strong></p><p>RDS作成段階ではDB名が未決の状態でしたが、Flaskアプリの接続設定でDB名が必要になりました。<br>もし講座内で利用するDB名が決まっている場合、RDS作成時またはFlask設定前の段階で明記いただけると助かります。</p><p><br></p><p>以上となります。</p><p>環境構築の試行錯誤も含めて本講座の意義ということでしたら恐れ入りますが、現状ですと講座本編に入る前の段階で不明点が多く、後続の学習に進んでよい状態か不安が残っております。</p><p>お忙しいところ恐縮ですが、可能であればドキュメントや補足説明を今一度ご確認いただけますと幸いです。</p><p>なお、私の理解違いや見当違いの内容がございましたら大変申し訳ございません。<br>その場合は、正しい進め方をご教示いただけますと幸いです。</p><p>よろしくお願いいたします。</p>",
+          "num_replies": 4,
+          "num_follows": 2,
+          "num_reply_upvotes": 0,
+          "modified": "2026-05-07T23:41:44Z",
+          "last_activity": "2026-05-07T23:41:44Z",
+          "is_read": true,
+          "is_featured": false,
+          "course": {
+            "_class": "course",
+            "id": "x01_v7v4tXI86SepbnpC5jBSg==",
+            "title": "【AWS SRE実践】構築から運用へ - CloudWatch・SLO・インシデント対応まで現場で使えるスキルを習得",
+            "url": "/course/aws-sre-cloudwatch/"
+          },
+          "is_instructor": false,
+          "num_upvotes": 0
+        }
+      },
+      {
+        "category": "questions",
+        "status_filter": "unanswered",
+        "id": "x01faxoh9HCQSzSRvJ3DHyvWg==",
+        "title": "リンク先のgithubに「sre-handson-base.yml」が入っていない。",
+        "course": "【AWS SRE実践】構築から運用へ - CloudWatch・SLO・インシデント対応まで現場で使えるスキルを習得",
+        "user": "",
+        "created": "2026-04-15T16:20:54Z",
+        "modified": "2026-05-04T00:49:44Z",
+        "url": "",
+        "raw": {
+          "_class": "question",
+          "id": "x01faxoh9HCQSzSRvJ3DHyvWg==",
+          "created": "2026-04-15T16:20:54Z",
+          "title": "リンク先のgithubに「sre-handson-base.yml」が入っていない。",
+          "body": "<p>表題の通り、リンク先のgithubに「sre-handson-base.yml」が入っていません。<br><br>14番の動画ではハンズオンを実施することになっていて、リンク先のgithub<a href=\"https://github.com/toma1110/aws-sre-cfn-templates\" rel=\"noopener noreferrer\" target=\"_blank\">GitHub - toma1110/aws-sre-cfn-templates: UdemyのAWS SRE実践コースのハンズオン用CloudFormationテンプレート · GitHub</a><br>から、ymlをダウンロードして、CloudFormationからアップロードする理解です。<br>しかし、github上にsre-handson-base.ymlがありません。<br>github上に正しいymlをアップロードお願いします。<br><br>[補足]<br>github上には01~06のymlが入っていますが、github上の案内ではこれを01から順にアップロードしてデプロイせよと説明があります。<br>ただ、自身で順に実行する場合、自分でALBを作成する必要があり、02以降のyml内のALB情報のところを自身で修正してからアップロードしないと動かない認識です。<br>この場合、動画内で説明している「sre-handson-base.ymlを使えばALBも自動で構築されます」といった案内と矛盾することになるため、<br>恐らくgithub側の登録ミスだと理解しています。</p>",
+          "num_replies": 2,
+          "num_follows": 2,
+          "num_reply_upvotes": 0,
+          "modified": "2026-05-04T00:49:44Z",
+          "last_activity": "2026-05-04T00:49:44Z",
+          "is_read": true,
+          "is_featured": false,
+          "course": {
+            "_class": "course",
+            "id": "x01_v7v4tXI86SepbnpC5jBSg==",
+            "title": "【AWS SRE実践】構築から運用へ - CloudWatch・SLO・インシデント対応まで現場で使えるスキルを習得",
+            "url": "/course/aws-sre-cloudwatch/"
+          },
+          "is_instructor": false,
+          "num_upvotes": 0
+        }
+      }
+    ],
+    "message_threads": [],
+    "reviews": [
+      {
+        "category": "reviews",
+        "status_filter": "unresponded",
+        "id": "x01Gicc3lnUiWji5RjsuEzzyQ==",
+        "title": "正直に申し上げますと、他の講師が挙げているハンズオン講座を参考にして作り直すことをおすすめします。 ・ハンズオンになっていない Udemyにハンズオンの講座は多くあり、大抵はどう操作していくか画面を表示して解説しておりますが、本講座ではそれが一切ありません。このハンズオン部分だけでも修正すれば、改善すると思います。 ・ほぼ全てのチャプターが文字のみ 基本文字のみで実際のAWS画面の画像などが存在しません。プレゼンを受ける立場で考えてください。文字のみのスライドを見せて、相手に理解していただけるでしょうか。 ハンズオンは期待できなかったため、自身でAWSにLaravelの環境を構築して、各セクションで解説されていた内容を実行していきました。 用語や考え方については豊富だったので、自身が普段使用している言語で環境構築をおこなったほうが良いと思ったからです。 用語や考え方は参考になり、そこは良い部分なのにもったいないなと思いました。",
+        "course": "",
+        "user": "MASANORI MATSUMURA",
+        "created": "2026-05-08T15:20:15Z",
+        "modified": "2026-05-08T15:39:02Z",
+        "url": "",
+        "raw": {
+          "_class": "course_review",
+          "id": "x01Gicc3lnUiWji5RjsuEzzyQ==",
+          "content": "正直に申し上げますと、他の講師が挙げているハンズオン講座を参考にして作り直すことをおすすめします。\n\n・ハンズオンになっていない\n\nUdemyにハンズオンの講座は多くあり、大抵はどう操作していくか画面を表示して解説しておりますが、本講座ではそれが一切ありません。このハンズオン部分だけでも修正すれば、改善すると思います。\n\n\n・ほぼ全てのチャプターが文字のみ\n\n基本文字のみで実際のAWS画面の画像などが存在しません。プレゼンを受ける立場で考えてください。文字のみのスライドを見せて、相手に理解していただけるでしょうか。\n\n\nハンズオンは期待できなかったため、自身でAWSにLaravelの環境を構築して、各セクションで解説されていた内容を実行していきました。\n用語や考え方については豊富だったので、自身が普段使用している言語で環境構築をおこなったほうが良いと思ったからです。\n\n用語や考え方は参考になり、そこは良い部分なのにもったいないなと思いました。",
+          "rating": 2.0,
+          "created": "2026-05-08T15:20:15Z",
+          "user_modified": "2026-05-08T15:39:02Z",
+          "user": {
+            "_class": "user",
+            "id": "x01HNuISsYkl3ViiQWaSJtBkA==",
+            "title": "MASANORI MATSUMURA",
+            "name": "MASANORI"
+          }
+        }
+      },
+      {
+        "category": "reviews",
+        "status_filter": "unresponded",
+        "id": "x01FPwT0TErsfA07tIeEQhUww==",
+        "title": "・ハンズオンが全く整備されていません。動画内でダウンロードを指示されるymlファイルが、添付されているgithub上に存在しません。 ・ハンズオンではCLI上でコマンド実行しますが、そのコマンドがコードとして共有されず、動画画面上の内容を目視でコピペしないといけません。ユーザーフレンドリーでなく最悪です。 ・上記に関する問い合わせをQA欄と講師へのDM双方で行いましたが、一週間以上返信がありません。",
+        "course": "",
+        "user": "Tomoki Mori",
+        "created": "2026-04-20T13:52:32Z",
+        "modified": "2026-04-20T13:54:55Z",
+        "url": "",
+        "raw": {
+          "_class": "course_review",
+          "id": "x01FPwT0TErsfA07tIeEQhUww==",
+          "content": "・ハンズオンが全く整備されていません。動画内でダウンロードを指示されるymlファイルが、添付されているgithub上に存在しません。\n・ハンズオンではCLI上でコマンド実行しますが、そのコマンドがコードとして共有されず、動画画面上の内容を目視でコピペしないといけません。ユーザーフレンドリーでなく最悪です。\n・上記に関する問い合わせをQA欄と講師へのDM双方で行いましたが、一週間以上返信がありません。",
+          "rating": 1.0,
+          "created": "2026-04-20T13:52:32Z",
+          "user_modified": "2026-04-20T13:54:55Z",
+          "user": {
+            "_class": "user",
+            "id": "x014EQEuy53xbtnHs3jSahbGw==",
+            "title": "Tomoki Mori",
+            "name": "Tomoki"
+          }
+        }
+      }
+    ]
+  }
+}

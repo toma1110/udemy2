@@ -1,0 +1,18 @@
+{
+  "section": 3,
+  "lecture": 3,
+  "title": "見るべきメトリクス一覧（CPU/メモリ/DB/ALB）",
+  "duration_min": 15,
+  "learning_objectives": "EC2・RDS・ALBそれぞれで監視すべき重要メトリクスを把握し、異常時のしきい値設計の考え方を理解する。",
+  "key_points": [
+    "EC2の重要メトリクス: CPUUtilization / NetworkIn / NetworkOut / StatusCheckFailed",
+    "EC2メモリ・ディスクはCloudWatch Agent経由で収集（mem_used_percent / disk_used_percent）",
+    "RDSの重要メトリクス: CPUUtilization / FreeableMemory / DatabaseConnections / ReadLatency / WriteLatency",
+    "RDS FreeStorageSpaceはゼロになる前にアラートが必要（回復不可能なダウンを防ぐ）",
+    "ALBの重要メトリクス: RequestCount / TargetResponseTime / HTTPCode_Target_5XX_Count / HealthyHostCount",
+    "Lambdaの重要メトリクス: Invocations / Errors / Duration / Throttles / ConcurrentExecutions",
+    "しきい値設計の考え方: ベースライン計測 → 異常の定義 → アラートレベル（警告/危険）の2段階",
+    "メトリクスの相関分析: CPU高騰 + NetworkOut低下 = アプリ詰まりのサイン"
+  ],
+  "notes": "実務で一番役立つ「どれを見ればいいか」を整理したレクチャー。サービスごとにテーブルで見やすくまとめる。FreeStorageSpaceの罠など実体験に基づいた落とし穴を交える。しきい値の設計思想（%固定よりベースライン比）も伝える。"
+}

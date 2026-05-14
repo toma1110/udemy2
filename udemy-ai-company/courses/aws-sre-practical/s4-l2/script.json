@@ -1,0 +1,99 @@
+{
+  "section": 4,
+  "lecture": 2,
+  "title": "ログの構造化（JSON形式のすすめ）",
+  "duration_min": 10,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "---\nmarp: true\ntheme: default\npaginate: true\n---\n\n# ログの構造化\n## JSON形式のすすめ\n\n**セクション4 ・ レクチャー2**\n\nなぜログを「読みやすい文字列」から卒業すべきなのか",
+      "narration": "このレクチャーでは「ログの構造化」について学びます。ログといえばエラーメッセージや処理の経過を文字列で記録するイメージがあると思いますが、実は出力形式を少し変えるだけで、トラブル調査の効率が劇的に変わります。なぜ構造化が必要なのか、動機づけからスタートしていきましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "---\n\n# こんなログ、調査で困ったことはありませんか？\n\n```\n[2024-01-15 09:23:41] ERROR user login failed for user@example.com retry=3\n[2024-01-15 09:23:42] INFO  request processed in 342ms status=200\n[2024-01-15 09:23:43] WARN  db connection slow host=db-01 latency=1200ms\n```\n\n- 😰 「`retry=3` 以上のエラーだけ抽出したい…」\n- 😰 「特定ユーザーのログだけ集めたい…」\n- 😰 **grep や正規表現で頑張るしかない状態**",
+      "narration": "まず現実のログを見てみましょう。こういった一行テキスト形式のログ、見覚えがある方も多いのではないでしょうか。人間が読む分には何となく把握できますが、「retryが3以上のエラーだけ抽出したい」「特定ユーザーの操作ログを集めたい」となると途端に大変です。grepや正規表現を駆使しても、少しフォーマットが変わるだけで動かなくなる、そんな経験はありませんか？",
+      "diagram": null
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "---\n\n# 非構造化ログ vs 構造化ログ\n\n構造化ログとは、**各情報をキーと値のペアで表現したログ**のことです。\n\nJSON形式が業界標準として広く使われています。",
+      "narration": "そこで登場するのが「構造化ログ」です。構造化ログとは、ログの各情報をキーとあたいのペアで表現したもので、JSON形式が業界標準として広く採用されています。人間が読むためではなく、機械が処理しやすい形式にすることで、検索・集計・アラートの設定がすべて楽になります。左右で比べてみましょう。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "非構造化ログ vs 構造化ログ（JSON）",
+          "left": {
+            "label": "❌ 非構造化ログ",
+            "items": [
+              "ERROR user login failed for user@example.com retry=3",
+              "フィールドの区切りが曖昧",
+              "正規表現でしか抽出できない",
+              "フォーマット変更で解析が壊れる",
+              "集計・統計が取りにくい"
+            ]
+          },
+          "right": {
+            "label": "✅ 構造化ログ（JSON）",
+            "items": [
+              "{\"level\":\"ERROR\", \"userId\":\"user@example.com\", \"retry\":3}",
+              "フィールドが明確に定義されている",
+              "キー名で即座に検索・フィルタ可能",
+              "フォーマット変更に強い",
+              "retry > 2 のような条件集計も簡単"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "---\n\n# 最低限含めるべき5つのフィールド\n\n| フィールド名 | 役割 | 例 |\n|---|---|---|\n| `timestamp` | いつ発生したか | `2024-01-15T09:23:41Z` |\n| `level` | 重要度 | `ERROR` |\n| `message` | 何が起きたか | `\"Login failed\"` |\n| `requestId` | どのリクエストか | `\"abc-123-xyz\"` |\n| `userId` | 誰の操作か | `\"user_456\"` |\n\n> 💡 `requestId` があると**1つのリクエストの全ログを串刺し検索**できる！",
+      "narration": "構造化ログに最低限含めてほしいフィールドが5つあります。timestamp・level・message・requestId・userIdです。特に重要なのがrequestIdです。これは1回のAPIリクエストやLambda実行に対して付与する一意なIDで、これがあるとCloudWatch Logs Insightsで「このリクエストに関連するログを全部見せて」という検索が一発でできるようになります。ぜひ全ログに共通して付けるよう設計してください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "---\n\n# ログレベルの使い分け\n\n| レベル | 使いどころ |\n|---|---|\n| `DEBUG` | 開発時の詳細情報。本番では原則OFF |\n| `INFO` | 正常な処理の記録（リクエスト受付・完了など） |\n| `WARN` | 問題ではないが注意が必要な状態 |\n| `ERROR` | 処理が失敗した・例外が発生した |\n| `FATAL` | システムが継続不能な致命的エラー |\n\n> ⚠️ **なんでも ERROR にしない！**\n> 適切なレベルがないとアラートが機能しなくなります",
+      "narration": "ログには重要度を示す「ログレベル」があります。DEBUG・INFO・WARN・ERROR・FATALの5段階です。よくある失敗が「とりあえず全部ERRORにする」こと。こうするとアラートが鳴りっぱなしになり、本当に重要なエラーが埋もれてしまいます。ユーザーの入力ミスはWARN、システム側の予期せぬ例外はERROR、というように意図を持って使い分けることが大切です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "---\n\n# Pythonでの実装例\n## `python-json-logger` ライブラリ\n\n```python\nimport logging\nfrom pythonjsonlogger import jsonlogger\n\nlogger = logging.getLogger()\nhandler = logging.StreamHandler()\nformatter = jsonlogger.JsonFormatter(\n    '%(timestamp)s %(level)s %(message)s %(requestId)s'\n)\nhandler.setFormatter(formatter)\nlogger.addHandler(handler)\n\n# 使い方\nlogger.info(\"Login successful\", extra={\n    \"requestId\": \"abc-123\",\n    \"userId\": \"user_456\"\n})\n```\n\n出力: `{\"timestamp\": \"2024-01-15T09:23:41Z\", \"level\": \"INFO\", \"message\": \"Login successful\", \"requestId\": \"abc-123\", \"userId\": \"user_456\"}`",
+      "narration": "PythonでJSON形式のログを出力するには「python-json-logger」ライブラリが便利です。標準のloggingモジュールにフォーマッターを設定するだけで、通常のlogger.infoの呼び出しがそのままJSON出力になります。extraに辞書を渡せば、requestIdやuserIdといった追加フィールドを自由に付与できます。既存コードの大幅な変更なく導入できるのが嬉しいポイントです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "---\n\n# Node.jsでの実装例\n## `pino` ライブラリ\n\n```javascript\nimport pino from 'pino';\n\nconst logger = pino({\n  level: process.env.LOG_LEVEL || 'info',\n});\n\n// 使い方\nlogger.info(\n  { requestId: 'abc-123', userId: 'user_456' },\n  'Login successful'\n);\n\nlogger.error(\n  { requestId: 'abc-123', err: error },\n  'Database connection failed'\n);\n```\n\n> 💡 pinoは**高パフォーマンス**で知られるNode.js向けJSONロガーです",
+      "narration": "Node.jsの場合は「pino」ライブラリがおすすめです。pinoは非常に高速なJSONロガーとして知られており、Lambda環境のような処理時間が重要な場面でも安心して使えます。ログレベルを環境変数LOG_LEVELで切り替えられるようにしておくと、本番ではINFO以上、デバッグ時はDEBUGに変更するといった運用がしやすくなります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "---\n\n# Lambda開発者必見：Powertools for AWS Lambda\n\nAWSが**公式に推奨する**サーバーレス向けユーティリティライブラリです。\n\n```python\nfrom aws_lambda_powertools import Logger\n\nlogger = Logger(service=\"user-service\")\n\n@logger.inject_lambda_context   # ← requestIdを自動付与！\ndef handler(event, context):\n    logger.info(\"Processing request\", extra={\n        \"userId\": event[\"userId\"]\n    })\n```\n\n出力例：\n```json\n{\n  \"level\": \"INFO\",\n  \"message\": \"Processing request\",\n  \"service\": \"user-service\",\n  \"cold_start\": true,\n  \"function_request_id\": \"abc-123-xyz\",\n  \"userId\": \"user_456\"\n}\n```",
+      "narration": "Lambdaを使っているなら「Powertools for AWS Lambda」を強くおすすめします。これはAWSが公式に推奨するライブラリで、Python・TypeScript・Javaなどで使えます。デコレーター一つ付けるだけでLambdaのrequestIdやコールドスタートの情報が自動でログに付与されます。ゼロから構造化ロガーを作る手間が省けるうえ、AWS環境に最適化されているので、Lambda開発では積極的に活用してください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "---\n\n# ⚠️ セキュリティ：絶対にログに出してはいけない情報\n\n## ログに残してはいけない情報（マスキング必須）\n\n- 🔴 パスワード・秘密鍵\n- 🔴 クレジットカード番号\n- 🔴 マイナンバー・社会保障番号\n- 🔴 APIキー・アクセストークン\n\n```python\n# ❌ 危険な例\nlogger.info(\"User login\", extra={\"password\": user.password})\n\n# ✅ 安全な例（マスキング）\nlogger.info(\"User login\", extra={\"password\": \"***MASKED***\"})\n\n# ✅ カード番号は末尾4桁のみ\nlogger.info(\"Payment\", extra={\"card\": f\"****-****-****-{card[-4:]}\"})\n```\n\n> CloudWatch Logsに流れたログは**AWSサポートも閲覧できる可能性**があります",
+      "narration": "構造化ログを設計する際、セキュリティの観点も非常に重要です。パスワード・クレジットカード番号・APIキーといった機密情報は、絶対にログに出してはいけません。構造化ログは検索しやすい分、機密情報も簡単に抽出されてしまいます。CloudWatch Logsに流れたデータはAWSサポートが閲覧できる可能性もあります。マスキング処理をアプリケーションレイヤーで必ず実装し、設計レビューでも確認するようにしましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "---\n\n# CloudWatch Logs Insightsで活きる構造化ログ\n\n```sql\n-- requestIdで一つのリクエストを追跡\nfields @timestamp, level, message, userId\n| filter requestId = \"abc-123-xyz\"\n| sort @timestamp asc\n\n-- 直近1時間のERRORを件数順に集計\nfields level, message\n| filter level = \"ERROR\"\n| stats count() as errorCount by message\n| sort errorCount desc\n```\n\n> 💡 JSONフィールドを **そのままクエリのフィールド名** として使えます！\n> 非構造化ログでは正規表現を書く必要があった部分が、**シンプルなSQLで書けます**",
+      "narration": "構造化ログの真価が発揮されるのがCloudWatch Logs Insightsです。JSONのフィールドをそのままクエリのカラムとして使えるため、requestIdで1リクエストのログ全体を追跡したり、ERRORログをメッセージごとに集計してどのエラーが多いか確認したりといった分析が、シンプルなSQLライクなクエリで書けます。非構造化ログ時代には正規表現を書いていた部分が、劇的にシンプルになります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "---\n\n# まとめ\n\n## このレクチャーで学んだこと\n\n1. **非構造化ログの限界と構造化ログのメリット**\n   テキスト解析の複雑さから解放され、フィールド単位で検索・集計が可能になる\n\n2. **最低限のフィールド設計とログレベルの使い分け**\n   `timestamp / level / message / requestId / userId` を基本に、\n   ログレベルは意図を持って5段階を使い分ける\n\n3. **実装はライブラリを活用・セキュリティも忘れずに**\n   Python は `python-json-logger`、Node.js は `pino`、\n   Lambda なら `Powertools for AWS Lambda` が公式推奨。\n   機密情報のマスキングは設計段階から考える\n\n---\n### 次のレクチャー：CloudWatch Logs Insightsで実践クエリ入門",
+      "narration": "このレクチャーのまとめです。1つ目、非構造化ログはテキスト解析が複雑になるため、JSON形式の構造化ログへ移行することでCloudWatch Logs Insightsでの検索・集計が格段に楽になります。2つ目、ログには最低5フィールドを含め、ログレベルは意図を持って使い分けることでアラートが正しく機能します。3つ目、実装はライブラリに頼りましょう。Lambdaならば公式推奨のPowertoolsが最善です。そして機密情報のマスキングは必ず設計段階から組み込んでください。次のレクチャーでは、今日学んだ構造化ログをCloudWatch Logs Insightsで実際にクエリする方法を学びます。",
+      "diagram": null
+    }
+  ]
+}

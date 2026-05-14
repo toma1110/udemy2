@@ -1,0 +1,152 @@
+{
+  "section": 5,
+  "lecture": 4,
+  "title": "SNS通知の設定（メール・Slack連携）",
+  "duration_min": 12,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# SNS通知の設定\n## メール・Slack連携でアラートを見逃さない\n\n**Section 5 - Lecture 4**\n\n> CloudWatch Alarmが鳴っても、誰も気づかなければ意味がない",
+      "narration": "このレクチャーでは、Amazon SNSを使ったアラート通知の設定を学びます。CloudWatch Alarmでしきい値を検知しても、担当者に届かなければ障害対応が遅れてしまいます。メールへの通知から、Slackへのリアルタイム連携まで、現場でよく使われる設定をステップごとに解説していきますね。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# Amazon SNSとは？\n\n**Simple Notification Service**\n\n> 「発行者」がメッセージを送ると、登録された「購読者」全員に届く仕組み\n\n- **Pub/Sub型**のメッセージングサービス\n- CloudWatch Alarm の「アクション」として指定\n- 1つのTopicに複数の送信先を登録できる",
+      "narration": "Amazon SNSは「Pub/Subメッセージングサービス」です。Pub/Subとは、発行者（Publisher）がトピックにメッセージを投げると、そのトピックを購読（Subscribe）している全員に同時に届く仕組みのことです。たとえばCloudWatch Alarmがアラート状態になったとき、SNS Topicに通知を送ることで、メールやSlack、Lambdaなどさまざまなエンドポイントへまとめてメッセージを届けられます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# SNSの全体像\n\nCloudWatch Alarm がトリガーになり、SNS Topic を経由して各通知先へ届く",
+      "narration": "全体の流れを図で確認しましょう。CloudWatch Alarmがしきい値を超えると、指定したSNS Topicにメッセージが発行されます。そのTopicには複数のサブスクリプション、つまり送信先を登録できます。メール・Slack・Lambdaなど、用途に応じた宛先を1つのTopicにまとめられるのがSNSの便利な点ですね。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "CloudWatch → SNS → 通知先",
+          "steps": [
+            {
+              "label": "CloudWatch Alarm",
+              "desc": "しきい値を超えたらアクション実行",
+              "color": "orange"
+            },
+            {
+              "label": "SNS Topic",
+              "desc": "メッセージを受け取り購読者へ配信",
+              "color": "blue"
+            },
+            {
+              "label": "サブスクリプション",
+              "desc": "メール / Slack(Chatbot) / Lambda / Webhook",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# SNS Topic の作成手順\n\n### AWSコンソール操作\n\n1. SNSコンソール → **「トピックの作成」**\n2. タイプ: **スタンダード**（Slack/Lambda連携はこちら）\n3. 名前例: `prod-alert-topic`\n4. **「トピックの作成」**ボタンをクリック\n5. 作成された **Topic ARN** をメモしておく\n\n> ⚠️ FIFOタイプはSQS連携専用。通知用途はスタンダードを選択",
+      "narration": "では実際にSNS Topicを作成してみましょう。SNSコンソールを開いて「トピックの作成」をクリックします。タイプは「スタンダード」を選んでください。FIFOというタイプもありますが、これはSQSとの連携専用で、メールやSlack通知には使えません。名前はシステム名と用途がわかるよう、たとえば「prod-alert-topic」のように命名すると管理しやすいですよ。作成後に表示されるTopic ARNは後で使うのでメモしておきましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# メール通知の設定\n\n### サブスクリプションの追加\n\n1. 作成したTopicを開き **「サブスクリプションの作成」**\n2. プロトコル: **Email**\n3. エンドポイント: 通知先メールアドレスを入力\n4. **確認メールが届く** → リンクをクリックして有効化\n\n### ポイント\n- ✅ 複数アドレスを登録可能（チームML推奨）\n- ✅ 確認メールのクリックを忘れずに！\n- ⚠️ クリック前はステータスが `PendingConfirmation`",
+      "narration": "メール通知の設定はとてもシンプルです。作成したTopicを開いて「サブスクリプションの作成」を選び、プロトコルにEmailを指定してアドレスを入力するだけです。ただし、登録したメールアドレスに確認メールが届きますので、必ずリンクをクリックして有効化してください。クリック前はステータスが「PendingConfirmation」のままで、通知が届きません。チームへの共有にはMLアドレスを使うと抜け漏れがなくなりますね。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# Slack連携 ① AWS Chatbot（推奨）\n\n### なぜChatbotを使うのか？\n\n| | AWS Chatbot | Lambda自作 |\n|---|---|---|\n| 設定の手間 | 少ない | コード実装が必要 |\n| メンテナンス | AWS管理 | 自己管理 |\n| フォーマット | 標準テンプレート | 自由にカスタム |\n| 推奨シーン | **ほとんどの用途** | リッチUI・Slash操作 |",
+      "narration": "SlackへのアラートはAWS Chatbotを使った方法が公式推奨です。Chatbotを使うとコードを一切書かずにSlack連携が完成します。Lambdaを自作する方法もありますが、実装・テスト・メンテナンスのコストがかかります。通知メッセージのデザインを細かくカスタマイズしたい場合や、SlashコマンドでAWS操作をしたい場合はLambdaが有効ですが、まずはChatbotから始めることを強くおすすめします。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# AWS Chatbot の設定手順",
+      "narration": "AWS Chatbotの設定は4つのステップで完了します。まずSlackワークスペースの認証、次に通知を送るチャンネルの指定、そしてIAMロールの設定、最後にSNS Topicとの紐付けです。一度設定してしまえばあとは自動で動いてくれますので、手順をひとつずつ確認していきましょう。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "AWS Chatbot 設定フロー",
+          "steps": [
+            {
+              "label": "① Slackワークスペース認証",
+              "desc": "ChatbotコンソールからOAuth認証。Slackの管理者権限が必要",
+              "color": "orange"
+            },
+            {
+              "label": "② チャンネル設定",
+              "desc": "通知先のSlackチャンネル名またはIDを指定",
+              "color": "blue"
+            },
+            {
+              "label": "③ IAMロールの設定",
+              "desc": "ChatbotがSNSを読む権限を付与（推奨ポリシーを選択）",
+              "color": "lblue"
+            },
+            {
+              "label": "④ SNS Topicを紐付け",
+              "desc": "先ほど作成したTopic ARNを選択して保存",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# Slack連携 ② Lambda カスタム通知\n\n### こんなときはLambdaで自作\n\n- 🎨 **リッチフォーマット**: ボタン・色分け・スタックトレースを含めたい\n- 🔗 **CloudWatch Alarmの詳細リンク**を本文に埋め込みたい\n- 🤖 **Slash コマンド**で Lambda を呼び出してAWS操作をしたい\n\n### 最小構成\n```\nSNS Topic\n  → Lambda (Node.js / Python)\n      → Slack Incoming Webhook URL へ POST\n```\n\n> 通知URLはSecrets ManagerかSSM Parameter Storeで管理",
+      "narration": "Lambdaを使ったカスタム通知は、Chatbotでは実現できない表現をしたいときの選択肢です。たとえばアラートの重要度に応じてメッセージの色を赤・黄で分けたり、CloudWatch Alarmの詳細ページへの直リンクを本文に含めたりできます。実装はシンプルで、SNS TopicをトリガーにしたLambda関数からSlackのIncoming Webhook URLにPOSTするだけです。なおWebhook URLはソースコードに直書きせず、シークレッツマネージャーかSSM Parameter Storeで管理するようにしましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# PagerDuty / Opsgenie 連携\n\n### オンコール管理ツールとは？\n> 深夜の重大アラートを**担当者に自動エスカレーション**するサービス\n\n### 連携方法\n\n1. PagerDuty / Opsgenie で **Integration URL（Webhook）** を取得\n2. SNS サブスクリプションに `HTTPS` プロトコルでURLを登録\n3. ツール側で**エスカレーションポリシー**（誰に・何分後に再通知するか）を設定\n\n> SNS → Webhook の1ステップで連携完了",
+      "narration": "PagerDutyやOpsgenieはオンコール管理ツールです。深夜に重大アラートが発生したとき、担当者が気づかなければ自動で次の担当者へエスカレーションしてくれます。連携方法はシンプルで、ツール側で発行されるIntegration URLをSNSサブスクリプションにHTTPSプロトコルで登録するだけです。24時間365日の安定運用が求められる本番環境では、Slackだけに頼らずオンコールツールを組み合わせることが現場では一般的ですね。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# 通知ルーティング設計\n\n重要度に応じて**通知先を変える**のが現場のベストプラクティス",
+      "narration": "すべてのアラートを同じチャンネルに流すと、深刻なアラートが通知の洪水に埋もれてしまいます。現場では重要度に応じて通知先を分けるルーティング設計が重要です。P1の致命的なアラートはSMSと専用Slackチャンネル、さらにPagerDutyへ、P2は一般的な監視チャンネルへ、P3は情報共有のみ、といった設計が典型例です。SNS Topicを重要度ごとに分けて作成しておくのがポイントですね。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "重要度別 通知ルーティング設計",
+          "left": {
+            "label": "🔴 P1（致命的）",
+            "items": [
+              "SNS Topic: prod-p1-alert",
+              "📱 SMS（担当者個人）",
+              "💬 Slack #alert-critical",
+              "📟 PagerDuty（エスカレーション）"
+            ]
+          },
+          "right": {
+            "label": "🟡 P2 / P3（警告・情報）",
+            "items": [
+              "SNS Topic: prod-p2-alert",
+              "💬 Slack #alert-warning",
+              "📧 メール（チームML）",
+              "※ PagerDutyは使わない"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# CloudWatch Alarm との接続\n\n### Alarmのアクションに SNS Topic を指定\n\n```\nCloudWatch Alarm → 編集\n  ↓\n「アクションの設定」タブ\n  ↓\n通知: アラーム状態 → SNS トピック選択\n  　　OK状態にも追加推奨（復旧通知）\n```\n\n### 実践チェックリスト\n- ✅ ALARM状態のアクションを設定した\n- ✅ OK状態（復旧通知）のアクションも設定した\n- ✅ テスト通知で実際にSlack/メールに届くか確認した",
+      "narration": "設定したSNS TopicをCloudWatch Alarmに接続しましょう。Alarmの編集画面で「アクションの設定」タブを開き、通知のアラーム状態に作成したTopicを選択します。ここで重要なのが、ALARM状態だけでなくOK状態、つまり復旧したときのアクションも設定しておくことです。「問題が解決した」という通知がないと、担当者は対応が完了したかどうかSlackだけでは判断できません。最後にテスト通知を送って、実際にメッセージが届くか必ず確認してくださいね。",
+      "diagram": null
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# まとめ\n\n### このレクチャーで学んだこと\n\n1. **Amazon SNSのPub/Sub構造**\n   CloudWatch Alarm → SNS Topic → 複数の通知先へ一括配信\n\n2. **Slack連携はAWS Chatbotが公式推奨**\n   コード不要で設定完了。カスタムが必要な場合はLambdaを活用\n\n3. **重要度別のルーティング設計が現場の鉄則**\n   P1はSMS+Slack+PagerDuty、P2以下はSlack/メールに絞る\n\n---\n\n**次のレクチャー**: ダッシュボードの構築と可視化",
+      "narration": "このレクチャーのまとめです。1点目、Amazon SNSはPub/Sub型サービスで、CloudWatch AlarmのアクションにTopicを指定することで複数の通知先へ一括配信できます。2点目、Slack連携はコード不要のAWS Chatbotが公式推奨です。リッチフォーマットが必要なときだけLambdaを選択しましょう。3点目、すべてのアラートを同じ宛先に流すのではなく、重要度に応じた通知ルーティング設計が運用品質を高めます。次のレクチャーではCloudWatchダッシュボードを使った可視化を学んでいきます。",
+      "diagram": null
+    }
+  ]
+}

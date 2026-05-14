@@ -1,0 +1,93 @@
+{
+  "title": "s4-l3_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "period-based SLOとrequest-based SLO",
+      "message": "時間で見るか、リクエスト数で見るか",
+      "narration": "このレクチャーでは、期間ベースのエスエルオーと、リクエストベースのエスエルオーを比較します。どちらも目標達成率を見る考え方ですが、評価の単位が違います。時間の区切りで見るのか、リクエスト数で見るのかを分けて理解します。",
+      "visual_notes": [
+        "Two-column comparison: period-based vs request-based",
+        "Time windows vs request dots",
+        "Section 4 marker"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "period-basedは時間で評価する",
+      "message": "良い期間 ÷ 全期間",
+      "narration": "期間ベースのエスエルオーでは、決められた期間ごとに、目標を満たしたかを判定します。たとえば、いっぷんごとにレイテンシが目標以内かを見ます。そして、良い期間の数を、全期間の数で割って達成率を出します。時間を均等に扱うのが特徴です。",
+      "visual_notes": [
+        "Timeline split into equal periods",
+        "Good and bad periods colored",
+        "Formula: good periods / total periods"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "request-basedは件数で評価する",
+      "message": "良いリクエスト数 ÷ 全リクエスト数",
+      "narration": "リクエストベースのエスエルオーでは、リクエスト一件一件を評価します。良いリクエスト数を、全リクエスト数で割って達成率を出します。トラフィックが大きく変動するサービスでは、実際に影響を受けたリクエスト数で見られるため、体験に近い判断がしやすくなります。",
+      "visual_notes": [
+        "Request dots split into good/bad",
+        "Formula: good requests / total requests",
+        "Traffic-weighted evaluation"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "少ないトラフィックに注意",
+      "message": "少数の失敗が、見え方を大きく変える",
+      "narration": "どちらの方式でも、少ないトラフィックには注意が必要です。リクエストが少ないサービスでは、一件の失敗が達成率を大きく動かします。期間ベースでもリクエストベースでも、数字だけを見て決めず、対象サービスの利用量と重要度を合わせて確認します。",
+      "visual_notes": [
+        "Low traffic example with one bad request",
+        "Big percentage swing warning",
+        "Data volume checklist"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "Latency SLOでの使い分け",
+      "message": "しきいち以内のリクエストを良い体験とする",
+      "narration": "レイテンシのエスエルオーでは、待ち時間がしきいち以内なら良い体験、と定義します。期間ベースなら、各期間で目標を満たしたかを見ます。リクエストベースなら、しきいち以内だったリクエストの割合を見ます。どちらも、先に良い体験の条件を決めることが大切です。",
+      "visual_notes": [
+        "Latency threshold line",
+        "Period evaluation vs request evaluation",
+        "Good experience definition first"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "Availability SLOは成功条件を決める",
+      "message": "どのレスポンスを成功として扱うか",
+      "narration": "アベイラビリティのエスエルオーでは、どのレスポンスを成功として扱うかが重要です。アプリケーションシグナルズの標準メトリクスでは、五百系のフォルトがないレスポンスを成功として扱います。業務エラーを別の条件で扱いたい場合は、クラウドウォッチメトリクスやメトリクスマスで、独自のエスエルアイを設計します。",
+      "visual_notes": [
+        "Standard Availability definition cards",
+        "5xx fault vs successful response",
+        "Custom SLI path for business errors"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "エラーバジェットの見え方",
+      "message": "評価方式で、消費の見え方が変わる",
+      "narration": "期間ベースとリクエストベースでは、エラーバジェットの減り方の見え方も変わります。期間ベースは、悪いじかんたいを重く見ます。リクエストベースは、影響を受けたリクエスト数を重く見ます。どちらが良いかではなく、判断したいリスクに合う方式を選びます。",
+      "visual_notes": [
+        "Error budget burn comparison",
+        "Bad time window vs bad request count",
+        "Risk-based selection card"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ: 評価単位を選ぶ",
+      "message": "時間で見るか、リクエストで見るかを明確にする",
+      "narration": "まとめです。期間ベースは、良い期間を全期間で割って達成率を見ます。リクエストベースは、良いリクエスト数を全リクエスト数で割って達成率を見ます。次のレクチャーでは、アプリケーションシグナルズのエスエルオー推奨値を、どう使えばよいかを整理します。",
+      "visual_notes": [
+        "Final comparison table",
+        "Formula recap",
+        "Arrow to SLO推奨値"
+      ]
+    }
+  ]
+}

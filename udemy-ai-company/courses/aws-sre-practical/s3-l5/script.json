@@ -1,0 +1,163 @@
+{
+  "section": 3,
+  "lecture": 5,
+  "title": "ハンズオン: カスタムメトリクスを送信する",
+  "duration_min": 20,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# ハンズオン: カスタムメトリクスを送信する\n\n## AWS CLIとPythonで自分だけの監視指標を作ろう\n\n**Section 3 - Lecture 5**",
+      "narration": "このレクチャーへようこそ。今回はハンズオン形式で、カスタムメトリクスをCloudWatchに送信する方法を実際に手を動かしながら学んでいきます。AWS CLIとPythonのboto3というライブラリを使いますので、ぜひコンソールを開きながら一緒に進めていってください。約20分のレクチャーです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# 今日やること\n\nカスタムメトリクス送信の3ステップ\n\n本レクチャーでは以下の順で進めます",
+      "narration": "今回のハンズオンは大きく3つのステップで進めます。まずboto3を使ってPythonスクリプトからエラーカウントを送信します。次にCloudShellからCLIコマンドで直接送信して確認します。そして最後に、送信したカスタムメトリクスをCloudWatchダッシュボードに追加して可視化します。この流れで進めていきましょう。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "ハンズオン3ステップ",
+          "steps": [
+            {
+              "label": "STEP 1",
+              "sublabel": "boto3でエラーカウント送信",
+              "style": "highlight"
+            },
+            {
+              "label": "STEP 2",
+              "sublabel": "CloudShell CLIで送信・確認",
+              "style": "normal"
+            },
+            {
+              "label": "STEP 3",
+              "sublabel": "ダッシュボードに追加",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# カスタムメトリクスとは？（おさらい）\n\n- CloudWatchには最初から用意された**標準メトリクス**がある\n  - 例）EC2のCPU使用率、RDSの接続数など\n- **カスタムメトリクス**は自分のアプリの指標を自由に送れる\n  - 例）アプリのエラー件数、注文処理時間、キュー滞留数\n- 送信方法は大きく3種類\n  | 方法 | 特徴 |\n  |------|------|\n  | AWS CLI | 手動確認・テストに便利 |\n  | boto3（Python） | アプリ組み込みに最適 |\n  | CloudWatch Agent | OS内部指標（メモリ等）に対応 |",
+      "narration": "まず簡単におさらいです。CloudWatchにはEC2のCPU使用率など最初から用意された標準メトリクスがあります。カスタムメトリクスはその名の通り、自分のアプリ固有の指標を自由に送れる仕組みです。今回は送信方法として、CLIとboto3とCloudWatch Agentの3種類を体験していきます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# STEP 1: boto3でカスタムメトリクスを送信する\n\n## 事前準備\n\n```bash\n# boto3がなければインストール\npip install boto3\n```\n\n## Pythonスクリプト全体\n\n```python\nimport boto3\nfrom datetime import datetime\n\nclient = boto3.client('cloudwatch', region_name='ap-northeast-1')\n\nclient.put_metric_data(\n    Namespace='MyApp/Production',       # 名前空間（グループ名）\n    MetricData=[\n        {\n            'MetricName': 'ErrorCount',  # メトリクス名\n            'Dimensions': [\n                {\n                    'Name': 'ServiceName',\n                    'Value': 'OrderService'\n                }\n            ],\n            'Timestamp': datetime.utcnow(),\n            'Value': 5.0,                # 送信する値\n            'Unit': 'Count'              # 単位\n        }\n    ]\n)\n\nprint('✅ カスタムメトリクスを送信しました')\n```",
+      "narration": "では最初のステップです。boto3とはAWSをPythonから操作するための公式ライブラリです。このスクリプトのポイントを説明します。Namespaceはメトリクスをグループ化するための名前で、スラッシュで階層化できます。Dimensionsは「どのサービスのデータか」を絞り込むためのラベルです。今回はOrderServiceというサービスのエラーカウントを5として送信しています。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# STEP 1: 実行して確認しよう\n\n## スクリプトを実行\n\n```bash\npython send_metrics.py\n# ✅ カスタムメトリクスを送信しました\n```\n\n## CloudWatchコンソールで確認\n\n```\nCloudWatch\n  └─ メトリクス\n       └─ すべてのメトリクス\n            └─ カスタム名前空間\n                 └─ MyApp/Production  ← ここに現れる！\n```\n\n> ⚠️ 送信後、コンソールに反映されるまで **1〜2分** かかることがあります",
+      "narration": "スクリプトを実行したら、CloudWatchコンソールで確認してみましょう。コンソールの左メニューから「メトリクス」→「すべてのメトリクス」と進むと、カスタム名前空間のセクションに「MyApp/Production」が表示されているはずです。送信直後は反映に1〜2分かかることがありますので、少し待ってからリフレッシュしてみてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# STEP 2: CloudShell CLIで送信する\n\n## CloudShellとは？\nAWSコンソール上でブラウザから直接コマンドを実行できる環境\n→ インストール不要・認証済みですぐ使える！\n\n## CLIコマンド（コンソール上から貼り付けてOK）\n\n```bash\naws cloudwatch put-metric-data \\\n  --namespace \"MyApp/Production\" \\\n  --metric-name \"ErrorCount\" \\\n  --dimensions \"Name=ServiceName,Value=OrderService\" \\\n  --value 3 \\\n  --unit Count \\\n  --region ap-northeast-1\n```\n\n## 複数の値をまとめて送信するときは `--metric-data` を使う\n\n```bash\naws cloudwatch put-metric-data \\\n  --namespace \"MyApp/Production\" \\\n  --metric-data \\\n    'MetricName=ErrorCount,Value=2,Unit=Count' \\\n    'MetricName=ResponseTime,Value=320,Unit=Milliseconds' \\\n  --region ap-northeast-1\n```",
+      "narration": "次はCloudShellを使ってCLIコマンドで送信してみましょう。CloudShellとはAWSコンソール画面のみぎうえにあるアイコンから起動できる、ブラウザ上のターミナルです。インストールなしですぐ使えて、すでに自分のAWSアカウントで認証された状態になっています。上のコマンドをそのまま貼り付けて実行してみてください。複数メトリクスをまとめて送りたい場合は下の書き方が便利です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# STEP 3: ダッシュボードに追加する\n\n## ダッシュボード追加の手順",
+      "narration": "いよいよ最後のステップです。送信したカスタムメトリクスをCloudWatchダッシュボードに追加して、視覚的に確認できるようにしましょう。ダッシュボードを使うと複数のメトリクスをひとつの画面にまとめられるので、運用時の状況確認がとても楽になります。手順はシンプルですので、一緒にやってみましょう。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "ダッシュボード追加手順",
+          "steps": [
+            {
+              "label": "① ダッシュボードを作成",
+              "desc": "CloudWatch → ダッシュボード → 「ダッシュボードの作成」をクリック",
+              "color": "blue"
+            },
+            {
+              "label": "② ウィジェットを追加",
+              "desc": "「ウィジェットの追加」→ 「折れ線グラフ」を選択",
+              "color": "blue"
+            },
+            {
+              "label": "③ メトリクスを選択",
+              "desc": "カスタム名前空間 → MyApp/Production → ErrorCount を選択",
+              "color": "orange"
+            },
+            {
+              "label": "④ 保存して確認",
+              "desc": "「ウィジェットの作成」→ 「ダッシュボードの保存」でグラフが表示される",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# 補足: CloudWatch Agentでメモリを収集する\n\nメモリ使用率はEC2の標準メトリクスに**含まれない**\n→ CloudWatch Agentをインストールして設定ファイルで有効化する\n\n## 設定ファイル（`/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json`）\n\n```json\n{\n  \"metrics\": {\n    \"namespace\": \"CWAgent\",\n    \"metrics_collected\": {\n      \"mem\": {\n        \"measurement\": [\n          \"mem_used_percent\"  // メモリ使用率(%)\n        ],\n        \"metrics_collection_interval\": 60  // 60秒ごとに収集\n      },\n      \"disk\": {\n        \"measurement\": [\n          \"disk_used_percent\"  // ディスク使用率(%)\n        ],\n        \"resources\": [\"/\"],\n        \"metrics_collection_interval\": 60\n      }\n    }\n  }\n}\n```\n\n```bash\n# 設定を反映してエージェントを起動\nsudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \\\n  -a fetch-config -m ec2 \\\n  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \\\n  -s\n```",
+      "narration": "補足として、CloudWatch Agentを使ったメモリ収集も紹介します。実はEC2のメモリ使用率はAWSの標準メトリクスには含まれていないんです。これはOSの内部情報はAWSが直接見えないためです。CloudWatch AgentをEC2にインストールし、このJSONファイルでmemとdiskの収集を設定することでメモリとディスクの使用率が取得できるようになります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# 補足: Embedded Metrics Format (EMF)\n\n## EMFとは？\n**ログの中にメトリクスを埋め込む**形式。  \nCloudWatch Logsに送るだけで自動的にメトリクスとして記録される。\n\n## Pythonサンプル\n\n```python\nimport json, time\n\n# EMF形式のログを標準出力に書き出すだけでOK\nlog_entry = {\n    \"_aws\": {\n        \"Timestamp\": int(time.time() * 1000),\n        \"CloudWatchMetrics\": [{\n            \"Namespace\": \"MyApp/EMF\",\n            \"Dimensions\": [[\"ServiceName\"]],\n            \"Metrics\": [{\"Name\": \"Latency\", \"Unit\": \"Milliseconds\"}]\n        }]\n    },\n    \"ServiceName\": \"OrderService\",\n    \"Latency\": 245.3,\n    \"RequestId\": \"abc-123\"  # ← ログとして残したい情報も一緒に\n}\n\nprint(json.dumps(log_entry))  # Lambda等ではこれだけで完結\n```\n\n> 💡 **メリット**: ログとメトリクスを一度の出力で両方記録できる",
+      "narration": "次にEMF、エンベデッドメトリクスフォーマットを紹介します。EMFはログの中にメトリクスのデータを埋め込む特殊な形式です。このJSON構造のログをCloudWatch Logsに送るだけで、CloudWatchが自動的にメトリクスとしても記録してくれます。LambdaやECSのコンテナでは標準出力がそのままCloudWatch Logsに流れるので、printするだけでメトリクスまで完結するのが大きなメリットです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# 補足: ADOTコレクター経由での送信\n\n## ADOT（AWS Distro for OpenTelemetry）とは？\nOpenTelemetryという**業界標準の計装ライブラリ**を使って収集し、\nADOTコレクターがCloudWatchへ転送してくれる仕組み\n\n## 送信の流れ",
+      "narration": "最後にADOT、AWS Distro for OpenTelemetryについて触れておきます。ADOTはSection2のLecture3で概念を学びましたね。OpenTelemetryはAWS特有ではなく業界標準の計装の仕組みで、アプリのコードに一度組み込めばCloudWatchだけでなく他の監視ツールにも転送できます。ADOTコレクターがその橋渡し役を担っています。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "ADOT経由のメトリクス送信フロー",
+          "steps": [
+            {
+              "label": "① アプリコードにOpenTelemetry SDKを組み込む",
+              "desc": "Python/Java/Node.jsなど各言語のSDKで計装（トレース・メトリクス・ログを記録）",
+              "color": "blue"
+            },
+            {
+              "label": "② ADOTコレクターがデータを受信",
+              "desc": "サイドカーまたは別プロセスとして動作するADOTコレクターが収集",
+              "color": "orange"
+            },
+            {
+              "label": "③ CloudWatchへエクスポート",
+              "desc": "ADOTのCloudWatch Exporterがメトリクス・トレースをAWSへ転送",
+              "color": "lblue"
+            },
+            {
+              "label": "④ CloudWatchで確認・アラート設定",
+              "desc": "カスタムメトリクスとして記録され、ダッシュボードやアラームで活用可能",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# CLIとboto3の使い分け\n\n| 用途 | 推奨方法 |\n|------|----------|\n| 動作確認・テスト送信 | AWS CLI（CloudShell） |\n| アプリへの組み込み | boto3（Python） |\n| OS内部指標（メモリ・ディスク） | CloudWatch Agent |\n| ログと同時に記録したい | EMF（Embedded Metrics Format） |\n| マルチクラウド・将来の移植性重視 | ADOT（OpenTelemetry） |\n\n> 💡 まずはboto3とCLIを習得して、必要に応じてAgentやEMFを追加するのがおすすめです",
+      "narration": "ここで今日登場した送信方法の使い分けを整理しておきましょう。動作確認やちょっとしたテストにはCLIが最速です。アプリへの組み込みにはboto3が直感的で扱いやすいです。メモリやディスクのようなOS内部情報はCloudWatch Agentが必要です。LambdaやECSでログとメトリクスを一度で済ませたいときはEMFが便利です。まずはboto3とCLIをマスターして、そこから必要に応じて広げていくイメージで大丈夫です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# トラブルシュート: よくあるエラー\n\n## ❌ AccessDeniedException\n```\nAn error occurred (AccessDeniedException) when calling\nthe PutMetricData operation: ...\n```\n**原因**: IAMロール / ユーザーに権限がない  \n**対処**: `cloudwatch:PutMetricData` のポリシーを付与する\n\n```json\n{\n  \"Effect\": \"Allow\",\n  \"Action\": \"cloudwatch:PutMetricData\",\n  \"Resource\": \"*\"\n}\n```\n\n## ❌ コンソールにメトリクスが表示されない\n- 送信から **1〜2分** 待ってからリフレッシュ\n- Namespaceのスペルミスを確認\n- リージョンが合っているか確認（ap-northeast-1 など）",
+      "narration": "ハンズオン中によく遭遇するエラーをまとめておきます。AccessDeniedExceptionが出た場合はIAMの権限不足です。EC2インスタンスやLambdaで実行するならIAMロールに、ローカルから実行するならIAMユーザーに、cloudwatch:PutMetricDataのポリシーを付与してください。またコンソールにメトリクスが現れない場合は、Namespaceのスペルミスとリージョンの確認が最初の確認ポイントです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 13,
+      "marp_content": "# このレクチャーのまとめ\n\n## 今日学んだこと 3つ\n\n### ✅ 1. boto3とCLIでカスタムメトリクスを送信できる\nNamespace・MetricName・Dimensionsの3要素を意識して設計しよう\n\n### ✅ 2. CloudWatch Agentでメモリ等のOS指標も収集できる\nJSONの設定ファイルを書いてAgentに読み込ませるだけでOK\n\n### ✅ 3. EMFとADOTという発展的な送信方法もある\nログと一体化させたいときはEMF・マルチクラウド対応にはADOT\n\n---\n\n**次のレクチャー**: CloudWatchアラームで通知を設定する",
+      "narration": "お疲れさまでした。今回のレクチャーでは3つのことを学びました。1つ目はboto3とCLIを使ったカスタムメトリクスの送信方法です。Namespace、MetricName、Dimensionsという3つの要素を意識して設計することが大切です。2つ目はCloudWatch AgentによるOS内部指標の収集です。3つ目はEMFとADOTという発展的な方法です。次回はいよいよCloudWatchアラームを使って、しきい値を超えたときに通知を飛ばす設定を学びます。",
+      "diagram": null
+    }
+  ]
+}

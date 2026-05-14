@@ -29,6 +29,8 @@ The bot records dangerous operation detection in:
 
 Publishing and external posting require explicit human approval.
 
+Google Drive upload for CEO/QA review does not require prior human approval. It is the standard way to make video outputs reviewable. The run must record the Drive URL, file ID, sharing status, and local metadata path in the Issue.
+
 When a task needs approval, use `/approval_request issue_number reason`.
 
 ## Prohibited Bot Behavior

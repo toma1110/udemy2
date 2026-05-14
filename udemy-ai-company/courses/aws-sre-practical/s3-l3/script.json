@@ -1,0 +1,166 @@
+{
+  "section": 3,
+  "lecture": 3,
+  "title": "見るべきメトリクス一覧（CPU/メモリ/DB/ALB）",
+  "duration_min": 15,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# 見るべきメトリクス一覧\n## CPU / メモリ / DB / ALB\n\n**Section 3 - Lecture 3**\n\n> 「何を監視すればいいか」を、サービスごとにまるごと整理します",
+      "narration": "このレクチャーでは、AWSの主要サービスごとに「どのメトリクスを見ればいいか」を一気に整理していきます。CloudWatchを開いてもメトリクスの数が多すぎて迷う、という経験はありませんか？今日はEC2・RDS・ALB・Lambdaに絞って、現場で本当に役立つメトリクスを厳選してご紹介します。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# このレクチャーで学ぶこと\n\n学習の流れを確認しましょう",
+      "narration": "まず全体の流れを確認します。EC2・RDS・ALB・Lambdaの4サービスそれぞれの重要メトリクスを見ていき、最後にしきい値の設計思想と、メトリクスを組み合わせた相関分析のコツをお伝えします。実務で「これさえ見ておけば大丈夫」という地図を作っていくイメージです。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "レクチャーの流れ",
+          "steps": [
+            {
+              "label": "EC2",
+              "sublabel": "CPU・ネットワーク・メモリ",
+              "style": "highlight"
+            },
+            {
+              "label": "RDS",
+              "sublabel": "DB固有の落とし穴",
+              "style": "normal"
+            },
+            {
+              "label": "ALB",
+              "sublabel": "リクエスト・エラー率",
+              "style": "normal"
+            },
+            {
+              "label": "Lambda",
+              "sublabel": "サーバーレス特有指標",
+              "style": "normal"
+            },
+            {
+              "label": "しきい値設計",
+              "sublabel": "ベースライン思考",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# EC2の重要メトリクス\n\nCloudWatchで**デフォルト**で取得できるもの\n\n| メトリクス名 | 意味 | 目安しきい値 |\n|---|---|---|\n| CPUUtilization | CPU使用率(%) | 警告:70% / 危険:90% |\n| NetworkIn | 受信バイト数 | ベースライン比2倍 |\n| NetworkOut | 送信バイト数 | ベースライン比2倍 |\n| StatusCheckFailed | インスタンス異常 | **1回でアラート** |",
+      "narration": "EC2でデフォルトで取れるメトリクスはこの4つが核心です。CPUUtilizationはおなじみのCPU使用率、NetworkIn・NetworkOutはそれぞれ受信・送信のバイト数です。StatusCheckFailedはインスタンスやホストの死活確認で、これが1でも出たら即アラートが必要です。デフォルトで取れる、というのがポイントで、追加設定なしにすぐ監視できます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# EC2メモリ・ディスクの注意点\n\n## ⚠️ デフォルトでは取得できない！\n\nCloudWatch **Agent** のインストールが必要\n\n```\n# 追加で収集できるメトリクス\nmem_used_percent     # メモリ使用率\ndisk_used_percent    # ディスク使用率\n```\n\n> OSの内部情報はAWS側から見えないため、  \n> エージェント経由で「自己申告」させる仕組みです",
+      "narration": "ここは多くの方がハマるポイントです。メモリ使用率とディスク使用率は、デフォルトのCloudWatchでは取得できません。EC2はAWSが外から管理しているため、OS内部のメモリ状況は見えないんですね。CloudWatch Agentというソフトウェアをインスタンスにインストールすることで、mem_used_percentやdisk_used_percentが取れるようになります。必ずセットアップしましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# RDSの重要メトリクス\n\n| メトリクス名 | 意味 | ポイント |\n|---|---|---|\n| CPUUtilization | DB処理のCPU使用率 | 継続80%超は要調査 |\n| FreeableMemory | 空きメモリ(バイト) | 減少トレンドに注意 |\n| DatabaseConnections | 接続数 | 上限超えで接続不可 |\n| ReadLatency | 読み込み遅延(秒) | 通常1ms以下が目安 |\n| WriteLatency | 書き込み遅延(秒) | スパイクに即反応 |\n| **FreeStorageSpace** | **残りストレージ** | **⚠️ 要注意** |",
+      "narration": "RDSはデータベースサービスなので、DB固有のメトリクスがあります。CPUやメモリに加えて、DatabaseConnectionsは接続数の上限に近づくとアプリが接続できなくなる深刻な問題になります。ReadLatencyとWriteLatencyはデータの読み書き速度で、遅延が増えるとユーザー体験に直結します。そして最下行のFreeStorageSpaceが特に重要ですので、次のスライドで詳しく説明します。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# ⚠️ FreeStorageSpaceの罠\n\n## ストレージが0になると...\n\n- DBへの書き込みが**完全に停止**する\n- RDSは自動では回復しない（手動対応が必要）\n- **サービス全体のダウン**につながる重大障害\n\n## 推奨アラート設定\n\n```\n警告: 残り20%（余裕を持った対応が可能）\n危険: 残り10%（即時拡張が必要）\n```\n\n> 実務では「気づいたら0だった」という事故が多発します",
+      "narration": "FreeStorageSpaceはストレージの残り容量です。これがゼロになると、RDSへの書き込みが完全に止まります。読み込みはできるのに書き込みだけ失敗するため、原因特定に時間がかかりがちです。しかもRDSは自動的には回復してくれないので、手動でストレージを拡張するまでサービス停止が続きます。残り20%の段階で警告アラートを出すのが現場での鉄則です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# ALBの重要メトリクス\n\nALB（Application Load Balancer）= アクセスを振り分ける門番\n\n| メトリクス名 | 意味 | 目安 |\n|---|---|---|\n| RequestCount | 総リクエスト数 | トラフィック把握 |\n| TargetResponseTime | バックエンド応答時間 | 1秒超で要調査 |\n| HTTPCode_Target_5XX_Count | サーバーエラー数 | **0件が理想** |\n| HealthyHostCount | 正常なサーバー台数 | **0になったら即障害** |",
+      "narration": "ALBはApplication Load Balancerの略で、ユーザーからのアクセスを複数のサーバーに振り分ける仕組みです。RequestCountで全体のトラフィック量を把握できます。TargetResponseTimeはALBからバックエンドサーバーへの応答時間で、遅延の早期発見に使えます。HTTPCode_Target_5XX_Countはサーバー側のエラー数で、急増したらアプリ異常のサインです。HealthyHostCountがゼロになると全リクエストがエラーになります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# Lambdaの重要メトリクス\n\nサーバーレス特有の指標に注目\n\n| メトリクス名 | 意味 | ポイント |\n|---|---|---|\n| Invocations | 実行回数 | コスト・トラフィック把握 |\n| Errors | エラー回数 | エラー率 = Errors/Invocations |\n| Duration | 実行時間(ms) | タイムアウト上限に注意 |\n| Throttles | 実行制限回数 | 同時実行数の上限超え |\n| ConcurrentExecutions | 同時実行数 | デフォルト上限1000 |",
+      "narration": "Lambdaはサーバーレスのサービスなのでサーバー自体のCPUは見ませんが、代わりに実行回数・エラー・実行時間・スロットリングを監視します。ThrottlesはLambdaの同時実行数が上限に達したとき発生し、処理が間引かれます。急にリクエストが増えたときに起きやすい問題です。Durationは実行時間で、設定したタイムアウト値に近づいていないかチェックしましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# しきい値設計の考え方\n\n## ❌ よくある間違い\n「CPU 80%超えたらアラート」を全サービスに一律適用\n\n## ✅ 正しいアプローチ：3ステップ",
+      "narration": "しきい値の設計で一番ありがちな失敗は、「CPU80%以上でアラート」のような固定値をすべてのサービスに適用してしまうことです。サービスによって通常時の使用率はまったく異なります。バッチ処理中は常に90%超え、でも異常ではない、というケースもあります。では正しいアプローチはどうあるべきか、3ステップで考えていきましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# しきい値設計：3ステップ\n\nベースライン思考で設計する",
+      "narration": "しきい値設計の3ステップはこちらです。まずベースラインの計測、つまり「普段はどんなあたいか」を1〜2週間観察して把握します。次に異常の定義として、ベースラインからどれくらい外れたら問題かを決めます。最後に警告と危険の2段階アラートを設けます。警告は「注意して見ておく」、危険は「今すぐ対応」のレベルです。固定%より「平常時の1.5倍を超えたら」のような相対的な基準が実務では使いやすいです。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "しきい値設計の3ステップ",
+          "steps": [
+            {
+              "label": "① ベースライン計測",
+              "desc": "1〜2週間の通常時の値を観察・記録する",
+              "color": "blue"
+            },
+            {
+              "label": "② 異常の定義",
+              "desc": "ベースラインからの乖離幅（例：1.5倍・2倍）を決める",
+              "color": "orange"
+            },
+            {
+              "label": "③ 2段階アラート設定",
+              "desc": "警告（注意して見る）/ 危険（即対応）に分ける",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# メトリクスの相関分析\n\n## 1つの指標だけで判断しない\n\n### 実例：アプリ詰まりのサイン\n\n```\nCPUUtilization    : ↑ 急上昇（90%超）\nNetworkOut        : ↓ 急低下（レスポンスが出ていない）\nTargetResponseTime: ↑ 急増加（応答が遅い）\n```\n\n> この組み合わせ ＝ **アプリがCPUを食いつぶして応答できない状態**\n\n📌 複数メトリクスを「セットで見る」習慣をつけましょう",
+      "narration": "メトリクスは1つだけ見ていると判断を誤ることがあります。例えばCPU使用率が急上昇しているとき、同時にNetworkOutが下がっていれば、アプリがCPUを使い果たしてレスポンスを返せなくなっているサインです。さらにALBのTargetResponseTimeも伸びていれば、ユーザーへの影響が出ていると確信できます。こうした複数メトリクスのセットで見る習慣が、障害の素早い特定につながります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# Before / After：監視設計の比較\n\n監視が整う前と後の違いを確認しましょう",
+      "narration": "監視設計が整っていない状態と、整った状態を比較してみましょう。整っていないと、障害が起きてからユーザーのクレームで気づく、何を見ればいいかわからず対応が遅れる、といったことが起きます。一方できちんと設計できていれば、問題が顕在化する前に予兆をキャッチでき、どのメトリクスが異常かで原因を素早く絞り込めるようになります。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "監視設計：Before / After",
+          "left": {
+            "label": "❌ Before（監視なし）",
+            "items": [
+              "ユーザーのクレームで障害に気づく",
+              "何のメトリクスを見ればいいか不明",
+              "FreeStorageSpaceがいつの間にか0に",
+              "復旧まで時間がかかる",
+              "再発防止の根拠データがない"
+            ]
+          },
+          "right": {
+            "label": "✅ After（監視設計済み）",
+            "items": [
+              "アラートで障害の予兆を早期検知",
+              "サービスごとに見るべき指標が明確",
+              "残り20%でストレージ拡張に着手",
+              "相関分析で原因を素早く特定",
+              "ベースラインデータで再発防止策を立案"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 13,
+      "marp_content": "# このレクチャーのまとめ\n\n## 今日学んだ3つのポイント\n\n### 1️⃣ サービスごとに見るべきメトリクスは決まっている\nEC2・RDS・ALB・Lambda、それぞれの「押さえどころ」を把握しよう\n\n### 2️⃣ RDS FreeStorageSpaceには特に注意\nゼロになると回復不可のダウンに直結。残り20%で警告アラートを\n\n### 3️⃣ しきい値は「ベースライン」から設計する\n固定%より、平常時からの乖離で判断する思考が実務では有効\n\n---\n\n> 次のレクチャー：**CloudWatch Alarmの実践設定**",
+      "narration": "今日のまとめです。1点目、EC2・RDS・ALB・Lambdaそれぞれに見るべきメトリクスが決まっており、まず「このリストを抑える」ことが監視設計の出発点です。2点目、RDSのFreeStorageSpaceは特に注意が必要で、ゼロになる前に残り20%の段階でアラートを設定してください。3点目、しきい値は固定値より、ベースラインからの乖離で考えるほうが実務で使えます。次回はCloudWatch Alarmの実際の設定方法を学んでいきましょう。",
+      "diagram": null
+    }
+  ]
+}

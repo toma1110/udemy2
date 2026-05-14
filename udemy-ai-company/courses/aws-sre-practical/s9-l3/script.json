@@ -1,0 +1,333 @@
+{
+  "section": 9,
+  "lecture": 3,
+  "title": "よく使うコスト削減手法（Reserved/Spot/サイジング）",
+  "duration_min": 12,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# よく使うコスト削減手法\n## Reserved / Spot / ライトサイジング\n\n**Section 9 - Lecture 3**\n\n> 「払いすぎているAWS費用を、正しい手法で適切に削減する」",
+      "narration": "このレクチャーでは、AWSのコストを削減するための主要な手法を4つ学んでいきます。リザーブドインスタンス、セービングスプラン、スポットインスタンス、そしてライトサイジングです。どれも「なんとなく知っている」という方が多いのですが、特徴と使いどころを正確に把握しておくと、現場で大きな差が生まれます。一緒に整理していきましょう。",
+      "diagram": null,
+      "image": {
+        "style": "title",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 1 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, title layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # よく使うコスト削減手法\n## Reserved / Spot / ライトサイジング\n\n**Section 9 - Lecture 3**\n\n> 「払いすぎているAWS費用を、正しい手法で適切に削減する」\nNotes for narration context: このレクチャーでは、AWSのコストを削減するための主要な手法を4つ学んでいきます。リザーブドインスタンス、セービングスプラン、スポットインスタンス、そしてライトサイジングです。どれも「なんとなく知っている」という方が多いのですが、特徴と使いどころを正確に把握しておくと、現場で大きな差が生まれます。一緒に整理していきましょう。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "f930d605dbeb53f9",
+        "path": "slides_gpt_image2/slide_001.png"
+      }
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# 今日学ぶコスト削減の全体像\n\n手法ごとに「どんな状況で使うか」が違います。",
+      "narration": "まず全体の地図を確認しましょう。今日は4つのフェーズで学んでいきます。最初にコミットメント型の割引であるリザーブドインスタンスとセービングスプラン、次に大幅割引だが中断リスクがあるスポットインスタンス、そして実際の使用率を見て無駄を削るサイジングとリソース管理です。それぞれ使う場面が異なりますので、順番に見ていきましょう。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "コスト削減手法の全体像",
+          "steps": [
+            {
+              "label": "Reserved Instances",
+              "sublabel": "長期予約で最大75%OFF",
+              "style": "highlight"
+            },
+            {
+              "label": "Savings Plans",
+              "sublabel": "柔軟なコミットメント割引",
+              "style": "normal"
+            },
+            {
+              "label": "Spot Instance",
+              "sublabel": "最大90%OFFの活用術",
+              "style": "normal"
+            },
+            {
+              "label": "ライトサイジング",
+              "sublabel": "無駄スペックの見直し",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      },
+      "image": {
+        "style": "agenda",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 2 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, agenda layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # 今日学ぶコスト削減の全体像\n\n手法ごとに「どんな状況で使うか」が違います。\nNotes for narration context: まず全体の地図を確認しましょう。今日は4つのフェーズで学んでいきます。最初にコミットメント型の割引であるリザーブドインスタンスとセービングスプラン、次に大幅割引だが中断リスクがあるスポットインスタンス、そして実際の使用率を見て無駄を削るサイジングとリソース管理です。それぞれ使う場面が異なりますので、順番に見ていきましょう。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "0cea5777c64fb52f",
+        "path": "slides_gpt_image2/slide_002.png"
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# Reserved Instances（RI）\n\n## 1〜3年の「使用を予約」することで大幅割引\n\n- 💰 最大 **75% 割引**（3年・全額前払いの場合）\n- ✅ 適したワークロード：**常時稼働・安定した負荷**\n- 📋 購入時に決めること：インスタンスタイプ・リージョン・OS\n- ⚠️ 途中解約は原則できない（マーケットプレイスで売却は可能）\n\n```\n例）m5.xlarge を 1年・全額前払い → オンデマンド比 約40%OFF\n```",
+      "narration": "リザーブドインスタンス、略してRIとは、1年または3年間「このインスタンスを使い続けます」とAWSに約束することで割引を受けられる仕組みです。最大75%という大幅な割引が魅力ですが、購入時にインスタンスタイプやリージョンを固定する必要があります。Webサーバーやデータベースなど、常時稼働していて負荷が安定しているワークロードに非常に向いています。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 3 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, concept layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # Reserved Instances（RI）\n\n## 1〜3年の「使用を予約」することで大幅割引\n\n- 💰 最大 **75% 割引**（3年・全額前払いの場合）\n- ✅ 適したワークロード：**常時稼働・安定した負荷**\n- 📋 購入時に決めること：インスタンスタイプ・リージョン・OS\n- ⚠️ 途中解約は原則できない（マーケットプレイスで売却は可能）\n\n```\n例）m5.xlarge を 1年・全額前払い → オンデマンド比 約40%OFF\n```\nNotes for narration context: リザーブドインスタンス、略してRIとは、1年または3年間「このインスタンスを使い続けます」とAWSに約束することで割引を受けられる仕組みです。最大75%という大幅な割引が魅力ですが、購入時にインスタンスタイプやリージョンを固定する必要があります。Webサーバーやデータベースなど、常時稼働していて負荷が安定しているワークロードに非常に向いています。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "37ab8efa752a1fa7",
+        "path": "slides_gpt_image2/slide_003.png"
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# Savings Plans\n\n## RIより「柔軟な」コミットメント型割引\n\n- 💰 最大 **66% 割引**\n- 🔄 インスタンスファミリー・サイズ変更が**自由**\n- 📌 コミットするのは「1時間あたりの使用金額（例：$10/時間）」\n- 🧩 対応サービス：EC2・Lambda・Fargate\n\n> RIと割引率は近いが、柔軟性が大きく違う",
+      "narration": "セービングスプランはRIに似ていますが、より柔軟な新しい割引モデルです。特定のインスタンスタイプを固定するのではなく、「1時間あたりこれだけ使います」という金額をコミットするだけでOKです。たとえばm5からm6iにインスタンスファミリーを変更しても割引が継続されます。次のスライドでRIとの違いを表で比べてみましょう。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 4 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, concept layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # Savings Plans\n\n## RIより「柔軟な」コミットメント型割引\n\n- 💰 最大 **66% 割引**\n- 🔄 インスタンスファミリー・サイズ変更が**自由**\n- 📌 コミットするのは「1時間あたりの使用金額（例：$10/時間）」\n- 🧩 対応サービス：EC2・Lambda・Fargate\n\n> RIと割引率は近いが、柔軟性が大きく違う\nNotes for narration context: セービングスプランはRIに似ていますが、より柔軟な新しい割引モデルです。特定のインスタンスタイプを固定するのではなく、「1時間あたりこれだけ使います」という金額をコミットするだけでOKです。たとえばm5からm6iにインスタンスファミリーを変更しても割引が継続されます。次のスライドでRIとの違いを表で比べてみましょう。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "dbfe8d8df3bc568f",
+        "path": "slides_gpt_image2/slide_004.png"
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# RI vs Savings Plans 比較\n\nどちらを選ぶかは「変更の柔軟性」で判断する",
+      "narration": "RIとセービングスプランを比較してみます。割引率はどちらも最大65〜75%程度と近いのですが、柔軟性に大きな差があります。RIはインスタンスタイプやOSを固定するため変更が難しい反面、割引率が高いケースもあります。一方セービングスプランはインスタンスファミリーの変更も可能で、EC2以外のLambdaやFargateにも適用されます。迷ったらまずセービングスプランを検討するのがおすすめです。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "RI vs Savings Plans",
+          "left": {
+            "label": "Reserved Instances（RI）",
+            "items": [
+              "最大75%割引",
+              "インスタンスタイプを固定",
+              "リージョン・OSも指定",
+              "変更・移行が難しい",
+              "対象：EC2のみ（基本）"
+            ]
+          },
+          "right": {
+            "label": "Savings Plans",
+            "items": [
+              "最大66%割引",
+              "金額コミットメントで適用",
+              "ファミリー変更・サイズ変更OK",
+              "柔軟に使い続けられる",
+              "対象：EC2＋Lambda＋Fargate"
+            ]
+          }
+        }
+      },
+      "image": {
+        "style": "comparison",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 5 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, comparison layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # RI vs Savings Plans 比較\n\nどちらを選ぶかは「変更の柔軟性」で判断する\nNotes for narration context: RIとセービングスプランを比較してみます。割引率はどちらも最大65〜75%程度と近いのですが、柔軟性に大きな差があります。RIはインスタンスタイプやOSを固定するため変更が難しい反面、割引率が高いケースもあります。一方セービングスプランはインスタンスファミリーの変更も可能で、EC2以外のLambdaやFargateにも適用されます。迷ったらまずセービングスプランを検討するのがおすすめです。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "372835b13bb94cdb",
+        "path": "slides_gpt_image2/slide_005.png"
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# Spot Instance とは？\n\n## AWSの「余剰リソース」を格安で借りる仕組み\n\n- 💰 オンデマンド比 最大 **90% 割引**\n- ⚡ 利用可能なリソースが余っている間だけ使える\n- ⚠️ **中断リスクあり**：AWSの都合で突然停止される可能性\n\n### Spotに向いているワークロード\n| 向いている ✅ | 向いていない ❌ |\n|---|---|\n| バッチ処理・データ変換 | Webサーバー（常時必要） |\n| CI/CDのビルドジョブ | DBのプライマリノード |\n| 機械学習のトレーニング | ステートフルなアプリ |",
+      "narration": "スポットインスタンスは、AWSのデータセンターで余っているリソースを安く貸し出す仕組みです。最大90%という驚異的な割引率が魅力ですが、「AWSが必要になったら2分前に通知して止める」という中断リスクがあります。そのため、途中で止まっても再開できるバッチ処理や、ビルドジョブのような使い捨て系のワークロードに最適です。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 6 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, concept layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # Spot Instance とは？\n\n## AWSの「余剰リソース」を格安で借りる仕組み\n\n- 💰 オンデマンド比 最大 **90% 割引**\n- ⚡ 利用可能なリソースが余っている間だけ使える\n- ⚠️ **中断リスクあり**：AWSの都合で突然停止される可能性\n\n### Spotに向いているワークロード\n| 向いている ✅ | 向いていない ❌ |\n|---|---|\n| バッチ処理・データ変換 | Webサーバー（常時必要） |\n| CI/CDのビルドジョブ | DBのプライマリノード |\n| 機械学習のトレーニング | ステートフルなアプリ |\nNotes for narration context: スポットインスタンスは、AWSのデータセンターで余っているリソースを安く貸し出す仕組みです。最大90%という驚異的な割引率が魅力ですが、「AWSが必要になったら2分前に通知して止める」という中断リスクがあります。そのため、途中で止まっても再開できるバッチ処理や、ビルドジョブのような使い捨て系のワークロードに最適です。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "310c3a58253b082c",
+        "path": "slides_gpt_image2/slide_006.png"
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# Spot の中断対策\n\n## 「止まること前提」で設計するのがポイント",
+      "narration": "Spotを安全に使いこなすための中断対策を見ていきましょう。まずSpot Interruption Noticeという仕組みがあり、中断の2分前に通知が届きます。この2分間で処理の途中状態をS3などに保存する「チェックポイント処理」を実装しておけば、再起動後に途中から再開できます。また複数のインスタンスタイプをまとめて管理するSpot Fleet、ECSやEKSとの組み合わせも有効な手段です。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "Spot中断対策フロー",
+          "steps": [
+            {
+              "label": "Spot Interruption Notice 受信",
+              "desc": "中断2分前にEC2メタデータ・EventBridgeで通知",
+              "color": "orange"
+            },
+            {
+              "label": "チェックポイント保存",
+              "desc": "処理途中の状態をS3やDynamoDBに書き出す",
+              "color": "blue"
+            },
+            {
+              "label": "グレースフルシャットダウン",
+              "desc": "進行中タスクを安全に終了・キューに戻す",
+              "color": "blue"
+            },
+            {
+              "label": "新しいSpotが起動",
+              "desc": "Spot Fleet / ASGが別のタイプで自動補充",
+              "color": "green"
+            },
+            {
+              "label": "チェックポイントから再開",
+              "desc": "保存済み状態を読み込み処理を継続",
+              "color": "green"
+            }
+          ]
+        }
+      },
+      "image": {
+        "style": "checklist",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 7 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, checklist layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # Spot の中断対策\n\n## 「止まること前提」で設計するのがポイント\nNotes for narration context: Spotを安全に使いこなすための中断対策を見ていきましょう。まずSpot Interruption Noticeという仕組みがあり、中断の2分前に通知が届きます。この2分間で処理の途中状態をS3などに保存する「チェックポイント処理」を実装しておけば、再起動後に途中から再開できます。また複数のインスタンスタイプをまとめて管理するSpot Fleet、ECSやEKSとの組み合わせも有効な手段です。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "cfee89602aea0456",
+        "path": "slides_gpt_image2/slide_007.png"
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# ライトサイジング（Right Sizing）\n\n## 「過剰スペック」を実使用率で見直す\n\n- 📊 確認すべき指標：**CPU使用率・メモリ使用率・ネットワーク**\n- 🔍 よくある問題：「念のため大きめ」で選んだままのインスタンス\n- 💡 CloudWatch メトリクスで**2〜4週間**の使用率を確認\n\n```\nビフォー：m5.4xlarge（16vCPU）→ 平均CPU使用率 8%\nアフター ：m5.xlarge（4vCPU）  → 平均CPU使用率 32%\n月額削減：約 $280 → 約 $70  → 75%コスト削減！\n```",
+      "narration": "ライトサイジングとは、実際の使用率を確認して「過剰なスペック」を適切なサイズに縮小することです。「念のため大きめのインスタンスを選んだ」ままになっているケースが非常に多く見られます。CloudWatchで2〜4週間のCPUやメモリ使用率を確認し、平均使用率が低ければインスタンスタイプを下げることで、劇的にコストを削減できます。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 8 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, concept layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # ライトサイジング（Right Sizing）\n\n## 「過剰スペック」を実使用率で見直す\n\n- 📊 確認すべき指標：**CPU使用率・メモリ使用率・ネットワーク**\n- 🔍 よくある問題：「念のため大きめ」で選んだままのインスタンス\n- 💡 CloudWatch メトリクスで**2〜4週間**の使用率を確認\n\n```\nビフォー：m5.4xlarge（16vCPU）→ 平均CPU使用率 8%\nアフター ：m5.xlarge（4vCPU）  → 平均CPU使用率 32%\n月額削減：約 $280 → 約 $70  → 75%コスト削減！\n```\nNotes for narration context: ライトサイジングとは、実際の使用率を確認して「過剰なスペック」を適切なサイズに縮小することです。「念のため大きめのインスタンスを選んだ」ままになっているケースが非常に多く見られます。CloudWatchで2〜4週間のCPUやメモリ使用率を確認し、平均使用率が低ければインスタンスタイプを下げることで、劇的にコストを削減できます。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "8ff113c17aa8150c",
+        "path": "slides_gpt_image2/slide_008.png"
+      }
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# Compute Optimizer\n\n## 無料で使えるのに知られていない神ツール 🎯\n\n- 🤖 機械学習で**過去14日間**の使用率を分析\n- 📋 推奨インスタンスタイプを**自動提案**してくれる\n- 💸 **費用：無料**（追加コストなしで利用可能）\n- 🎯 対応リソース：EC2・Auto Scalingグループ・Lambda・EBS\n\n### コンソールから有効化するだけ！\n```\nAWSコンソール → Compute Optimizer → 有効化\n→ 数日後に推奨事項レポートが表示される\n```\n\n> 「推奨あり」のインスタンスを変更するだけで節約完了",
+      "narration": "AWS Compute Optimizerは、機械学習を使って過去14日間のリソース使用率を分析し、「このインスタンスはもっと小さくできますよ」と自動的に教えてくれる無料のサービスです。コンソールから有効化するだけで数日後にレポートが出てきます。使っていないのはもったいないので、まずは有効化してみることを強くおすすめします。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 9 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, concept layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # Compute Optimizer\n\n## 無料で使えるのに知られていない神ツール 🎯\n\n- 🤖 機械学習で**過去14日間**の使用率を分析\n- 📋 推奨インスタンスタイプを**自動提案**してくれる\n- 💸 **費用：無料**（追加コストなしで利用可能）\n- 🎯 対応リソース：EC2・Auto Scalingグループ・Lambda・EBS\n\n### コンソールから有効化するだけ！\n```\nAWSコンソール → Compute Optimizer → 有効化\n→ 数日後に推奨事項レポートが表示される\n```\n\n> 「推奨あり」のインスタンスを変更するだけで節約完了\nNotes for narration context: AWS Compute Optimizerは、機械学習を使って過去14日間のリソース使用率を分析し、「このインスタンスはもっと小さくできますよ」と自動的に教えてくれる無料のサービスです。コンソールから有効化するだけで数日後にレポートが出てきます。使っていないのはもったいないので、まずは有効化してみることを強くおすすめします。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "3ee49cc0d07a6302",
+        "path": "slides_gpt_image2/slide_009.png"
+      }
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# 不要リソースの自動検出・削除\n\n## 「使い忘れ」リソースは自動で見つける\n\n### よくある無駄リソース\n- 🌐 **すべてのElastic IP（EIP）**：2024年2月以降、割り当て状態に関係なく時間課金（$0.005/h ≒ 月$3.65/IP）\n- 💾 **未アタッチのEBSボリューム**：インスタンス削除後に残ったまま\n- 📸 **古すぎるスナップショット**：削除し忘れで蓄積\n\n### AWS Config Rules で自動検出\n```yaml\nルール例:\n  - ec2-eip-allocation-unused     # 未使用EIP\n  - ec2-volume-inuse-check        # 未アタッチEBS\n  - ebs-snapshot-public-restorable-check  # 古いSnapshot\n```",
+      "narration": "意外と見落とされがちなのが、使っていないのに課金され続けているリソースです。代表的なのがエラスティックアイピーです。2024年2月以降、AWSはすべてのパブリックアイピーブイフォーアドレスを時間あたり0.005ドル、月あたり約3.65ドルで課金するようになりました。つまり、エラスティックアイピーを含むパブリックアイピーブイフォーアドレスは、インスタンスに割り当て済みかどうかにかかわらず課金対象です。エーダブリューエスコンフィグルールズや、ブイピーシーアイパムのパブリックアイピーインサイツを組み合わせると、こういった「使い忘れ」リソースを自動で検出してアラートを上げることができます。定期的な棚卸しの自動化として非常に有効です。",
+      "diagram": null,
+      "image": {
+        "style": "checklist",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 10 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, checklist layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # 不要リソースの自動検出・削除\n\n## 「使い忘れ」リソースは自動で見つける\n\n### よくある無駄リソース\n- 🌐 **すべてのElastic IP（EIP）**：2024年2月以降、割り当て状態に関係なく時間課金（$0.005/h ≒ 月$3.65/IP）\n- 💾 **未アタッチのEBSボリューム**：インスタンス削除後に残ったまま\n- 📸 **古すぎるスナップショット**：削除し忘れで蓄積\n\n### AWS Config Rules で自動検出\n```yaml\nルール例:\n  - ec2-eip-allocation-unused     # 未使用EIP\n  - ec2-volume-inuse-check        # 未アタッチEBS\n  - ebs-snapshot-public-restorable-check  # 古いSnapshot\n```\nNotes for narration context: 意外と見落とされがちなのが、使っていないのに課金され続けているリソースです。代表的なのがエラスティックアイピーです。2024年2月以降、AWSはすべてのパブリックアイピーブイフォーアドレスを時間あたり0.005ドル、月あたり約3.65ドルで課金するようになりました。つまり、エラスティックアイピーを含むパブリックアイピーブイフォーアドレスは、インスタンスに割り当て済みかどうかにかかわらず課金対象です。エーダブリューエスコンフィグルールズや、ブイピーシーアイパムのパブリックアイピーインサイツを組み合わせると、こういった「使い忘れ」リソースを自動で検出してアラートを上げることができます。定期的な棚卸しの自動化として非常に有効です。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "484f6090585648a7",
+        "path": "slides_gpt_image2/slide_010.png"
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# スケジュールスケーリングで夜間・週末を削減\n\n## 「使わない時間帯」はインスタンスを止める\n\n```python\n# EventBridge + Lambda でのスケジュール自動停止例\n# 月〜金 22:00 停止 / 月〜金 8:00 起動\n\n停止スケジュール: cron(0 13 ? * MON-FRI *)  # UTC 13:00 = JST 22:00\n起動スケジュール: cron(0 23 ? * MON-FRI *)  # UTC 23:00 = JST 08:00\n```\n\n### 削減効果の試算\n| 環境 | 稼働時間 | 削減率 |\n|---|---|---|\n| 平日9〜22時のみ稼働 | 65時間/週 → 月260時間 | **約65%削減** |\n| 平日のみ稼働（週5日） | 月約504h → 月約360h | **約28%削減** |\n\n> 開発・ステージング環境は積極的に自動停止しよう！",
+      "narration": "開発環境やステージング環境は、夜間や週末に使っていないことがほとんどです。EventBridgeのcronスケジュールとLambdaを組み合わせることで、平日の業務時間外や週末に自動でインスタンスを停止できます。平日9時〜22時だけ稼働させると、月間で最大65%のコスト削減が可能です。本番環境には適用しにくいですが、開発環境では今日からでも実施できる手法です。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 11 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, concept layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # スケジュールスケーリングで夜間・週末を削減\n\n## 「使わない時間帯」はインスタンスを止める\n\n```python\n# EventBridge + Lambda でのスケジュール自動停止例\n# 月〜金 22:00 停止 / 月〜金 8:00 起動\n\n停止スケジュール: cron(0 13 ? * MON-FRI *)  # UTC 13:00 = JST 22:00\n起動スケジュール: cron(0 23 ? * MON-FRI *)  # UTC 23:00 = JST 08:00\n```\n\n### 削減効果の試算\n| 環境 | 稼働時間 | 削減率 |\n|---|---|---|\n| 平日9〜22時のみ稼働 | 65時間/週 → 月260時間 | **約65%削減** |\n| 平日のみ稼働（週5日） | 月約504h → 月約360h | **約28%削減** |\n\n> 開発・ステージング環境は積極的に自動停止しよう！\nNotes for narration context: 開発環境やステージング環境は、夜間や週末に使っていないことがほとんどです。EventBridgeのcronスケジュールとLambdaを組み合わせることで、平日の業務時間外や週末に自動でインスタンスを停止できます。平日9時〜22時だけ稼働させると、月間で最大65%のコスト削減が可能です。本番環境には適用しにくいですが、開発環境では今日からでも実施できる手法です。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "c0ca73c8c54f3d43",
+        "path": "slides_gpt_image2/slide_011.png"
+      }
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# 手法の使い分けまとめ\n\n## 状況に合わせて組み合わせることが重要",
+      "narration": "4つの手法の使い分けをフローとして整理してみました。まず「常時稼働・負荷が安定している」リソースにはセービングスプランかRIを適用します。「中断してもよいバッチ・ビルド系」にはスポットインスタンスが最適です。そして「そもそもスペックが過剰では？」という観点でCompute Optimizerを使ったライトサイジングを行います。これらを組み合わせることで、多角的なコスト最適化が実現できます。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "コスト削減手法の選び方",
+          "steps": [
+            {
+              "label": "常時稼働・安定ワークロード？",
+              "desc": "WebサーバーやDBなど24時間動いているリソース",
+              "color": "blue"
+            },
+            {
+              "label": "Savings Plans / RI を適用",
+              "desc": "最大75%割引。まずSavings Plansから検討",
+              "color": "green"
+            },
+            {
+              "label": "中断OK・バッチ系ワークロード？",
+              "desc": "CI/CD・機械学習・データ変換など",
+              "color": "blue"
+            },
+            {
+              "label": "Spot Instance を活用",
+              "desc": "最大90%割引。Interruption Notice対策も忘れずに",
+              "color": "orange"
+            },
+            {
+              "label": "スペック・稼働時間を見直す",
+              "desc": "Compute Optimizer＋スケジュール停止で無駄を削る",
+              "color": "lblue"
+            }
+          ]
+        }
+      },
+      "image": {
+        "style": "summary",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 12 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, summary layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # 手法の使い分けまとめ\n\n## 状況に合わせて組み合わせることが重要\nNotes for narration context: 4つの手法の使い分けをフローとして整理してみました。まず「常時稼働・負荷が安定している」リソースにはセービングスプランかRIを適用します。「中断してもよいバッチ・ビルド系」にはスポットインスタンスが最適です。そして「そもそもスペックが過剰では？」という観点でCompute Optimizerを使ったライトサイジングを行います。これらを組み合わせることで、多角的なコスト最適化が実現できます。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "5a4b1edad913d3f9",
+        "path": "slides_gpt_image2/slide_012.png"
+      }
+    },
+    {
+      "slide_number": 13,
+      "marp_content": "# このレクチャーのまとめ\n\n## 3つの重要ポイント\n\n### ✅ 1. コミットメント型割引は「柔軟性」で選ぶ\n- RI：高割引・固定。Savings Plans：柔軟・ファミリー変更OK\n- 迷ったら **Savings Plans** から始めよう\n\n### ✅ 2. Spot は「中断前提」の設計で真価を発揮\n- 2分前通知（Interruption Notice）＋チェックポイント保存が鍵\n- バッチ・CI/CD環境での活用が最も効果的\n\n### ✅ 3. ライトサイジングは「見える化」から始める\n- **Compute Optimizer**（無料）を有効化するだけでOK\n- スケジュール停止・不要リソース削除も組み合わせる\n\n> 次のレクチャー：コスト可視化とアラート設定",
+      "narration": "今日のレクチャーをまとめます。1つ目、コミットメント型割引のRIとセービングスプランは柔軟性で選び分けます。迷ったらセービングスプランが無難です。2つ目、スポットインスタンスは中断前提の設計をすることで真価が出ます。Interruption Noticeとチェックポイント保存をセットで覚えてください。3つ目、ライトサイジングはCompute Optimizerの有効化から始めましょう。無料なのに使わない理由はありません。次のレクチャーではコストの可視化とアラート設定を学んでいきます。",
+      "diagram": null,
+      "image": {
+        "style": "summary",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 13 of a Japanese AWS SRE course deck about common cost reduction methods.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, crisp Japanese typography, summary layout.\nColor palette: #1a1a2e, #1c1c34, #FF9900, #58A6FF, #79C7E3, #e8e8e8, #FFDC64.\nText (verbatim): # このレクチャーのまとめ\n\n## 3つの重要ポイント\n\n### ✅ 1. コミットメント型割引は「柔軟性」で選ぶ\n- RI：高割引・固定。Savings Plans：柔軟・ファミリー変更OK\n- 迷ったら **Savings Plans** から始めよう\n\n### ✅ 2. Spot は「中断前提」の設計で真価を発揮\n- 2分前通知（Interruption Notice）＋チェックポイント保存が鍵\n- バッチ・CI/CD環境での活用が最も効果的\n\n### ✅ 3. ライトサイジングは「見える化」から始める\n- **Compute Optimizer**（無料）を有効化するだけでOK\n- スケジュール停止・不要リソース削除も組み合わせる\n\n> 次のレクチャー：コスト可視化とアラート設定\nNotes for narration context: 今日のレクチャーをまとめます。1つ目、コミットメント型割引のRIとセービングスプランは柔軟性で選び分けます。迷ったらセービングスプランが無難です。2つ目、スポットインスタンスは中断前提の設計をすることで真価が出ます。Interruption Noticeとチェックポイント保存をセットで覚えてください。3つ目、ライトサイジングはCompute Optimizerの有効化から始めましょう。無料なのに使わない理由はありません。次のレクチャーではコストの可視化とアラート設定を学んでいきます。\nConstraints: Keep Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, English-only text, busy backgrounds.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T09:23:21+00:00",
+        "revision": 1,
+        "source_hash": "3494797d20b8ee24",
+        "path": "slides_gpt_image2/slide_013.png"
+      }
+    }
+  ]
+}

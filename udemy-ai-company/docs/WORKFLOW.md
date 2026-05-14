@@ -25,7 +25,7 @@ AI-PM-01はBacklog Issueの更新を検知し、Owner AI、Reviewer AI、`Auto E
 
 - 担当AI: AI-Strategy-01
 - 入力: Backlog Issue、CEO方針、既存 `course_spec.md`
-- 出力: `course_spec.md`、章立て、Task分解、Impact Analysis
+- 出力: `course_spec.md`、`lectures.md`、`course_curriculum.md`、章立て、Task分解、Impact Analysis
 - 完了条件: 対象者、学習目標、ハンズオン範囲、Out of Scopeが明記され、CEO承認がある
 
 AI-PM-01はPlanning完了後のTask Issueを監視し、`auto-execute` があり、Worker/Reviewer分離と承認条件を満たす場合だけ実行キューに入れる。
@@ -49,16 +49,16 @@ CloudFormation stack作成/更新/削除、AWS Batch/Fargate、ECR push、その
 ## Production
 
 - 担当AI: AI-Production-01
-- 入力: レビュー済みハンズオン、`course_spec.md`、`course_infomation.md`、STYLE_GUIDE
+- 入力: レビュー済みハンズオン、`course_spec.md`、`course_infomation.md`、`course_curriculum.md`、STYLE_GUIDE
 - 出力: GPT-Image2 source PNG、GPT-Image2由来の最終スライドPNG、台本、VOICEVOX素材、動画素材、Udemy登録情報の更新案または確認結果
-- 完了条件: `course_infomation.md` が存在し、READMEと動画手順が一致し、GPT-Image2 source evidence、GPT-Image2由来スライド、VOICEVOX素材が揃い、ナレーションチェックが完了している
+- 完了条件: `course_infomation.md` と `course_curriculum.md` が存在し、READMEと動画手順が一致し、GPT-Image2 source evidence、GPT-Image2由来スライド、VOICEVOX素材が揃い、ナレーションチェックが完了している
 
 ## Content Review
 
 - 担当AI: AI-QA-01
-- 入力: GPT-Image2 source PNG、最終スライドPNG、台本、音声、動画素材、README、`course_infomation.md`
+- 入力: GPT-Image2 source PNG、最終スライドPNG、台本、音声、動画素材、README、`course_infomation.md`、`course_curriculum.md`
 - 出力: 教材QAレポート、承認または差戻し
-- 完了条件: GPT-Image2由来でない最終スライド混入、技術的誤り、手順不一致、Udemy登録情報との矛盾、読み上げ不自然箇所、英字残存、空白による不自然な間が解消されている
+- 完了条件: GPT-Image2由来でない最終スライド混入、技術的誤り、手順不一致、Udemy登録情報とカリキュラム情報の矛盾、読み上げ不自然箇所、英字残存、空白による不自然な間が解消されている
 
 ## Ready for Publish
 

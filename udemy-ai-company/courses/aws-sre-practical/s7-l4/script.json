@@ -1,0 +1,256 @@
+{
+  "section": 7,
+  "lecture": 4,
+  "title": "ハンズオン: 模擬インシデント対応演習",
+  "duration_min": 25,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# ハンズオン\n## 模擬インシデント対応演習\n\n### 自分で障害を起こして、自分で解決する\n\n**Section 7 / Lecture 4**",
+      "narration": "このレクチャーはハンズオン形式の演習です。実際にAWS環境で意図的に障害を発生させ、アラートの受信から調査・対処・解決宣言までを一通り体験していただきます。「本番で何か起きたらどうしよう」という不安を、実体験で自信に変えていきましょう。所要時間は約25分です。一緒に手を動かしながら進めていきましょう。",
+      "diagram": null,
+      "image": {
+        "style": "title",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 1 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, title layout, crisp Japanese typography.\nText (verbatim): # ハンズオン\n## 模擬インシデント対応演習\n\n### 自分で障害を起こして、自分で解決する\n\n**Section 7 / Lecture 4**\nNotes for narration context: このレクチャーはハンズオン形式の演習です。実際にAWS環境で意図的に障害を発生させ、アラートの受信から調査・対処・解決宣言までを一通り体験していただきます。「本番で何か起きたらどうしよう」という不安を、実体験で自信に変えていきましょう。所要時間は約25分です。一緒に手を動かしながら進めていきましょう。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "8759827559361853",
+        "path": "slides_gpt_image2/slide_001.png"
+      }
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# この演習で学ぶこと\n\n## 今日体験するサイクル\n\n**アラート受信 → 調査 → 対処 → 解決宣言**\n\n> プレイブックに沿って動くことで\n> 「判断の型」が身につきます",
+      "narration": "この演習を通じて体験するのは、インシデント対応の基本サイクルです。アラートを受信し、状況を調査して、対処して、最後に解決を宣言する。この一連の流れを、実際に手を動かしながらプレイブック通りに実行することで、頭で理解するだけでなく「体で覚える」レベルまで落とし込むことが目標です。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "インシデント対応サイクル",
+          "steps": [
+            {
+              "label": "①アラート受信",
+              "sublabel": "Slack通知",
+              "style": "normal"
+            },
+            {
+              "label": "②インシデント宣言",
+              "sublabel": "タイムライン開始",
+              "style": "normal"
+            },
+            {
+              "label": "③調査",
+              "sublabel": "CloudWatch確認",
+              "style": "highlight"
+            },
+            {
+              "label": "④対処",
+              "sublabel": "プロセス停止",
+              "style": "normal"
+            },
+            {
+              "label": "⑤解決宣言",
+              "sublabel": "ポストモーテムへ",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      },
+      "image": {
+        "style": "agenda",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 2 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, agenda layout, crisp Japanese typography.\nText (verbatim): # この演習で学ぶこと\n\n## 今日体験するサイクル\n\n**アラート受信 → 調査 → 対処 → 解決宣言**\n\n> プレイブックに沿って動くことで\n> 「判断の型」が身につきます\nNotes for narration context: この演習を通じて体験するのは、インシデント対応の基本サイクルです。アラートを受信し、状況を調査して、対処して、最後に解決を宣言する。この一連の流れを、実際に手を動かしながらプレイブック通りに実行することで、頭で理解するだけでなく「体で覚える」レベルまで落とし込むことが目標です。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "8e5173cbf145b36d",
+        "path": "slides_gpt_image2/slide_002.png"
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# 演習シナリオ\n\n## 今日起きる「障害」の全体像\n\n- **発端**: EC2インスタンスのCPU使用率が急上昇\n- **影響**: WebアプリのHTTPレスポンスに5xxエラーが増加\n- **通知**: CloudWatch Alarm → Slack にアラートが届く\n\n> ⚠️ これはすべて**意図的に**発生させる演習です",
+      "narration": "今回の演習シナリオはこちらです。EC2インスタンスのCPU使用率が急上昇し、その影響でWebアプリケーションが5xxエラー、つまりサーバーエラーを返し始めます。CloudWatchがこれを検知してSlackにアラートを送信する、というシナリオです。すべて皆さん自身が意図的に仕込む障害ですので、安心して試してください。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 3 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, concept layout, crisp Japanese typography.\nText (verbatim): # 演習シナリオ\n\n## 今日起きる「障害」の全体像\n\n- **発端**: EC2インスタンスのCPU使用率が急上昇\n- **影響**: WebアプリのHTTPレスポンスに5xxエラーが増加\n- **通知**: CloudWatch Alarm → Slack にアラートが届く\n\n> ⚠️ これはすべて**意図的に**発生させる演習です\nNotes for narration context: 今回の演習シナリオはこちらです。EC2インスタンスのCPU使用率が急上昇し、その影響でWebアプリケーションが5xxエラー、つまりサーバーエラーを返し始めます。CloudWatchがこれを検知してSlackにアラートを送信する、というシナリオです。すべて皆さん自身が意図的に仕込む障害ですので、安心して試してください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "48c49eea401c688c",
+        "path": "slides_gpt_image2/slide_003.png"
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# 障害の再現方法\n\n## `stress-ng` コマンドでCPU負荷を発生させる\n\n### インストール手順（Amazon Linux 2023）\n\n```bash\n# stress-ng をインストール\nsudo dnf install stress-ng -y\n```\n\n### CPU負荷をかけるコマンド\n\n```bash\n# 書き込み可能なディレクトリへ移動\ncd ~\n\n# CPUを4コアフル使用で10分間負荷をかける\nstress-ng --cpu 4 --timeout 600\n```\n\n> ※ `timeout 600` は600秒（10分）後に自動停止\n> ※ 詳細コマンドは `CLI_COMMANDS.md` を参照",
+      "narration": "シーピーユースパイクを再現するには、ストレスエヌジーコマンドを使います。アマゾンリナックス2023では、ディーエヌエフコマンドでパッケージを直接インストールできます。インストール後はホームディレクトリに移動してから実行してください。ストレスエヌジーは書き込み可能なディレクトリで動作するためです。タイムアウト600で10分後に自動停止するので安心です。",
+      "diagram": null,
+      "image": {
+        "style": "code",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 4 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, code layout, crisp Japanese typography.\nText (verbatim): # 障害の再現方法\n\n## `stress-ng` コマンドでCPU負荷を発生させる\n\n### インストール手順（Amazon Linux 2023）\n\n```bash\n# stress-ng をインストール\nsudo dnf install stress-ng -y\n```\n\n### CPU負荷をかけるコマンド\n\n```bash\n# 書き込み可能なディレクトリへ移動\ncd ~\n\n# CPUを4コアフル使用で10分間負荷をかける\nstress-ng --cpu 4 --timeout 600\n```\n\n> ※ `timeout 600` は600秒（10分）後に自動停止\n> ※ 詳細コマンドは `CLI_COMMANDS.md` を参照\nNotes for narration context: シーピーユースパイクを再現するには、ストレスエヌジーコマンドを使います。アマゾンリナックス2023では、ディーエヌエフコマンドでパッケージを直接インストールできます。インストール後はホームディレクトリに移動してから実行してください。ストレスエヌジーは書き込み可能なディレクトリで動作するためです。タイムアウト600で10分後に自動停止するので安心です。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "30067e5e7230d4a7",
+        "path": "slides_gpt_image2/slide_004.png"
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# 演習手順①\n\n## Slackアラート受信 → インシデント宣言\n\n**やること**\n- [ ] Slackの `#alerts` チャンネルでアラートを確認\n- [ ] インシデント対応チャンネルを作成する\n  - 例: `#inc-20240115-cpu-spike`\n- [ ] タイムライン記録を開始する\n  - 最初の1行: `[HH:MM] アラート受信 - CPU使用率90%超過`\n\n> 📝 タイムラインは**リアルタイム**で書く習慣をつけましょう",
+      "narration": "さて、演習スタートです。ストレスエヌジーコマンドを実行してしばらくすると、スラックのアラートチャンネルにクラウドウォッチからの通知が届きます。受信したらすぐにインシデント専用チャンネルを作成してください。チャンネル名には日付と概要を入れるとあとで見返しやすくなります。そしてタイムラインの記録をその瞬間から始めましょう。後のポストモーテムに必ず役立ちます。",
+      "diagram": null,
+      "image": {
+        "style": "checklist",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 5 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, checklist layout, crisp Japanese typography.\nText (verbatim): # 演習手順①\n\n## Slackアラート受信 → インシデント宣言\n\n**やること**\n- [ ] Slackの `#alerts` チャンネルでアラートを確認\n- [ ] インシデント対応チャンネルを作成する\n  - 例: `#inc-20240115-cpu-spike`\n- [ ] タイムライン記録を開始する\n  - 最初の1行: `[HH:MM] アラート受信 - CPU使用率90%超過`\n\n> 📝 タイムラインは**リアルタイム**で書く習慣をつけましょう\nNotes for narration context: さて、演習スタートです。ストレスエヌジーコマンドを実行してしばらくすると、スラックのアラートチャンネルにクラウドウォッチからの通知が届きます。受信したらすぐにインシデント専用チャンネルを作成してください。チャンネル名には日付と概要を入れるとあとで見返しやすくなります。そしてタイムラインの記録をその瞬間から始めましょう。後のポストモーテムに必ず役立ちます。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "b23de5a82364259d",
+        "path": "slides_gpt_image2/slide_005.png"
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# 演習手順②\n\n## CloudWatchダッシュボードで状況を把握する\n\n**確認すべき3つのメトリクス**\n\n| メトリクス | 確認ポイント | 異常の目安 |\n|---|---|---|\n| CPU使用率 | EC2 > CPUUtilization | **90%超** |\n| 5xxエラー率 | ALB > HTTPCode_5XX | **急増** |\n| レイテンシ | ALB > TargetResponseTime | **通常比3倍以上** |\n\n> タイムラインに追記: `[HH:MM] CPU 95%, 5xx 急増を確認`",
+      "narration": "Slackでアラートを受け取ったら、次はCloudWatchダッシュボードを開いて状況を数字で把握します。確認するのはこの3つです。EC2のCPU使用率、ALBの5xxエラー率、そしてレスポンスタイムです。AWSのロードバランサーであるALBが収集しているこれらのメトリクスを見ることで、問題の深刻度と影響範囲をひと目で判断できます。確認した内容はタイムラインにもメモしておいてください。",
+      "diagram": null,
+      "image": {
+        "style": "concept",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 6 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, concept layout, crisp Japanese typography.\nText (verbatim): # 演習手順②\n\n## CloudWatchダッシュボードで状況を把握する\n\n**確認すべき3つのメトリクス**\n\n| メトリクス | 確認ポイント | 異常の目安 |\n|---|---|---|\n| CPU使用率 | EC2 > CPUUtilization | **90%超** |\n| 5xxエラー率 | ALB > HTTPCode_5XX | **急増** |\n| レイテンシ | ALB > TargetResponseTime | **通常比3倍以上** |\n\n> タイムラインに追記: `[HH:MM] CPU 95%, 5xx 急増を確認`\nNotes for narration context: Slackでアラートを受け取ったら、次はCloudWatchダッシュボードを開いて状況を数字で把握します。確認するのはこの3つです。EC2のCPU使用率、ALBの5xxエラー率、そしてレスポンスタイムです。AWSのロードバランサーであるALBが収集しているこれらのメトリクスを見ることで、問題の深刻度と影響範囲をひと目で判断できます。確認した内容はタイムラインにもメモしておいてください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "58c73e814aae8612",
+        "path": "slides_gpt_image2/slide_006.png"
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# 演習手順③\n\n## Session ManagerでEC2に接続してプロセスを調査する\n\n**Session Manager** = SSH鍵なしでEC2に接続できるAWSの機能\n\n```bash\n# AWSコンソール → EC2 → 対象インスタンス\n# 「接続」→「Session Manager」→「接続」をクリック\n\n# 接続後、topコマンドでプロセスを確認\ntop\n```\n\n**`top` コマンドの見方**\n- 上部のCPU行で全体使用率を確認\n- `%CPU` の高いプロセスを探す → **`stress-ng` が犯人**\n- `PID`（プロセスID）をメモしておく",
+      "narration": "次にイーシーツーインスタンスの中を直接調査します。セッションマネージャーを使うと、エスエスエイチの鍵や踏み台サーバーなしでブラウザからイーシーツーに接続できます。セッションマネージャーはエスアールイー現場でも頻繁に使う便利な機能です。接続したらトップコマンドを実行してください。シーピーユー列で使用率が高いプロセスを探すと、ストレスエヌジーコマンドが犯人として見つかるはずです。このプロセスアイディーをメモしておきましょう。",
+      "diagram": null,
+      "image": {
+        "style": "code",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 7 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, code layout, crisp Japanese typography.\nText (verbatim): # 演習手順③\n\n## Session ManagerでEC2に接続してプロセスを調査する\n\n**Session Manager** = SSH鍵なしでEC2に接続できるAWSの機能\n\n```bash\n# AWSコンソール → EC2 → 対象インスタンス\n# 「接続」→「Session Manager」→「接続」をクリック\n\n# 接続後、topコマンドでプロセスを確認\ntop\n```\n\n**`top` コマンドの見方**\n- 上部のCPU行で全体使用率を確認\n- `%CPU` の高いプロセスを探す → **`stress-ng` が犯人**\n- `PID`（プロセスID）をメモしておく\nNotes for narration context: 次にイーシーツーインスタンスの中を直接調査します。セッションマネージャーを使うと、エスエスエイチの鍵や踏み台サーバーなしでブラウザからイーシーツーに接続できます。セッションマネージャーはエスアールイー現場でも頻繁に使う便利な機能です。接続したらトップコマンドを実行してください。シーピーユー列で使用率が高いプロセスを探すと、ストレスエヌジーコマンドが犯人として見つかるはずです。このプロセスアイディーをメモしておきましょう。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "f234afa1d613b261",
+        "path": "slides_gpt_image2/slide_007.png"
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# 演習手順④\n\n## Run Commandで `stress-ng` プロセスKill → 回復確認\n\n**Run Command** = AWSコンソールからEC2でコマンドを一括実行できる機能\n\n```bash\n# Systems Manager → Run Command → 「コマンドを実行」\n# ドキュメント: AWS-RunShellScript\n# コマンド欄に入力:\n\n# stress-ng プロセスをすべて停止\nkillall stress-ng\n\n# または PIDを指定して停止\nkill -9 <メモしたPID>\n```\n\n**実行後、CloudWatchで回復を確認**\n- CPU使用率が下がり始める（1〜2分）\n- 5xxエラーが収束する",
+      "narration": "問題のプロセスが特定できたら、今度はランコマンドを使って停止させます。ランコマンドとは、エーダブリューエスのシステムズマネージャーコンソールから複数のイーシーツーインスタンスに対してシェルコマンドを一括実行できる機能です。エスエスエイチ接続しなくてもイーシーツーを操作できるので、緊急時に非常に役立ちます。キラルコマンドでストレスエヌジープロセスを停止したら、クラウドウォッチのグラフが回復していくのをリアルタイムで眺めてみてください。",
+      "diagram": null,
+      "image": {
+        "style": "code",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 8 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, code layout, crisp Japanese typography.\nText (verbatim): # 演習手順④\n\n## Run Commandで `stress-ng` プロセスKill → 回復確認\n\n**Run Command** = AWSコンソールからEC2でコマンドを一括実行できる機能\n\n```bash\n# Systems Manager → Run Command → 「コマンドを実行」\n# ドキュメント: AWS-RunShellScript\n# コマンド欄に入力:\n\n# stress-ng プロセスをすべて停止\nkillall stress-ng\n\n# または PIDを指定して停止\nkill -9 <メモしたPID>\n```\n\n**実行後、CloudWatchで回復を確認**\n- CPU使用率が下がり始める（1〜2分）\n- 5xxエラーが収束する\nNotes for narration context: 問題のプロセスが特定できたら、今度はランコマンドを使って停止させます。ランコマンドとは、エーダブリューエスのシステムズマネージャーコンソールから複数のイーシーツーインスタンスに対してシェルコマンドを一括実行できる機能です。エスエスエイチ接続しなくてもイーシーツーを操作できるので、緊急時に非常に役立ちます。キラルコマンドでストレスエヌジープロセスを停止したら、クラウドウォッチのグラフが回復していくのをリアルタイムで眺めてみてください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "516706e2fbecd2eb",
+        "path": "slides_gpt_image2/slide_008.png"
+      }
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# 演習手順⑤\n\n## タイムラインを振り返り → インシデント解決宣言\n\n**タイムライン完成例**\n\n```\n[14:03] アラート受信 - CPU使用率 95%超過\n[14:05] インシデント宣言 / 調査開始\n[14:08] CloudWatchにて5xxエラー急増を確認\n[14:11] Session ManagerでEC2接続 / stress-ngプロセスを特定\n[14:13] Run CommandにてKill実行\n[14:15] CPUが正常値に回復 / 5xxエラー収束を確認\n[14:17] ✅ インシデント解決宣言\n```\n\n> Slackに「解決しました」と投稿して完了！",
+      "narration": "ストレスエヌジープロセスを停止してメトリクスが正常値に戻ったら、タイムラインを見直してください。アラート受信から解決宣言まで、一連の流れが時系列で記録されているはずです。これが完成したら、スラックのインシデントチャンネルにインシデント解決を宣言して投稿しましょう。演習はここで完了です。お疲れ様でした！このタイムラインは、次のセクションで学ぶポストモーテムの素材になります。",
+      "diagram": null,
+      "image": {
+        "style": "summary",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 9 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, summary layout, crisp Japanese typography.\nText (verbatim): # 演習手順⑤\n\n## タイムラインを振り返り → インシデント解決宣言\n\n**タイムライン完成例**\n\n```\n[14:03] アラート受信 - CPU使用率 95%超過\n[14:05] インシデント宣言 / 調査開始\n[14:08] CloudWatchにて5xxエラー急増を確認\n[14:11] Session ManagerでEC2接続 / stress-ngプロセスを特定\n[14:13] Run CommandにてKill実行\n[14:15] CPUが正常値に回復 / 5xxエラー収束を確認\n[14:17] ✅ インシデント解決宣言\n```\n\n> Slackに「解決しました」と投稿して完了！\nNotes for narration context: ストレスエヌジープロセスを停止してメトリクスが正常値に戻ったら、タイムラインを見直してください。アラート受信から解決宣言まで、一連の流れが時系列で記録されているはずです。これが完成したら、スラックのインシデントチャンネルにインシデント解決を宣言して投稿しましょう。演習はここで完了です。お疲れ様でした！このタイムラインは、次のセクションで学ぶポストモーテムの素材になります。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "ec755d68aceffe95",
+        "path": "slides_gpt_image2/slide_009.png"
+      }
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# Before / After で見る\n\n## 演習前後でどう変わったか",
+      "narration": "演習を振り返って、Before・Afterを整理しましょう。演習前は「アラートが来たら何から手を付けるかわからない」「焦ってパニックになりそう」という状態だったかもしれません。でも演習後は、プレイブックに沿って順番に動けば必ず解決できるという体験が得られたはずです。障害対応は「型」があれば怖くありません。この感覚を本番でも活かしてください。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "演習 Before / After",
+          "left": {
+            "label": "演習前 😰",
+            "items": [
+              "アラートが来たら何から見る？",
+              "どのコマンドを叩けばいい？",
+              "いつ解決宣言すればいい？",
+              "焦ってパニックになりそう"
+            ]
+          },
+          "right": {
+            "label": "演習後 💪",
+            "items": [
+              "まずCloudWatchで3メトリクス確認",
+              "Session Managerで接続→top",
+              "メトリクス回復を確認して宣言",
+              "プレイブック通りに動ける自信"
+            ]
+          }
+        }
+      },
+      "image": {
+        "style": "comparison",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 10 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, comparison layout, crisp Japanese typography.\nText (verbatim): # Before / After で見る\n\n## 演習前後でどう変わったか\nNotes for narration context: 演習を振り返って、Before・Afterを整理しましょう。演習前は「アラートが来たら何から手を付けるかわからない」「焦ってパニックになりそう」という状態だったかもしれません。でも演習後は、プレイブックに沿って順番に動けば必ず解決できるという体験が得られたはずです。障害対応は「型」があれば怖くありません。この感覚を本番でも活かしてください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "a34f8c14e03b7e6b",
+        "path": "slides_gpt_image2/slide_010.png"
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# 演習後の次のステップ\n\n## ポストモーテムの準備へ\n\n今回の演習タイムラインを使って、次のセクションで\n**ポストモーテム**（障害振り返りレポート）を作成します\n\n**ポストモーテム** = 障害後に「なぜ起きたか・再発防止策は何か」を\nチーム全体で振り返るプロセス（犯人探しではなく改善のための会議）\n\n> 📄 今回のタイムラインを手元に保存しておいてください",
+      "narration": "演習お疲れ様でした。次のセクションではこのタイムラインを素材にして、ポストモーテムの作成に進みます。ポストモーテムとは、障害後に「なぜ起きたか」「どうすれば再発を防げるか」をチームで振り返るプロセスのことです。重要なのは犯人探しではなく、システムや仕組みの改善につなげることです。今回書いたタイムラインを手元に保存しておいてください。",
+      "diagram": null,
+      "image": {
+        "style": "summary",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 11 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, summary layout, crisp Japanese typography.\nText (verbatim): # 演習後の次のステップ\n\n## ポストモーテムの準備へ\n\n今回の演習タイムラインを使って、次のセクションで\n**ポストモーテム**（障害振り返りレポート）を作成します\n\n**ポストモーテム** = 障害後に「なぜ起きたか・再発防止策は何か」を\nチーム全体で振り返るプロセス（犯人探しではなく改善のための会議）\n\n> 📄 今回のタイムラインを手元に保存しておいてください\nNotes for narration context: 演習お疲れ様でした。次のセクションではこのタイムラインを素材にして、ポストモーテムの作成に進みます。ポストモーテムとは、障害後に「なぜ起きたか」「どうすれば再発を防げるか」をチームで振り返るプロセスのことです。重要なのは犯人探しではなく、システムや仕組みの改善につなげることです。今回書いたタイムラインを手元に保存しておいてください。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "211a90eda2bf6edc",
+        "path": "slides_gpt_image2/slide_011.png"
+      }
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# このレクチャーのまとめ\n\n## 今日体験で学んだこと\n\n1. **障害対応は「型」で動く**\n   アラート受信 → 宣言 → 調査 → 対処 → 解決宣言のサイクルをプレイブック通りに実行することで、パニックを防げる\n\n2. **CloudWatch + Session Manager + Run Command が三種の神器**\n   コンソールだけで「見る・入る・直す」がすべて完結する\n\n3. **タイムラインのリアルタイム記録が後工程を楽にする**\n   その場で書いたメモがポストモーテムの土台になり、再発防止につながる",
+      "narration": "今日のレクチャーのまとめです。1点目は、障害対応は型に沿って動くことが大切だということ。プレイブック通りに進めれば、焦りを最小限に抑えられます。2点目は、CloudWatch・セッションマネージャー・Run Commandの三つを使いこなせば、コンソールだけで調査から対処まで完結できるということ。3点目は、タイムラインをリアルタイムで書き続ける習慣が、ポストモーテムや再発防止につながるということです。次のセクションでもお会いしましょう。",
+      "diagram": null,
+      "image": {
+        "style": "summary",
+        "prompt": "Use case: productivity-visual\nAsset type: Udemy lecture slide\nPrimary request: Create slide 12 for a Japanese AWS SRE course hands-on about incident response training.\nScene/backdrop: Dark navy modern flat infographic slide with subtle gradient.\nStyle/medium: Presentation slide, summary layout, crisp Japanese typography.\nText (verbatim): # このレクチャーのまとめ\n\n## 今日体験で学んだこと\n\n1. **障害対応は「型」で動く**\n   アラート受信 → 宣言 → 調査 → 対処 → 解決宣言のサイクルをプレイブック通りに実行することで、パニックを防げる\n\n2. **CloudWatch + Session Manager + Run Command が三種の神器**\n   コンソールだけで「見る・入る・直す」がすべて完結する\n\n3. **タイムラインのリアルタイム記録が後工程を楽にする**\n   その場で書いたメモがポストモーテムの土台になり、再発防止につながる\nNotes for narration context: 今日のレクチャーのまとめです。1点目は、障害対応は型に沿って動くことが大切だということ。プレイブック通りに進めれば、焦りを最小限に抑えられます。2点目は、CloudWatch・セッションマネージャー・Run Commandの三つを使いこなせば、コンソールだけで調査から対処まで完結できるということ。3点目は、タイムラインをリアルタイムで書き続ける習慣が、ポストモーテムや再発防止につながるということです。次のセクションでもお会いしましょう。\nConstraints: Japanese readable, no photos, no logos, no watermark, no extra services.\nAvoid: clutter, broken glyphs, busy background.",
+        "model": "gpt-image-2",
+        "size": "1920x1080",
+        "generated_at": "2026-05-08T11:08:34+00:00",
+        "revision": 1,
+        "source_hash": "da8cf173de9ffcc1",
+        "path": "slides_gpt_image2/slide_012.png"
+      }
+    }
+  ]
+}

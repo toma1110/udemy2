@@ -1,0 +1,21 @@
+{
+  "course_id": "aws-slo-adoption-course",
+  "lecture_id": "s3-l5",
+  "slides_s3_uri": "s3://REPLACE_BUCKET/aws-slo-adoption-course/s3-l5/slides/",
+  "script_s3_uri": "s3://REPLACE_BUCKET/aws-slo-adoption-course/s3-l5/script/s3-l5_script.md",
+  "audio_s3_uri": "s3://REPLACE_BUCKET/aws-slo-adoption-course/s3-l5/audio/",
+  "output_s3_uri": "s3://REPLACE_BUCKET/aws-slo-adoption-course/s3-l5/output/",
+  "voicevox": {
+    "speaker_id": 3,
+    "speed_scale": 1.1
+  },
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "crf": 23,
+    "preset": "veryfast",
+    "audio_bitrate": "192k",
+    "tail_padding_seconds": 0.2
+  }
+}

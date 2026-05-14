@@ -1,0 +1,18 @@
+{
+  "section": 3,
+  "lecture": 4,
+  "title": "ハンズオン: ダッシュボードを作る",
+  "duration_min": 20,
+  "learning_objectives": "CloudWatch コンソールを操作して、EC2・RDS・ALBのメトリクスを一覧できるダッシュボードを実際に作成できるようになる。",
+  "key_points": [
+    "CloudWatch Dashboardsの概要: ウィジェット（Line / Number / Alarm Status等）の種類",
+    "ハンズオン手順① ダッシュボードの新規作成",
+    "ハンズオン手順② EC2のCPU使用率をLine Chartで追加",
+    "ハンズオン手順③ ALBのRequestCountとTargetResponseTimeを追加",
+    "ハンズオン手順④ CloudWatch Agentで取得したメモリ使用率を追加",
+    "ダッシュボードの共有: コンソールリンク共有 / Snapshot URL / Grafanaとの連携",
+    "自動ダッシュボード: Container Insights / Lambda Insights の自動生成ダッシュボード紹介",
+    "コスト: ダッシュボード自体は最初の3つまで無料。4つ目以降は$3/月"
+  ],
+  "notes": "手順を明示したフロー図とスクリーンキャプチャ的な説明を心がける。ハンズオン系なので各ステップを明確に番号付きで示す。s2-l5でデプロイしたサンプルWebアプリのEC2をターゲットとして使う前提で説明する。"
+}

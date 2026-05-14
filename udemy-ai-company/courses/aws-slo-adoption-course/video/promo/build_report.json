@@ -1,0 +1,16 @@
+{
+  "lecture": "promo",
+  "slides": 7,
+  "audios": 7,
+  "duration": 87.933333,
+  "size": 41083237,
+  "faststart": true,
+  "output": "courses/aws-slo-adoption-course/video/promo/promo.30fps.mp4",
+  "dynamic": true,
+  "fps": 30,
+  "source_dynamic_fps": 6,
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "audio_channels": 2,
+  "audio_layout": "stereo"
+}

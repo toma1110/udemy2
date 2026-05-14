@@ -1,0 +1,85 @@
+{
+  "title": "s8-l1_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "SLO導入が失敗する3つのパターン",
+      "message": "失敗の型を知ると、導入の順番を間違えにくい",
+      "narration": "このレクチャーでは、エスエルオー導入でよく起きる失敗を三つに分けて整理します。指標を作ったのに使われない。達成率だけ見て改善につながらない。会議や判断の流れに入らない。この三つを避けると、導入の成功率が上がります。",
+      "visual_notes": [
+        "Three failure patterns",
+        "measurement, diagnosis, decision flow"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "失敗1: 測れるものから始める",
+      "message": "ユーザー体験ではなく、手元のメトリクスだけを選んでしまう",
+      "narration": "一つ目の失敗は、測れるものから始めることです。クラウドウォッチにある数字だけを選ぶと、ユーザー体験とずれることがあります。大切なのは、先に守りたい体験を言葉にし、その体験を表すエスエルアイを選ぶことです。",
+      "visual_notes": [
+        "Metric-first failure",
+        "user journey to SLI"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "失敗2: 達成率だけを見る",
+      "message": "良い、悪い、だけで止まり、原因と次の行動に進まない",
+      "narration": "二つ目の失敗は、達成率だけを見ることです。九十九点九パーセントを超えたかどうかだけでは、次の改善に進めません。どの時間帯に悪化したのか。どの機能で予算を使ったのか。原因候補と行動までつなげて初めて意味があります。",
+      "visual_notes": [
+        "Score-only failure",
+        "drilldown to cause and action"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "失敗3: 会議に入れない",
+      "message": "SLOを作っても、リリース判断や改善計画に使われない",
+      "narration": "三つ目の失敗は、会議や判断の流れに入れないことです。エスエルオーを作っても、リリース判断、優先度づけ、週次レビューに出てこなければ、数字は見られなくなります。最初から、どの場で誰が見るかを決めます。",
+      "visual_notes": [
+        "SLO outside meetings",
+        "release decision and review loop"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "体験から選び直す",
+      "message": "重要なユーザー操作を起点に、SLIを決める",
+      "narration": "一つ目の対策は、ユーザー体験から選び直すことです。ログイン、検索、購入、通知のような重要操作を一つ選びます。その操作が成功したか、遅すぎないかを測ります。これにより、エスエルオーが現場の実感とつながります。",
+      "visual_notes": [
+        "User operation first",
+        "success and latency"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "予算を判断へつなげる",
+      "message": "残りエラーバジェットを、継続、停止、改善の判断に使う",
+      "narration": "二つ目の対策は、エラーバジェットを判断へつなげることです。余白が十分ならリリース継続。急速に減っているなら改善優先。原因が分からないなら監視強化。このように、数字を次の行動に変換します。",
+      "visual_notes": [
+        "Budget to decision",
+        "continue, improve, observe"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "レビューに組み込む",
+      "message": "週次と月次の場で、同じ型で見続ける",
+      "narration": "三つ目の対策は、レビューに組み込むことです。週次では直近の悪化と対応を見ます。月次では、目標が現実的か、改善が進んでいるかを見ます。同じ型で見続けると、エスエルオーが一度きりの資料ではなくなります。",
+      "visual_notes": [
+        "Weekly and monthly review",
+        "repeatable template"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ",
+      "message": "体験、原因、判断、定例化をそろえる",
+      "narration": "まとめです。エスエルオー導入で避けたい失敗は、測れるものだけを選ぶこと、達成率だけで止まること、会議に入れないことです。ユーザー体験から選び、原因と行動へつなげ、定例の場で見続ける。この形にすると、組織で使える数字になります。",
+      "visual_notes": [
+        "Summary",
+        "experience, cause, decision, routine"
+      ]
+    }
+  ]
+}

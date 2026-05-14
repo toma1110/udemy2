@@ -1,0 +1,97 @@
+{
+  "title": "s5-l2_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "CloudFormationテンプレートを読む",
+      "message": "Parameters、Resources、Outputsに分けて理解する",
+      "narration": "このレクチャーでは、ハンズオンで使うクラウドフォーメーションテンプレートを読みます。全部を一度に覚える必要はありません。パラメーター、リソース、アウトプッツの三つに分けると、初心者でも追いやすくなります。",
+      "visual_notes": [
+        "Template map: Parameters / Resources / Outputs",
+        "Beginner-friendly reading order",
+        "File: cloudformation/template.yaml"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "Parameters",
+      "message": "スタックごとに変えたい値を外に出す",
+      "narration": "パラメーターは、スタックごとに変えたい設定です。プロジェクト名、通知メール、ダッシュボードタイトル、アプリケーションシグナルズのエスエルオーを作るかどうかを指定できます。固定値を減らすことで、再利用しやすくします。",
+      "visual_notes": [
+        "ProjectName",
+        "NotificationEmail",
+        "DashboardTitle",
+        "EnableApplicationSignalsSlo"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "SNS Topic",
+      "message": "Alarmの通知先を先に作る",
+      "narration": "最初のリソースは、エスエヌエストピックです。アラームが状態変化したときの通知先になります。通知メールを指定した場合だけ、メール購読も作ります。指定しない場合は、トピックだけを作る構成です。",
+      "visual_notes": [
+        "SloAlarmTopic",
+        "Optional email subscription",
+        "AlarmActions target"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "Availability Alarm",
+      "message": "成功率が目標を下回るリスクを見る",
+      "narration": "アベイラビリティ用のアラームは、サンプルの成功率メトリクスを見ます。平均が九十九パーセントを下回ったら、エスエルオーのリスクとして扱います。欠損データは問題なしとして扱い、学習中の不要な通知を減らします。",
+      "visual_notes": [
+        "Metric: Availability",
+        "Namespace: UdemyAICompany/SLO",
+        "Threshold: 99 percent",
+        "TreatMissingData: notBreaching"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "Latency Alarm",
+      "message": "p99が300ミリ秒を超えたら検知する",
+      "narration": "レイテンシ用のアラームは、九十九パーセンタイルを見ます。サンプルでは、三百ミリ秒を超えたら悪化として扱います。平均だけでなく、遅いユーザー体験を見るために、パーセンタイル統計を使います。",
+      "visual_notes": [
+        "Metric: Latency",
+        "ExtendedStatistic: p99",
+        "Threshold: 300 milliseconds",
+        "ComparisonOperator: GreaterThanThreshold"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "Dashboard",
+      "message": "AvailabilityとLatencyを同じ画面で見る",
+      "narration": "ダッシュボードでは、アベイラビリティとレイテンシを並べて表示します。通知のためのアラームだけでなく、状態を見る場所も一緒に作るのがポイントです。あとで運用向けのダッシュボード設計にもつながります。",
+      "visual_notes": [
+        "Text widget with dashboard title",
+        "Availability metric widget",
+        "Latency p99 widget",
+        "Horizontal threshold annotation"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "Optional SLO",
+      "message": "Application Signals SLOは明示的に有効化する",
+      "narration": "オプションのエスエルオーは、アプリケーションシグナルズのリソースです。標準では無効です。有効化すると、サービスリンクロールが作られる場合があります。実務で使う前に、料金と削除後に残る管理リソースを確認します。",
+      "visual_notes": [
+        "Condition: CreateApplicationSignalsSlo",
+        "Resource: AWS::ApplicationSignals::ServiceLevelObjective",
+        "Service-linked role caution"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ: テンプレートは地図として読む",
+      "message": "入力、作成物、出力を対応づける",
+      "narration": "まとめです。クラウドフォーメーションテンプレートは、入力、作成物、出力の地図として読むと理解しやすくなります。次のレクチャーでは、このテンプレートを使ってスタックを作成し、サンプルメトリクスを投入します。",
+      "visual_notes": [
+        "Parameters -> Resources -> Outputs",
+        "Arrow to stack create",
+        "Section 5 template reading wrap-up"
+      ]
+    }
+  ]
+}

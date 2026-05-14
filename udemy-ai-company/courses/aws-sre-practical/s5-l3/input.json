@@ -1,0 +1,18 @@
+{
+  "section": 5,
+  "lecture": 3,
+  "title": "CloudWatch Alarmsの仕組み",
+  "duration_min": 12,
+  "learning_objectives": "CloudWatch Alarmsの状態遷移・設定パラメータを理解し、適切な閾値・評価期間を設定できるようになる。",
+  "key_points": [
+    "アラームの3状態: OK / ALARM / INSUFFICIENT_DATA",
+    "設定パラメータ: Threshold（閾値）/ Evaluation Periods（評価期間）/ Datapoints to Alarm",
+    "Datapoints to Alarm: 「n回中m回超えたら発報」で Flapping を防ぐ",
+    "Missing Data の扱い: breaching / notBreaching / ignore / missing の4つの選択肢",
+    "Anomaly Detection Alarm: 機械学習で異常を自動検出（固定閾値不要）",
+    "Composite Alarm: 複数のアラームをAND/OR条件で組み合わせる",
+    "アクション設定: SNS通知 / EC2アクション（停止・再起動）/ Auto Scalingトリガー",
+    "コスト: スタンダードアラームは1つあたり$0.10/月。高解像度は$0.30/月"
+  ],
+  "notes": "パラメータの意味を図解で丁寧に説明する。DatapointsToAlarmは日本語の解説が少なく混乱しやすいので特に注力する。Anomaly Detectionは最新機能として紹介する。"
+}

@@ -39,6 +39,7 @@
 - `docs/WORKFLOW.md`
 - `docs/TASK_MANAGEMENT.md`
 - `docs/QUALITY_GATE.md`
+- `docs/CURRICULUM_RULES.md`
 - `docs/PM_AUTOMATION.md`
 - `docs/APPROVAL_POLICY.md`
 - `docs/PUBLIC_REPO_RULES.md`
@@ -60,6 +61,7 @@ CloudFormation、CDK、TerraformなどIaCに関わる場合は追加で以下を
 - 対象講座の `audio/README.md`
 - 対象講座の `video/README.md`
 - 対象講座の `course_infomation.md`
+- 対象講座の `course_curriculum.md`
 
 ## AI-Strategy-01
 
@@ -90,6 +92,7 @@ CloudFormation、CDK、TerraformなどIaCに関わる場合は追加で以下を
 ### Definition of Done
 
 - `course_spec.md` に対象者、前提、学習目標、Course Promise、Out of Scopeが明記されている
+- `course_curriculum.md` に全レクチャーの到達状態とハンズオン有無が記載されている
 - ハンズオン範囲、ハンズオンIaC範囲、実運用IaCの位置づけが明記されている
 - AI-Engineer-01とAI-Production-01が作業可能なIssueに分解されている
 - Reviewer AIが指定されている
@@ -187,6 +190,7 @@ AI-PM-01はPlanner、Worker、Reviewerのいずれでもない。タスクを自
 - 承認済みTask Issue
 - 対象講座の `course_spec.md`
 - 対象講座の `course_infomation.md`
+- 対象講座の `course_curriculum.md`
 - ハンズオンREADME
 - 技術レビュー済みの手順
 
@@ -203,6 +207,7 @@ AI-PM-01はPlanner、Worker、Reviewerのいずれでもない。タスクを自
 ### 禁止事項
 
 - `course_infomation.md` が存在しない状態で動画制作を完了扱いにしない
+- `course_curriculum.md` が存在しない状態で動画制作を完了扱いにしない
 - READMEと異なるコマンドや手順を動画内で説明しない
 - 図解を `course_spec.md` と矛盾させない
 - ローカル描画のみのスライドPNGを完成動画に使わない
@@ -214,6 +219,7 @@ AI-PM-01はPlanner、Worker、Reviewerのいずれでもない。タスクを自
 ### Definition of Done
 
 - `course_infomation.md` が存在し、コースタイトル、サブタイトル、説明、想定学習者、前提条件が `course_spec.md` と矛盾していない
+- `course_curriculum.md` が存在し、レクチャーごとのタイトル、到達状態、ハンズオン有無、PublicRepo URLが `docs/CURRICULUM_RULES.md` と矛盾していない
 - スライドが `course_spec.md` の学習目標に対応している
 - 最終スライドPNGの画像と文字がGPT-Image2由来であり、source evidenceが保存されている
 - 台本がREADMEと一致している

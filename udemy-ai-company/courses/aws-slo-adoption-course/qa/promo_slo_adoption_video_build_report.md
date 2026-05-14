@@ -22,10 +22,16 @@
 
 - Report: `audio/promo_slo_adoption/voicevox_report.md`
 - Audio count: 7
-- Total audio duration seconds: 91.339
+- Total audio duration seconds: 91.211
 - Speaker ID: 3
 - Speed scale: 1.1
 - gTTS fallback: not used
+
+## Pronunciation Fix
+
+- `そんな方向け` は `そんなかたむけ` に変更
+- 対象者を指す `方` は `かた` に変更
+- `エーダブリューエス上で` は `エーダブリューエスうえで` に変更
 
 ## Build Output
 
@@ -33,14 +39,14 @@
 - Final review MP4: `video/promo_slo_adoption/promo_slo_adoption.30fps.mp4`
 - Build report: `video/promo_slo_adoption/build_report.json`
 - 30fps report: `video/promo_slo_adoption/build_report_30fps.json`
-- Frame check: `video/promo_slo_adoption/frame_check_43s.png`
+- Frame check: `video/promo_slo_adoption/frame_check_45s.png`
 
 ## Final MP4 Properties
 
 | Property | Value |
 | --- | ---: |
-| Duration seconds | 91.359206 |
-| Size bytes | 5469449 |
+| Duration seconds | 91.232222 |
+| Size bytes | 5468104 |
 | Resolution | 1920x1080 |
 | Frame rate | 30 fps |
 | Video codec | H.264 |
@@ -49,6 +55,7 @@
 
 ## Notes
 
+- 2026-05-14 pronunciation fix: regenerated all 7 VOICEVOX WAV files from the updated promo script and rebuilt both MP4 outputs.
 - Dynamic 6fps encoding was attempted first but the local session stopped during segment encoding.
 - A stable 1fps slide-video build was completed, then re-encoded to 30fps for review/upload compatibility.
 - Decode validation passed for the final 30fps MP4.

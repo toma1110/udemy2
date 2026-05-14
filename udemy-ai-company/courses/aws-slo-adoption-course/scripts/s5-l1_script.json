@@ -1,0 +1,96 @@
+{
+  "title": "s5-l1_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "ハンズオン構成とコスト注意",
+      "message": "低コスト構成で、SLO基盤の流れを作る",
+      "narration": "ここからは、クラウドフォーメーションでエスエルオー基盤を作るハンズオンに入ります。まずは、何を作るのか、どこで料金が発生し得るのか、そして最後にどう削除するのかを確認します。",
+      "visual_notes": [
+        "Section 5 opening slide",
+        "CloudFormation hands-on flow",
+        "Low-cost path highlighted"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "作るもの",
+      "message": "SNS、Alarm、Dashboardを最小構成で用意する",
+      "narration": "このハンズオンで作る中心は、エスエヌエス、クラウドウォッチアラーム、クラウドウォッチダッシュボードです。アプリ本体は作らず、サンプル用のカスタムメトリクスを投入して、エスエルアイを確認できる形にします。",
+      "visual_notes": [
+        "Architecture: Custom Metrics -> CloudWatch Alarm -> SNS Topic",
+        "Dashboard reads availability and latency",
+        "No application workload deployed"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "Custom Metricを使う理由",
+      "message": "実アプリなしで、SLIの形を再現する",
+      "narration": "今回は、実際のロードバランサーやアプリケーションを用意しません。その代わりに、クラウドウォッチのカスタムメトリクスを使います。これにより、低コストで、成功率や待ち時間をエスエルアイとして扱う流れを練習できます。",
+      "visual_notes": [
+        "Simulated service metrics",
+        "Availability percent and latency milliseconds",
+        "Training environment without real traffic"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "Application Signals SLOはオプション",
+      "message": "必要な人だけ、有効化して試す",
+      "narration": "テンプレートには、アプリケーションシグナルズのエスエルオーも入れています。ただし、標準では作成しません。料金、サービスリンクロール、実メトリクスの前提があるため、明示的に有効化した場合だけ作ります。",
+      "visual_notes": [
+        "Optional Application Signals SLO switch",
+        "Default: disabled",
+        "Explicit opt-in and cost caution"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "必要な準備",
+      "message": "AWS CLI、リージョン、スタック名を決める",
+      "narration": "事前に、エーダブリューエスシーエルアイの認証情報を設定しておきます。次に、リージョンとスタック名を決めます。通知メールは任意です。メールを指定した場合は、エスエヌエスの確認メールも確認対象になります。",
+      "visual_notes": [
+        "AWS CLI configured",
+        "Region: us-east-1 example",
+        "StackName and ProjectName",
+        "Optional NotificationEmail"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "料金が発生し得る場所",
+      "message": "Alarm、Dashboard、Custom Metric、SLOに注意する",
+      "narration": "料金が発生し得る場所は、クラウドウォッチアラーム、ダッシュボード、カスタムメトリクス、そしてオプションのエスエルオーです。短時間で確認し、不要になったら必ず削除します。学習用でも、作りっぱなしにはしません。",
+      "visual_notes": [
+        "Cost caution cards",
+        "CloudWatch Alarm",
+        "Dashboard",
+        "Custom Metrics",
+        "Optional Application Signals SLO"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "進め方",
+      "message": "validate、create、metrics、smoke、update、delete",
+      "narration": "流れは六つです。まずテンプレートを検証します。次にスタックを作成します。サンプルメトリクスを投入し、スモークテストで存在確認をします。そのあと更新を試し、最後に削除まで確認します。",
+      "visual_notes": [
+        "Flow: validate -> create -> put-metrics -> smoke -> update -> delete",
+        "Each step as a checkpoint",
+        "Delete is part of the hands-on"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ: 作る前に削除まで決める",
+      "message": "ハンズオンは、消せる設計まで含めて完成",
+      "narration": "まとめです。セクション5では、低コストのサンプル構成で、エスエルオー基盤の作成から削除までを確認します。次のレクチャーでは、クラウドフォーメーションテンプレートを読み、どのリソースが作られるかを見ていきます。",
+      "visual_notes": [
+        "Checklist: scope, cost, deletion",
+        "Arrow to template reading",
+        "Section 5 roadmap"
+      ]
+    }
+  ]
+}

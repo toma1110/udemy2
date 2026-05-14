@@ -1,0 +1,18 @@
+{
+  "section": 4,
+  "lecture": 1,
+  "title": "CloudWatch Logsの基本とロググループ設計",
+  "duration_min": 12,
+  "learning_objectives": "CloudWatch Logsの基本構造を理解し、ロググループとログストリームを適切に設計できるようになる。",
+  "key_points": [
+    "CloudWatch Logsの構造: ロググループ（Log Group）→ ログストリーム（Log Stream）→ ログイベント",
+    "ロググループの設計原則: サービス/環境/コンポーネント単位で分ける（例: /app/prod/api）",
+    "保持期間（Retention）の設定: デフォルトは無期限。コスト最適化のため1〜90日を推奨",
+    "EC2からのログ収集: CloudWatch Agentの設定（/etc/cwagent/config.json）",
+    "Lambdaのログ: 自動的に /aws/lambda/{関数名} に送られる",
+    "ECSのログ: awslogsドライバーで自動転送",
+    "サブスクリプションフィルター: リアルタイムでLambda/Kinesis/OpenSearchへ転送可能",
+    "コスト構造: 取り込み料金（$0.76/GB）+ ストレージ料金 + 分析料金"
+  ],
+  "notes": "ロググループの命名規則は実務で迷いやすいポイントなので具体例を多く示す。保持期間の設定忘れによるコスト増は頻出の失敗例として強調する。EC2・Lambda・ECSそれぞれのログ設定方法を比較して整理する。"
+}

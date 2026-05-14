@@ -1,0 +1,18 @@
+{
+  "section": 7,
+  "lecture": 4,
+  "title": "ハンズオン: 模擬インシデント対応演習",
+  "duration_min": 25,
+  "learning_objectives": "意図的に障害を起こし、アラート→調査→対処のサイクルをプレイブックに沿って体験することで、本番インシデントへの自信をつける。",
+  "key_points": [
+    "演習シナリオ: サンプルWebアプリでCPUスパイク → 5xxエラー増加 → Slackにアラート",
+    "障害の再現方法: EC2で stress-ng コマンドを実行してCPU負荷を意図的に発生させる（Amazon Linux 2023 想定）",
+    "演習手順①: Slackでアラートを受信 → インシデント宣言 → タイムライン記録開始",
+    "演習手順②: CloudWatchダッシュボードでCPU・5xx・レイテンシを確認",
+    "演習手順③: Session ManagerでEC2に接続 → top コマンドでプロセス確認",
+    "演習手順④: Run Commandで stress-ng プロセスを停止（killall stress-ng）→ メトリクスが回復するのを確認",
+    "演習手順⑤: タイムラインを振り返ってインシデント解決を宣言",
+    "演習後: ポストモーテムの準備（次のセクションへの橋渡し）"
+  ],
+  "notes": "stress-ng のインストールは Amazon Linux 2023 では `sudo dnf install stress-ng -y` で完結（amazon-linux-extras / yum install stress の AL2 手順は使わない）。書き込み可能なディレクトリ（cd ~）で実行する。実際に自分で障害を起こして解決する体験が最大の学習効果。"
+}

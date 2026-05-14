@@ -1,0 +1,180 @@
+{
+  "section": 5,
+  "lecture": 3,
+  "title": "CloudWatch Alarmsの仕組み",
+  "duration_min": 12,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# CloudWatch Alarmsの仕組み\n\n### アラートの「頭脳」を正しく設計する\n\n**Section 5 - Lecture 3**\n\n> 閾値・評価期間・Datapoints to Alarm を使いこなして\n> 「うるさすぎない、見逃さない」アラームを作ろう",
+      "narration": "このレクチャーでは、CloudWatch Alarmsの仕組みを深く掘り下げていきます。アラームの設定はシンプルに見えて、実は奥が深いんです。「通知が多すぎて無視するようになった」「重大な障害を見逃した」というトラブルは、設定パラメータを正しく理解することで防げます。一緒に学んでいきましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# アラームの3つの状態\n\n### CloudWatch Alarmは常にこの3状態のどれかにいます\n\n図で確認してみましょう👇",
+      "narration": "CloudWatch Alarmは、常に3つの状態のうちどれかに存在しています。「OK」「ALARM」「INSUFFICIENT_DATA」の3つです。この状態遷移を理解することが、アラーム設計の出発点になります。それぞれの状態がどういう意味を持つのか、図を見ながら確認していきましょう。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "アラームの3状態",
+          "steps": [
+            {
+              "label": "✅ OK",
+              "desc": "メトリクスが閾値の範囲内に収まっている正常状態",
+              "color": "green"
+            },
+            {
+              "label": "🔴 ALARM",
+              "desc": "メトリクスが閾値を超えた異常状態。アクション（通知など）が実行される",
+              "color": "red"
+            },
+            {
+              "label": "❓ INSUFFICIENT_DATA",
+              "desc": "データが不足していて判定できない状態。起動直後やメトリクス停止時に発生",
+              "color": "orange"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# 基本パラメータ3点セット\n\n### この3つがアラームの「判定ロジック」を決める\n\n図で確認してみましょう👇",
+      "narration": "アラームを作るときに設定する基本パラメータは3つあります。「Threshold（閾値）」「エバリュエーションピリオド（評価期間）」「Datapoints to Alarm」です。この3つが組み合わさってアラームがはっぽうするかどうかを決定します。特に3つ目のDatapoints to Alarmは日本語の解説が少なく、混乱しやすいポイントなので、次のスライドで丁寧に説明しますね。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "基本パラメータ3点セット",
+          "left": {
+            "label": "📐 Threshold / Evaluation Periods",
+            "items": [
+              "Threshold（閾値）: この値を超えたら異常と判定する基準値",
+              "例）CPU使用率 > 80%",
+              "Evaluation Periods（評価期間）: 何回分のデータポイントを見るか",
+              "例）5分間隔 × 3回 = 過去15分を評価対象にする"
+            ]
+          },
+          "right": {
+            "label": "🎯 Datapoints to Alarm",
+            "items": [
+              "評価期間のうち、何回閾値超えで発報するか",
+              "例）3回中2回超えたら → ALARM",
+              "「n回中m回」形式で設定する",
+              "一時的なスパイクによる誤報を防ぐ重要設定"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# Datapoints to Alarm 詳細解説\n\n### 「n回中m回超えたら発報」でFlapを防ぐ\n\n**具体例：Evaluation Periods = 5、Datapoints to Alarm = 3**\n\n```\n時刻    CPU    閾値超え?\n14:00   75%    ❌\n14:05   82%    ✅ (1/5)\n14:10   85%    ✅ (2/5)\n14:15   78%    ❌\n14:20   88%    ✅ (3/5) → 🔴 ALARM 発報！\n```\n\n> **Flapping（フラッピング）**: アラームがOK↔ALARMを短時間で繰り返す現象。\n> Datapoints to Alarmを使うことで防げます。",
+      "narration": "Datapoints to Alarmを具体例で見てみましょう。評価期間を5回、Datapoints to Alarmを3と設定した場合です。この例では5回の計測のうち3回閾値を超えた時点でALARMになります。一時的なCPUスパイクが1〜2回だけ発生してもはっぽうしないので、「ちょっとしたスパイクのたびに通知が来る」という状況を防げます。これがFlapingと呼ばれる問題への対処法です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# Missing Data（欠損データ）の扱い\n\n### データが来なかったとき、どう判定するか\n\n| 設定値 | 意味 | 使いどころ |\n|--------|------|------------|\n| `breaching` | 閾値超えとして扱う | セキュリティ監視など「沈黙=異常」の場合 |\n| `notBreaching` | 正常として扱う | バッチ処理など「動いてないとき=正常」の場合 |\n| `ignore` | 直前の状態を維持する | ネットワーク瞬断など一時的な欠損を無視したい場合 |\n| `missing` | INSUFFICIENT_DATAに移行（デフォルト） | 不明なものは不明として扱いたい場合 |\n\n> ⚠️ デフォルトの `missing` のまま放置すると、EC2停止時に通知が飛ばず障害を見逃す可能性があります",
+      "narration": "メトリクスのデータが届かない場合の扱い、これが意外と見落とされがちな設定です。4つの選択肢があります。「breaching」は欠損を異常扱い、「notBreaching」は正常扱い、「ignore」は直前の状態を維持、「missing」はデフォルトでINSUFFICIENT_DATAに移行します。EC2が突然停止してメトリクスが来なくなったとき、デフォルトのmissingのままだと通知が飛ばず障害に気づかない、という落とし穴があるので注意してください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# Anomaly Detection Alarm\n\n### 機械学習で「正常の範囲」を自動定義する最新機能\n\n**固定閾値の課題**\n- 曜日・時間帯でトラフィックが変動するサービスでは固定値が難しい\n- 例）平日昼のCPU 70% は正常、深夜の70% は異常かもしれない\n\n**Anomaly Detectionなら**\n- 過去の履歴から「この時間帯の正常値」を機械学習でモデル化\n- 正常範囲（グレーのバンド）を自動生成し、逸脱したらALARM\n- **固定の閾値を決めなくてよい**のが最大のメリット\n\n> 📌 少なくとも **2週間分** の履歴データがあるとモデルの精度が上がります",
+      "narration": "次はAnomaly Detection Alarmです。これはCloudWatchの比較的新しい機能で、機械学習を使って「この時間帯の正常なあたいの範囲」を自動的に学習してくれます。昼間は高くて当然、夜間は低いのが正常、といった時間帯ごとのパターンを自動で把握してくれるので、固定の閾値を決めにくいサービスに非常に有効です。導入時は2週間以上の履歴データを用意しておくと、より精度の高いモデルが作られます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# Composite Alarm（複合アラーム）\n\n### 複数のアラームをAND/ORで組み合わせる\n\n**なぜ必要か？**\n> CPU高負荷「だけ」では障害とは限らない。\n> CPU高負荷 **かつ** エラーレート上昇、が本当の障害サイン。\n\n**設定例（ルール式）**\n```\nALARM(\"CPU-High-Alarm\")\nAND\nALARM(\"ErrorRate-High-Alarm\")\n```\n\n**メリット**\n- 個別アラームの誤報を減らせる\n- 複雑な障害条件を1つのアラームで表現できる\n- 通知の数を絞り「アラーム疲れ」を防ぐ",
+      "narration": "コンポジットアラームは、複数のアラームをANDやOR条件で組み合わせる機能です。たとえば「CPU使用率が高い」という条件だけでアラームを出すと誤報が多くなりますが、「CPU使用率が高い、かつ、エラーレートも上昇している」という複合条件にすることで、より確実に本物の障害を検知できます。アラームが多すぎて通知を無視するようになる「アラーム疲れ」を防ぐためにも、コンポジットアラームは積極的に活用してみてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# アクション設定\n\n### アラームが発報したとき「何をするか」を定義する\n\n図で確認してみましょう👇",
+      "narration": "アラームがはっぽうしたときに実行するアクションを設定できます。大きく3種類あります。SNS通知でメールやSlackに飛ばす方法、EC2を自動で停止・再起動するEC2アクション、そしてAuto ScalingのスケールアウトやスケールインをトリガーするAuto Scalingアクションです。これらを組み合わせることで、人が気づく前に自動で対処できる仕組みを作ることができます。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "アラームのアクション3種",
+          "steps": [
+            {
+              "label": "📣 SNS通知",
+              "desc": "Amazon SNS経由でメール・Slack・PagerDutyなどに通知を飛ばす。最もよく使われる基本アクション",
+              "color": "blue"
+            },
+            {
+              "label": "🖥️ EC2アクション",
+              "desc": "EC2インスタンスを自動で「停止・再起動・終了・復旧」できる。ハングアップ時の自動復旧に有効",
+              "color": "orange"
+            },
+            {
+              "label": "📈 Auto Scalingアクション",
+              "desc": "CPU高負荷時にスケールアウト、低負荷時にスケールインをトリガー。コスト最適化と安定性を両立",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# コストと料金体系\n\n### アラームの種類ごとの月額料金（東京リージョン）\n\n| アラームの種類 | 料金 | メトリクスの解像度 |\n|----------------|------|--------------------|\n| スタンダードアラーム | **$0.10 / 月** | 1分〜（通常メトリクス） |\n| 高解像度アラーム | **$0.30 / 月** | 10秒〜（高解像度メトリクス） |\n| Composite Alarm | **$0.50 / 月** | — |\n\n**コスト試算の目安**\n```\n例）EC2 50台、各5個のアラーム設定\n  50台 × 5個 × $0.10 = $25/月\n```\n\n> 💡 無料利用枠：**10個まで無料**（スタンダードアラームのみ）",
+      "narration": "コストも確認しておきましょう。スタンダードアラームは1つあたり月$0.10、高解像度アラームは$0.30です。コンポジットアラームは$0.50になります。EC2が50台あって各5つのアラームを設定した場合、月$25程度になります。無料利用枠としてスタンダードアラームは10個まで無料なので、まずは重要なメトリクスから試してみることができます。アラームを増やすほどコストも増えるので、本当に必要なアラームを見極めることも大切です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# アラーム設計のベストプラクティス\n\n### 「うるさすぎず、見逃さない」設定のポイント\n\n```\n❌ よくある失敗パターン\n  - Datapoints to Alarmを1/1にして一時スパイクで誤報連発\n  - Missing DataをデフォルトのままでEC2停止を見逃す\n  - 閾値を厳しくしすぎてALARM疲れが発生\n\n✅ 推奨パターン\n  - Datapoints to Alarm は 3/5 〜 2/3 あたりから始める\n  - EC2監視ではMissing Data を「breaching」に設定\n  - Composite Alarmで誤報フィルタリングする\n  - 本番環境では Anomaly Detection で動的閾値を検討\n```",
+      "narration": "ここでアラーム設計のベストプラクティスをまとめます。よくある失敗として、Datapoints to Alarmを1/1にして一時スパイクのたびに誤報が出る、Missing DataをデフォルトのままでEC2停止に気づかない、閾値が厳しすぎてアラーム疲れが起きるという3つが挙げられます。まずDatapoints to Alarmは3/5か2/3を起点に調整するのが現場でよく使われる設定です。ぜひ参考にしてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# コース全体の今いる位置\n\n### Section 5 の進捗確認",
+      "narration": "このレクチャーはSection 5のちょうど中盤にあたります。次のレクチャーでは、CloudWatch LogsとLog Insightsを使ったログ分析の方法を学んでいきます。アラームでメトリクスを監視し、ログで原因を深掘りする、この2つを組み合わせることでより強力な監視体制が構築できます。引き続きよろしくお願いします。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "Section 5: CloudWatch 完全攻略",
+          "steps": [
+            {
+              "label": "L1",
+              "sublabel": "CloudWatch概要",
+              "style": "normal"
+            },
+            {
+              "label": "L2",
+              "sublabel": "メトリクス設計",
+              "style": "normal"
+            },
+            {
+              "label": "L3",
+              "sublabel": "Alarms仕組み",
+              "style": "highlight"
+            },
+            {
+              "label": "L4",
+              "sublabel": "Logs & Insights",
+              "style": "normal"
+            },
+            {
+              "label": "L5",
+              "sublabel": "ダッシュボード",
+              "style": "normal"
+            }
+          ],
+          "current": 2
+        }
+      }
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# このレクチャーのまとめ\n\n### 今日学んだこと 3点\n\n## 1️⃣ アラームの3状態と判定パラメータ\nOK / ALARM / INSUFFICIENT_DATA の遷移は、**Threshold・Evaluation Periods・Datapoints to Alarm** の3つで制御する\n\n## 2️⃣ Datapoints to AlarmとMissing Dataが設計の肝\n「n回中m回」でFlapingを防ぎ、欠損データの扱い（breaching/notBreachingなど）で見逃しを防ぐ\n\n## 3️⃣ Anomaly Detection と Composite Alarm で上級設計\n固定閾値不要の機械学習検知と、AND/OR条件の複合アラームでアラーム疲れを解消する\n\n---\n> 📝 **次のレクチャー**: CloudWatch Logs & Log Insights でログを分析する",
+      "narration": "最後にまとめです。1点目、アラームはOK・ALARM・INSUFFICIENT_DATAの3状態を持ち、Threshold・エバリュエーションピリオド・Datapoints to Alarmの3パラメータで判定ロジックが決まります。2点目、Datapoints to AlarmでFlapingを防ぎ、Missing DataのbreachingでEC2停止の見逃しを防ぐことが設計の肝です。3点目、Anomaly Detectionとコンポジットアラームを活用することで、より精度の高いアラーム設計ができます。次はCloudWatch Logsに進みましょう。",
+      "diagram": null
+    }
+  ]
+}

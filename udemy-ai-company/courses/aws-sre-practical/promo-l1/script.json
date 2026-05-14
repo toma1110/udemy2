@@ -1,0 +1,140 @@
+{
+  "section": "promo",
+  "lecture": 1,
+  "title": "プロモーション動画",
+  "duration_min": 2.5,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# AWS SRE実践\n## 構築できる、から運用できるへ\n\n**本番環境を任されるための実務コース**",
+      "narration": "AWSでサーバーを立てることはできる。でも、本番環境を任されるとなると少し怖い。アラートが鳴ったとき、何を見ればいいのか。障害が起きたとき、どこから切り分ければいいのか。このコースは、そんな不安を実務スキルに変えるためのコースです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "## 本番で困るのは\n# 作ったあとです",
+      "narration": "多くのAWS学習では、作るところまでは丁寧に学べます。でも実務で本当に困るのは、そのあとです。なぜ遅いのか。どのログを見ればいいのか。このアラートは本当に対応すべきなのか。障害のあと、どう再発防止につなげるのか。ここを扱うのがSREです。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "運用で起きる現実",
+          "steps": [
+            {"label": "遅い", "desc": "原因がどこか分からない", "color": "red"},
+            {"label": "鳴る", "desc": "アラートが多すぎる", "color": "orange"},
+            {"label": "止まる", "desc": "初動対応が属人化する", "color": "red"},
+            {"label": "繰り返す", "desc": "振り返りが改善につながらない", "color": "blue"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "## このコースで身につく\n# 3つの実践力",
+      "narration": "このコースで身につけるのは、サービスを作ったあとに必要になる3つの実践力です。まず、異常に早く気づく力。次に、障害が起きたときに落ち着いて対応する力。そして最後に、障害やコストを振り返り、運用を継続的に改善する力です。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "作ったあとに必要な力",
+          "subtitle": "本番運用で迷わないための型を身につける",
+          "cards": [
+            {"icon": "monitor", "title": "気づく", "text": "異常を早く見つける"},
+            {"icon": "shield", "title": "対応する", "text": "初動で迷わない"},
+            {"icon": "flow", "title": "改善する", "text": "同じ問題を繰り返さない"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "## CloudWatchを\n# ただ見るだけで終わらせない",
+      "narration": "CloudWatchは、グラフを見るだけのツールではありません。メトリクスを設計し、ログを検索し、必要なアラートだけを通知し、障害対応の判断材料にする。そのための使い方を、実際のハンズオンで身につけていきます。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "CloudWatchを運用に使う",
+          "steps": [
+            {"label": "集める", "desc": "Metrics / Logs / Traces", "color": "blue"},
+            {"label": "見る", "desc": "Dashboard / Insights", "color": "lblue"},
+            {"label": "気づく", "desc": "Alarm / Notification", "color": "orange"},
+            {"label": "直す", "desc": "Runbook / 改善", "color": "green"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "## SLOで\n# 信頼性を会話できるようにする",
+      "narration": "SREの中心にあるのがSLOです。なんとなく安定している、ではなく、どのくらいの成功率を目指すのか。どこまでのエラーなら許容できるのか。信頼性を数字で扱えるようになると、開発速度と安定性のバランスをチームで話せるようになります。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "感覚から数値へ",
+          "left": {
+            "label": "感覚の運用",
+            "items": ["たぶん大丈夫", "障害が怖い", "判断が人に依存"]
+          },
+          "right": {
+            "label": "SLOの運用",
+            "items": ["目標を数値化", "許容範囲を共有", "改善判断が明確"]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "## ハンズオン中心で\n# 現場の流れを体験する",
+      "narration": "このコースは、用語を覚えるだけの講座ではありません。サンプルWebアプリをAWSにデプロイし、CloudWatch Agent、ログ、X-Ray、アラート、SLO設計、インシデント対応まで、実際の流れに沿って手を動かします。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "ハンズオンで体験する流れ",
+          "subtitle": "作る、見る、気づく、対応する、改善する",
+          "cards": [
+            {"icon": "server", "title": "Deploy", "text": "サンプルWebアプリ"},
+            {"icon": "monitor", "title": "Observe", "text": "メトリクスとログ"},
+            {"icon": "warning", "title": "Alert", "text": "通知と判断"},
+            {"icon": "shield", "title": "Respond", "text": "障害対応の型"},
+            {"icon": "flow", "title": "Improve", "text": "振り返りと改善"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "## こんな方に向いています",
+      "narration": "このコースは、AWSの基礎を学んだあと、次に何を学べば実務に近づけるのか悩んでいる方に向いています。運用担当になったばかりの方、障害対応に苦手意識がある方、CloudWatchをもっと実務的に使いたい方にもおすすめです。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "対象者",
+          "subtitle": "基礎の次に、運用の型を身につけたい方向け",
+          "cards": [
+            {"icon": "cloud", "title": "AWS基礎後", "text": "次の学習軸が欲しい"},
+            {"icon": "server", "title": "運用担当", "text": "本番対応に自信を持ちたい"},
+            {"icon": "warning", "title": "障害対応", "text": "初動の型を身につけたい"},
+            {"icon": "monitor", "title": "CloudWatch", "text": "実務で使いこなしたい"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# AWS SRE実践\n## 本番運用に強いエンジニアへ\n\n**構築の次は、運用を学びましょう**",
+      "narration": "構築できるエンジニアから、運用できるエンジニアへ。AWSの本番環境を、より安心して任されるために。ぜひこのコースで、一緒にSREの実務を学んでいきましょう。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "構築の次は、運用へ",
+          "left": {
+            "label": "受講前",
+            "items": ["作ることが中心", "障害対応が不安", "CloudWatchを眺めるだけ"]
+          },
+          "right": {
+            "label": "受講後",
+            "items": ["運用の型が分かる", "初動対応に迷わない", "改善までつなげられる"]
+          }
+        }
+      }
+    }
+  ]
+}

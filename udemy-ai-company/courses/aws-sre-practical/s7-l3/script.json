@@ -1,0 +1,165 @@
+{
+  "section": 7,
+  "lecture": 3,
+  "title": "AWS Runbook / Systems Managerの活用",
+  "duration_min": 12,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# AWS Runbook / Systems Managerの活用\n\n### SSH不要・自動復旧で運用を次のレベルへ\n\n**Section 7 - Lecture 3**",
+      "narration": "このレクチャーでは、AWSシステムズマネージャーの活用方法を学びます。SSHキー管理の煩わしさから解放されるセッションマネージャー、複数サーバーへの一括コマンド実行、そして夜間の自動復旧も実現できるランブックまで、現場で即使えるスキルを身につけていきましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# AWS Systems Manager（SSM）とは？\n\n> EC2などのサーバーを **エージェント経由でセキュアに一元管理** するサービス群\n\n- SSM Agentをインストールするだけで利用開始\n- SSH / RDPポートを開けなくてよい\n- 操作ログが自動的にCloudTrailへ記録される\n- **単機能ではなく「機能の集合体」**",
+      "narration": "AWSシステムズマネージャー、略してSSMは、EC2などのサーバーを安全に管理するためのサービス群です。サーバーにエスエスエムエージェントというソフトウェアをインストールするだけで利用できます。SSHポートを開放する必要がなく、操作ログも自動記録されるため、セキュリティと監査の両面で非常に優れたサービスです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# SSMの主要機能ロードマップ\n\nこのレクチャーでカバーする機能",
+      "narration": "SSMには多くの機能が含まれています。このレクチャーでは特に重要な4つの機能を順番に解説します。サーバーアクセスのセッションマネージャー、一括コマンド実行のランコマンド、手順書自動化のオートメーション、そしてインシデント統合管理のインシデントマネージャーです。それぞれの使いどころを押さえていきましょう。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "SSM 主要機能",
+          "steps": [
+            {
+              "label": "Session Manager",
+              "sublabel": "SSH不要アクセス",
+              "style": "highlight"
+            },
+            {
+              "label": "Run Command",
+              "sublabel": "一括コマンド実行",
+              "style": "highlight"
+            },
+            {
+              "label": "Automation",
+              "sublabel": "Runbook自動化",
+              "style": "highlight"
+            },
+            {
+              "label": "Incident Manager",
+              "sublabel": "インシデント統合管理",
+              "style": "highlight"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# Session Manager：SSH不要でEC2にアクセス\n\n## 従来 vs Session Manager",
+      "narration": "セッションマネージャーは、SSMの機能の中でも特に実用的なツールです。従来はEC2にアクセスするためにSSHキーの生成・配布・管理・失効といった作業が必要でした。踏み台サーバーの運用コストもかかります。セッションマネージャーを使えば、ブラウザのコンソールからワンクリックでアクセスでき、SSHキー管理から完全に解放されます。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "従来のSSH vs Session Manager",
+          "left": {
+            "label": "従来のSSH接続",
+            "items": [
+              "🔑 SSHキーペアの生成・管理",
+              "🏠 踏み台サーバーの運用",
+              "🔓 22番ポートの開放が必要",
+              "😰 キー紛失・漏洩リスク",
+              "📋 接続ログの取得が大変"
+            ]
+          },
+          "right": {
+            "label": "Session Manager",
+            "items": [
+              "✅ SSHキー不要",
+              "✅ 踏み台サーバー不要",
+              "✅ ポート開放不要",
+              "✅ IAMで権限管理",
+              "✅ 操作ログを自動記録"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# Session Manager：IAM設定\n\n## 必要な設定は2つだけ\n\n```\n① EC2インスタンスプロファイルに付与するポリシー\n   ↓\n   AmazonSSMManagedInstanceCore\n\n② ユーザーに付与するポリシー\n   ↓\n   SSMSessionManagerRunAsPolicy\n```\n\n> 💡 コース環境のAmazon Linux 2023ではSSM Agentを利用できます",
+      "narration": "セッションマネージャーを使うためのIAM設定はとてもシンプルです。まずEC2インスタンスに付与するロールに「AmazonSSMManagedInstanceCore」ポリシーを追加します。次に接続するユーザー側には「SSMSessionManagerRunAsPolicy」を付与します。コース環境のアマゾンリナックス2023ではエスエスエムエージェントを利用できるため、ポリシーを設定すればセッションマネージャーで接続できます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# Run Command：複数EC2に一括コマンド実行\n\n## こんなシーンで活躍します\n\n- 🔍 **ログ収集**: 100台のEC2から一括でエラーログを取得\n- ⚙️ **設定変更**: Nginxの設定ファイルを全台に配布\n- 🔄 **パッケージ更新**: yum update を全台に適用\n- 🩺 **死活確認**: プロセス稼働状況の一括チェック\n\n```bash\n# 実行例：全EC2でNginxのステータスを確認\nsystemctl status nginx\n```\n> 操作結果はS3またはCloudWatch Logsに保存できます",
+      "narration": "ランコマンドは、SSH接続なしに複数のEC2へ同時にコマンドを実行できる機能です。例えば100台のサーバーのエラーログを一括収集したり、設定ファイルを全台に配布したりといった作業が、コンソールから数クリックで完了します。実行結果はS3やCloudWatch Logsに自動保存されるため、監査ログとしてもそのまま活用できます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# SSM Automation（Runbook）とは？\n\n> **定型の運用手順書をコード化し、ワンクリックで自動実行する仕組み**\n\n## Runbookで実現できること\n\n- 手動ミスのゼロ化\n- 夜間障害の **自動復旧**\n- 承認ステップを組み込んだ安全な実行\n- 実行履歴・ログの自動記録",
+      "narration": "エスエスエムオートメーションは、運用の手順書をコード化してワンクリックで自動実行できる仕組みです。これをランブックと呼びます。たとえば夜間にEC2が落ちたとき、人が起きて対応しなくても自動で再起動を試みることができます。手動ミスをなくし、深夜対応の負担を大幅に減らせる、現場SREが本当に重宝する機能です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# AWS提供の既製Runbook（100種類以上！）\n\n## すぐ使える代表的なRunbook\n\n| Runbook名 | 内容 |\n|---|---|\n| `AWS-RestartEC2Instance` | EC2インスタンスの再起動 |\n| `AWS-CreateImage` | AMIバックアップの取得 |\n| `AWS-ResizeDisk` | EBSボリュームの拡張 |\n| `AWS-StopEC2Instance` | インスタンスの停止 |\n| `AWSSupport-TroubleshootSSH` | SSH接続問題の自動診断 |\n\n> 💡 AWSコンソール → Systems Manager → Automation → ドキュメント から検索できます",
+      "narration": "AWSはあらかじめ100種類以上のランブックを用意してくれています。EC2の再起動やAMIバックアップの取得、EBSのディスク拡張など、よくある運用タスクがすぐ使える形で揃っています。ゼロから作らなくてもよいので、まずはこれらの既製ランブックを活用するところから始めるのがおすすめです。コンソールのオートメーションメニューから検索できますよ。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# カスタムRunbookの作成\n\n## YAML/JSONで独自の自動対応フローを定義\n\n```yaml\nschemaVersion: '0.3'\ndescription: Webサーバー自動復旧Runbook\nmainSteps:\n  - name: checkInstanceState\n    action: aws:assertAwsResourceProperty\n    inputs:\n      Service: ec2\n      Api: DescribeInstances\n      # インスタンス状態を確認\n\n  - name: restartService\n    action: aws:runCommand\n    inputs:\n      DocumentName: AWS-RunShellScript\n      Parameters:\n        commands:\n          - systemctl restart nginx\n```",
+      "narration": "既製ランブックで対応できない場合は、YAMLまたはJSONで独自のランブックを作成できます。ステップを順番に定義していくだけで、「インスタンス状態を確認→Nginxを再起動→失敗したら担当者にSlack通知」といった複雑な自動対応フローが実現できます。承認ステップを挟めば、人の確認を経たうえで次の処理を進める安全な運用も可能です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# 夜間自動復旧の実装イメージ\n\n## CloudWatch Alarms + SSM Automation の連携",
+      "narration": "ランブックの真価が発揮されるのが、夜間の自動復旧シナリオです。CloudWatch AlarmがEC2の異常を検知すると、EventBridgeを経由してエスエスエムオートメーションが起動し、ランブックが自動実行されます。EC2再起動→正常確認→Slack通知という一連の流れが、人の介入なく完了します。これにより深夜呼び出しを大幅に削減できます。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "夜間自動復旧フロー",
+          "steps": [
+            {
+              "label": "CloudWatch Alarm",
+              "desc": "CPU/メモリ/ヘルスチェック異常を検知",
+              "color": "red"
+            },
+            {
+              "label": "EventBridge Rule",
+              "desc": "アラーム状態変化をトリガーにSSM起動",
+              "color": "orange"
+            },
+            {
+              "label": "SSM Automation 実行",
+              "desc": "カスタムRunbookが自動起動",
+              "color": "blue"
+            },
+            {
+              "label": "EC2再起動 & 正常確認",
+              "desc": "AWS-RestartEC2Instance → ヘルスチェック",
+              "color": "lblue"
+            },
+            {
+              "label": "Slack / SNS 通知",
+              "desc": "復旧完了または失敗をチームへ通知",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# AWS Incident Manager\n\n## インシデント対応を統合管理するサービス\n\n- 🚨 **インシデント検知**: CloudWatch Alarmと連携して自動起票\n- 📋 **対応計画（Response Plan）**: 誰が・何をするかをテンプレート化\n- 👥 **エスカレーション**: オンコール担当者への自動連絡\n- 📝 **タイムライン記録**: 対応履歴を自動でタイムライン化\n- 🔍 **事後分析（Post-Incident Analysis）**: 再発防止策の管理\n\n> SSM AutomationのRunbookと連携して、検知→対応→分析を一気通貫で実現",
+      "narration": "AWSインシデントマネージャーは、インシデントの検知から対応、事後分析までを一元管理するサービスです。CloudWatch Alarmと連携してインシデントを自動起票し、あらかじめ定義した対応計画に従ってオンコール担当者へ自動連絡します。対応履歴はタイムラインとして自動記録され、事後分析にそのまま使えます。エスエスエムオートメーションのランブックとも連携できるため、インシデント対応の全体を自動化できます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# まとめ：このレクチャーで学んだこと\n\n## ✅ 3つのポイント\n\n1. **Session Manager** でSSHキー管理から解放\n   → IAMポリシー2つを設定するだけ、ポート開放不要\n\n2. **SSM Automation（Runbook）** で手順書を自動化\n   → 既製100種類＋カスタム作成で夜間自動復旧も実現\n\n3. **Incident Manager** でインシデント対応を一気通貫\n   → 検知→対応→事後分析をAWSで完結\n\n---\n\n> 🔑 **今すぐできること**: コンソールでSession Managerを有効化して、踏み台サーバーを1台廃止してみましょう！",
+      "narration": "このレクチャーのまとめです。1つ目はセッションマネージャー。SSHキー管理から解放され、IAMポリシー2つを設定するだけでブラウザからEC2にアクセスできます。2つ目はエスエスエムオートメーション。100種類以上の既製ランブックとカスタムランブックで夜間の自動復旧も実現できます。3つ目はインシデントマネージャー。インシデントの検知から事後分析までをAWSで一気通貫で管理できます。まず今日からセッションマネージャーを試してみてください！",
+      "diagram": null
+    }
+  ]
+}

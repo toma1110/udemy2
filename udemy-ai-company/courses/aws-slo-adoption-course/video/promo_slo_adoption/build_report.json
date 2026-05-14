@@ -2,11 +2,10 @@
   "lecture": "promo_slo_adoption",
   "slides": 7,
   "audios": 7,
-  "duration": 91.359206,
-  "size": 6151835,
+  "duration": 91.232222,
+  "size": 6150589,
   "faststart": true,
   "output": "udemy-ai-company/courses/aws-slo-adoption-course/video/promo_slo_adoption/promo_slo_adoption.mp4",
   "dynamic": false,
-  "fps": 1,
-  "build_mode": "manual_segment_concat_after_batch_interruption"
+  "fps": 1
 }

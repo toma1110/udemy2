@@ -1,0 +1,48 @@
+{
+  "script_json": "udemy-ai-company/courses/aws-slo-adoption-course/scripts/s9-l4_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4",
+  "slides": 8,
+  "duration": 133.888,
+  "audio": [
+    {
+      "slide_number": 1,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_001.wav",
+      "duration_sec": 16.88533333333333
+    },
+    {
+      "slide_number": 2,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_002.wav",
+      "duration_sec": 14.165333333333333
+    },
+    {
+      "slide_number": 3,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_003.wav",
+      "duration_sec": 16.917333333333332
+    },
+    {
+      "slide_number": 4,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_004.wav",
+      "duration_sec": 16.416
+    },
+    {
+      "slide_number": 5,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_005.wav",
+      "duration_sec": 17.162666666666667
+    },
+    {
+      "slide_number": 6,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_006.wav",
+      "duration_sec": 17.269333333333332
+    },
+    {
+      "slide_number": 7,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_007.wav",
+      "duration_sec": 15.210666666666667
+    },
+    {
+      "slide_number": 8,
+      "wav_path": "udemy-ai-company/courses/aws-slo-adoption-course/audio/s9-l4/slide_008.wav",
+      "duration_sec": 19.861333333333334
+    }
+  ]
+}

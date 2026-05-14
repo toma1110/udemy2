@@ -1,0 +1,88 @@
+{
+  "title": "マネジメント向けSLOレポート",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "マネジメント向けSLOレポート",
+      "message": "細かいメトリクスを、判断できる文章と数字に変換する",
+      "narration": "このレクチャーでは、マネジメント向けのエスエルオーレポートを扱います。運用ダッシュボードの細かい数字を、そのまま渡しても判断には使いにくいです。状態、影響、原因、次の判断を短くまとめる形へ変換します。",
+      "visual_notes": [
+        "Management SLO report",
+        "metrics to decision summary"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "1ページで伝える",
+      "message": "今どうなのか、何が必要なのかを先に書く",
+      "narration": "マネジメント向けレポートでは、最初に結論を書きます。今月のエスエルオーは達成中なのか、違反リスクがあるのか。エラーバジェットはどれくらい残っているのか。追加対応が必要なのか。この順番で伝えると、読む側が判断しやすくなります。",
+      "visual_notes": [
+        "One-page report",
+        "status first",
+        "decision summary"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "残り予算を見せる",
+      "message": "何パーセント残っているか、何日分の余裕か",
+      "narration": "残りエラーバジェットは、マネジメントに伝わりやすい指標です。何パーセント残っているか、今のペースなら何日で枯渇しそうかを示します。単なる障害件数ではなく、目標に対する余白として説明します。",
+      "visual_notes": [
+        "Remaining budget",
+        "percent and days remaining",
+        "risk gauge"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "消費理由を書く",
+      "message": "予算を使った主要イベントを3つまでに絞る",
+      "narration": "レポートには、エラーバジェットを消費した理由も書きます。ただし、すべての細かいエラーを並べる必要はありません。主要イベントを三つまでに絞り、いつ、何が起き、どれくらい予算を使ったかを書きます。",
+      "visual_notes": [
+        "Top budget consumers",
+        "three event cards"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "判断につなげる",
+      "message": "リリース継続、改善優先、監視強化を提案する",
+      "narration": "マネジメント向けレポートは、報告で終わらせません。エラーバジェットが十分ならリリース継続、急速に減っているなら改善優先、原因が不明なら監視強化のように、次の判断案を添えます。数字は、判断に使って初めて価値があります。",
+      "visual_notes": [
+        "Decision options",
+        "continue/improve/observe"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "言い方を変える",
+      "message": "技術用語を、事業影響の言葉に置き換える",
+      "narration": "報告では、技術用語をそのまま並べすぎないことも大切です。バーンレート十四倍という数字は、月間予算を約二日で使い切るペースです、のように言い換えます。エスエルオー違反リスクを、事業影響と判断の言葉に変換します。",
+      "visual_notes": [
+        "Translate technical terms",
+        "burn rate -> days to exhaustion"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "テンプレート",
+      "message": "状態、予算、原因、判断、次回確認",
+      "narration": "レポートテンプレートはシンプルで構いません。状態、残り予算、主な消費理由、判断案、次回確認の五つを入れます。毎回同じ型で出すと、過去との比較もしやすくなり、月次レビューに組み込みやすくなります。",
+      "visual_notes": [
+        "Report template",
+        "status/budget/reasons/decision/next review"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ",
+      "message": "SLOレポートは、信頼性の状況を判断へつなげる",
+      "narration": "まとめです。マネジメント向けエスエルオーレポートでは、細かいメトリクスではなく、状態、残り予算、消費理由、判断案を短く伝えます。これで、エスエルオーが運用チームだけの数字ではなく、組織の意思決定に使える数字になります。",
+      "visual_notes": [
+        "Summary",
+        "status/budget/reason/decision",
+        "bridge to organization rollout"
+      ]
+    }
+  ]
+}

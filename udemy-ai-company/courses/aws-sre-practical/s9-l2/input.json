@@ -1,0 +1,18 @@
+{
+  "section": 9,
+  "lecture": 2,
+  "title": "Cost Explorer・Cost Anomaly Detectionの使い方",
+  "duration_min": 12,
+  "learning_objectives": "Cost Explorerでコストの傾向を分析し、Cost Anomaly Detectionで異常な課金を自動検出できるようになる。",
+  "key_points": [
+    "AWS Cost Explorer: 過去13ヶ月のコストをサービス別・リージョン別・タグ別に可視化",
+    "コスト配分タグ: リソースにタグをつけてプロジェクト・環境別にコストを集計する",
+    "Cost Explorer のフィルタリング: サービス = EC2 かつ タグ = env:prod でフィルタ",
+    "コストの急増を見つける: 前週比・前月比の変化率を見て異常を発見する",
+    "AWS Cost Anomaly Detection: ML が過去のパターンからコスト異常を自動検出",
+    "Anomaly Detection の設定: モニター（AWS サービス単位 or タグ単位）+ しきい値設定",
+    "Anomaly Detectionのアラート: 異常検出時にメール/SNSで通知",
+    "Savings Plans vs Reserved Instances: 柔軟性 vs 割引率のトレードオフ比較"
+  ],
+  "notes": "コスト配分タグの設定を早めに習慣化する重要性を強調する。Cost Anomaly Detectionは設定するだけで自動で守ってくれる安全網として紹介する。"
+}

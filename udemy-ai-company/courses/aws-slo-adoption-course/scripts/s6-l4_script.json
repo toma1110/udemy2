@@ -1,0 +1,93 @@
+{
+  "title": "バーンレートAlarmを設計する",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "バーンレートAlarmを設計する",
+      "message": "CloudWatchで、予算消費速度に基づく通知へ落とし込む",
+      "narration": "このレクチャーでは、バーンレートアラームの設計を扱います。実装の細部よりも、何をメトリクスにし、どの時間窓で評価し、どの緊急度で通知するかを整理します。クラウドウォッチアラームに落とし込む前の設計図を作るイメージです。",
+      "visual_notes": [
+        "Hands-on design intro",
+        "CloudWatch Alarm from burn rate",
+        "design sheet"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "入力を決める",
+      "message": "分母、分子、許容失敗率を固定する",
+      "narration": "最初に、入力を決めます。分母は対象リクエスト、分子は失敗リクエストです。さらに、エスエルオー目標から許容失敗率を決めます。ここが曖昧なままだと、アラームの意味も曖昧になります。",
+      "visual_notes": [
+        "Input definition",
+        "good/bad/total",
+        "allowed failure rate"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "Metric Mathで速度にする",
+      "message": "実失敗率を、許容失敗率で割る",
+      "narration": "次に、メトリクスマスでバーンレートを計算します。実際の失敗率を許容失敗率で割ることで、何倍の速度で予算を使っているかが出ます。CloudWatchでは、メトリクスを直接見るだけでなく、計算式をアラーム対象にできます。",
+      "visual_notes": [
+        "Metric Math expression",
+        "failure_rate / allowed_failure_rate",
+        "single time series"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "短期アラーム",
+      "message": "急な悪化を拾うための条件",
+      "narration": "短期アラームは、急な悪化を拾うために使います。たとえば五分間のバーンレートが高い状態を見ます。ここでは、単発の一分だけではなく、数データポイント続いたかを見ることで、ノイズを少し減らします。",
+      "visual_notes": [
+        "Short-window alarm",
+        "5 minutes",
+        "datapoints to alarm"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "長期アラーム",
+      "message": "継続的な悪化を確認する条件",
+      "narration": "長期アラームは、悪化が続いているかを確認するために使います。三十分や一時間の範囲でバーンレートを見ると、一時的な揺れを抑えられます。短期と長期を組み合わせることで、通知の信頼度を上げます。",
+      "visual_notes": [
+        "Long-window alarm",
+        "30 minutes or 1 hour",
+        "stability"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "Composite Alarmでまとめる",
+      "message": "短期と長期をAND条件で扱う",
+      "narration": "短期と長期の二つのアラームを作ったら、コンポジットアラームでまとめる考え方があります。短期も長期も悪いときだけ通知すれば、単発ノイズを避けやすくなります。ハンズオンでは、構成と考え方をリードミーに沿って確認します。",
+      "visual_notes": [
+        "Composite Alarm",
+        "short AND long",
+        "single notification"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "通知先を分ける",
+      "message": "高緊急度と低緊急度を同じ扱いにしない",
+      "narration": "通知設計では、すべてを同じ宛先に送らないことも重要です。高いバーンレートは即時対応、低いバーンレートはレビューや営業時間内対応に分けられます。通知先は、エスエヌエスやチャット連携に接続する前に、緊急度で整理します。",
+      "visual_notes": [
+        "Severity routing",
+        "high/low urgency",
+        "SNS topic routing"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ",
+      "message": "入力、計算、時間窓、通知先を順番に決める",
+      "narration": "まとめです。バーンレートアラームは、分母と分子を決め、失敗率を計算し、許容失敗率で割り、短期窓と長期窓で評価します。最後に、緊急度に合わせて通知先を決めます。次のセクションでは、これらを見せるダッシュボードへ進みます。",
+      "visual_notes": [
+        "Summary checklist",
+        "input/math/windows/routing",
+        "next dashboard"
+      ]
+    }
+  ]
+}

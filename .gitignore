@@ -14,5 +14,19 @@ udemy-ai-company/courses/**/output*.mp4
 udemy-ai-company/courses/**/*_upload.mp4
 
 # Temporary render outputs.
+udemy-ai-company/courses/**/video/**/segments/
+udemy-ai-company/courses/**/video/**/concat.txt
+udemy-ai-company/courses/**/video/**/frame_check_*.png
 *.tmp.wav
 *.faststart.mp4
+
+# Local AI-PM-01 watcher state.
+udemy-ai-company/.pm_state/
+udemy-ai-company/.pm_queue/
+
+# Discord Command Center runtime logs.
+udemy-ai-company/discord/logs/codex-runs/*.log
+
+# Local working copies of public repositories. Track only the directory README.
+udemy-ai-company/public_repo/*
+!udemy-ai-company/public_repo/README.md

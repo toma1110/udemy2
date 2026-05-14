@@ -1,0 +1,18 @@
+{
+  "section": 5,
+  "lecture": 5,
+  "title": "ハンズオン: アラートを設計してSlackに飛ばす",
+  "duration_min": 25,
+  "learning_objectives": "CloudWatch Alarm → SNS → AWS Chatbot の一連の流れを実際に構築し、ALBエラー率アラートをSlackに通知できるようになる。",
+  "key_points": [
+    "ハンズオン全体像: ALBの5xxエラー率が1%超えたらSlackに通知する仕組みを作る",
+    "ハンズオン手順① SNS Topicの作成（Standard / FIFO）",
+    "ハンズオン手順② AWS Chatbotの設定（Slackワークスペース連携・チャンネル指定）",
+    "ハンズオン手順③ CloudWatch Alarmの作成（ALB HTTPCode_Target_5XX_Count）",
+    "ハンズオン手順④ Evaluation Periods = 3、Datapoints = 2 で Flapping 対策",
+    "ハンズオン手順⑤ テスト: aws cloudwatch set-alarm-state コマンドで強制発報",
+    "ハンズオン手順⑥ Slackで通知を確認・ダッシュボードリンクを開く",
+    "後片付け: テスト用アラームとSNS Topicの削除（課金防止）"
+  ],
+  "notes": "aws cloudwatch set-alarm-stateコマンドを使った強制テストは実務でも使えるTipsとして強調する。後片付け手順を必ず入れてコスト管理の意識も培う。"
+}

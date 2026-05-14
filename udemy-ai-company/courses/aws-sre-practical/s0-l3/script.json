@@ -1,0 +1,117 @@
+{
+  "section": 0,
+  "lecture": 3,
+  "title": "受講者に必要な前提知識",
+  "duration_min": 5,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# 受講前に必要な知識\n\n### 必要なもの・不要なものを最初に整理します\n\n「自分には難しそう」と感じている方も大丈夫です",
+      "narration": "このレクチャーでは、受講前に必要な知識を整理します。難しそうと感じているかたも大丈夫です。必要なものと不要なものを分けて確認しましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# 必須スキル\n\n## これだけあればOKです\n\n---",
+      "narration": "必須スキルはシンプルです。AWSコンソールにログインできること。そしてEC2、S3、RDSの名前と役割を聞いたことがあれば十分です。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "必要な前提知識",
+          "subtitle": "深い操作経験は不要。名前と役割が分かれば十分です",
+          "cards": [
+            {"icon": "cloud", "title": "AWSコンソール", "text": "ログインできる"},
+            {"icon": "server", "title": "EC2", "text": "仮想サーバー"},
+            {"icon": "gear", "title": "S3", "text": "ファイル保存"},
+            {"icon": "chart", "title": "RDS", "text": "データベース"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# あると望ましいスキル\n\n## 知っていると理解が深まります\n\n---",
+      "narration": "あると望ましい知識は、VPC、サブネット、ALBです。知っていると理解は深まりますが、知らなくても受講できます。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "理解が深まる知識",
+          "subtitle": "知らなくても受講できます。聞いたことがある程度で大丈夫です",
+          "cards": [
+            {"icon": "cloud", "title": "VPC", "text": "仮想ネットワーク"},
+            {"icon": "flow", "title": "サブネット", "text": "ネットワークの区画"},
+            {"icon": "server", "title": "ALB", "text": "ロードバランサー"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# 知らなくても大丈夫なこと\n\n## このコースでは使いません\n\n---",
+      "narration": "一方で、Terraform、Docker、Kubernetesはこのコースでは使いません。今回はAWS運用設計の考え方に集中します。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "今回は不要な知識",
+          "subtitle": "AWS運用設計の考え方に集中します",
+          "cards": [
+            {"icon": "gear", "title": "Terraform", "text": "IaCツール"},
+            {"icon": "server", "title": "Docker", "text": "コンテナ技術"},
+            {"icon": "flow", "title": "Kubernetes", "text": "コンテナ基盤"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# 前提知識が不足していたら？\n\n## 無料で補える方法があります\n\n> まず触ってみるのが一番の近道です\n\n---",
+      "narration": "前提知識が不安なかたは、AWS公式の無料ハンズオンを活用しましょう。ブラウザだけで進められ、日本語対応の資料もあります。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "不安な場合の補い方",
+          "subtitle": "AWS公式ハンズオンなどを活用すれば十分追いつけます",
+          "cards": [
+            {"icon": "cloud", "title": "AWS公式", "text": "無料ハンズオン"},
+            {"icon": "monitor", "title": "ブラウザ完結", "text": "環境構築なし"},
+            {"icon": "check", "title": "日本語対応", "text": "初学者向け"}
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# 前提知識の全体像\n\n### 必要なレベルのイメージ",
+      "narration": "前提知識の全体像を整理すると、必要なものはかなり少ないです。AWSコンソールを開いたことがあるかたなら、十分ついてこられます。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "必要な知識レベルの整理",
+          "left": {
+            "label": "必要なこと",
+            "items": [
+              "AWSコンソールへのログイン",
+              "EC2・S3・RDSの名前を知っている",
+              "（望ましい）VPC・ALBの概念"
+            ]
+          },
+          "right": {
+            "label": "不要なこと",
+            "items": [
+              "Terraformの知識",
+              "Dockerの知識",
+              "Kubernetesの知識",
+              "プログラミングの深い知識"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# このレクチャーのまとめ\n\n1. **必須スキルはシンプル**\n   AWSコンソール + EC2/S3/RDSの名前でOK\n\n2. **難しいツールは不要**\n   Terraform・Docker・Kubernetesは使いません\n\n3. **不安なら補える**\n   無料ハンズオンで十分キャッチアップできます\n\n> 一緒に学んでいきましょう\n\n---",
+      "narration": "このレクチャーのまとめです。必須スキルはシンプルです。難しいツールは使いません。不安な場合は無料ハンズオンで補いながら進めましょう。",
+      "diagram": null
+    }
+  ]
+}

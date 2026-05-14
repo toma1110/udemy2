@@ -1,0 +1,173 @@
+{
+  "section": 4,
+  "lecture": 4,
+  "title": "ハンズオン: Logs Insightsでエラーを探す",
+  "duration_min": 20,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# ハンズオン: Logs Insights でエラーを探す\n\n### 実際のログからエラーの原因リクエストを特定しよう\n\n**Section 4 - Lecture 4**\n\n⏱ 所要時間: 約20分",
+      "narration": "このレクチャーはハンズオン形式です。実際にAWSコンソールを操作しながら、CloudWatch Logs Insightsを使ってエラーを調査する流れを体で覚えていきましょう。講義を見ながら、ぜひご自身の画面でも同じ操作をしてみてください。約20分で完了できます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# このハンズオンでやること\n\n操作を通じて以下の6ステップを体験します\n\n> 📌 前提: セクション2・レクチャー5でデプロイした\n> **デモアプリ**のJSONロググループを使用します",
+      "narration": "このハンズオンでは、セクション2のレクチャー5でデプロイしたデモアプリのJSONログを使います。ロググループは /aws/ec2/sre-handson/webapp です。まだデプロイが済んでいない方は、先にそちらを完了させてからこのレクチャーに戻ってきてください。これから6つのステップを順番に進めていきます。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "ハンズオン 6ステップ",
+          "steps": [
+            {
+              "label": "① ロググループ確認",
+              "sublabel": "コンソール確認",
+              "style": "highlight"
+            },
+            {
+              "label": "② Logs Insights起動",
+              "sublabel": "グループ選択",
+              "style": "normal"
+            },
+            {
+              "label": "③ ERRORログ検索",
+              "sublabel": "クエリ実行",
+              "style": "normal"
+            },
+            {
+              "label": "④ requestIdで絞込",
+              "sublabel": "原因特定",
+              "style": "normal"
+            },
+            {
+              "label": "⑤ グラフ化",
+              "sublabel": "ダッシュボード追加",
+              "style": "normal"
+            },
+            {
+              "label": "⑥ コールドスタート分析",
+              "sublabel": "percentile関数",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# ステップ① ロググループを確認する\n\n**CloudWatch コンソール → ロググループ**\n\n確認するポイント:\n- ロググループ名: `/aws/ec2/sre-handson/webapp`\n- 最新のログストリームに**JSONログが存在するか**\n- `requestId` / `status` / `duration` が入っているか\n- 「保持期間」が設定されているか（未設定 = 無期限課金に注意）\n\n> ⚠️ ロググループが見つからない場合はリージョンを確認してください",
+      "narration": "まず最初に、CloudWatchコンソールを開いて、左メニューのロググループをクリックしてください。確認するロググループ名は /aws/ec2/sre-handson/webapp です。最新のログストリームにJSONログが存在し、requestId、status、durationなどのフィールドが入っていることを確認します。ロググループが見つからない場合は、画面みぎうえのリージョン選択が正しいかを必ず確認してください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# ステップ② Logs Insights を開く\n\n**CloudWatch → Logs Insights**\n\n### 操作手順\n1. 左メニューの **「Logs Insights」** をクリック\n2. 画面上部の **「ロググループの選択」** をクリック\n3. `/aws/ec2/sre-handson/webapp` を選択\n4. 右上の **タイムレンジ** を `カスタム → 過去1時間` に設定\n\n> `/api/data` を数十回叩いておくと、500ログを検索しやすくなります",
+      "narration": "次に、左メニューからLogs Insightsを開きます。画面上部のロググループ選択から、先ほど確認した /aws/ec2/sre-handson/webapp を選んでください。さらに画面みぎうえのタイムレンジを過去1時間に設定します。事前に /api/data を数十回叩いておくと、500のログが含まれやすくなります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# ステップ③ 5xxログを検索する\n\n以下のクエリをそのままコピーして貼り付けてください\n\n```sql\nfields @timestamp, requestId, path, status, duration\n| filter status >= 500\n| sort @timestamp desc\n| limit 50\n```\n\n**▶ 「クエリの実行」ボタン** をクリック\n\n### 結果の見方\n- `@timestamp` : ログ発生時刻（UTC表示に注意）\n- `requestId` : リクエスト単位の追跡ID\n- `status` : HTTPステータスコード\n- `duration` : 処理時間ミリ秒",
+      "narration": "いよいよクエリを実行します。画面中央のクエリエディタに、スライドのクエリをコピーして貼り付けてください。このクエリは、JSONログのstatusフィールドが500以上のログを新しい順に50件取得します。タイムスタンプはUTC表示なので、日本時間より9時間前の時刻が表示される点に注意してください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# ⚠️ よくあるハマりポイント①\n\n## タイムゾーンとタイムレンジの落とし穴",
+      "narration": "ここで一度立ち止まって、よくあるハマりポイントを確認しておきましょう。実際の現場でも初心者のエンジニアが詰まるポイントです。しっかり押さえておいてください。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "よくあるハマりポイント① タイムゾーン・タイムレンジ",
+          "left": {
+            "label": "❌ やりがちなミス",
+            "items": [
+              "「さっきのエラーが出ない」→ タイムレンジが過去1時間になっていない",
+              "「時刻がずれてる」→ @timestamp はUTC表示（日本時間 -9時間）",
+              "「ログが空っぽ」→ ロググループの選択を忘れている",
+              "「古いクエリの結果が残ってる」→ 実行ボタンを押し忘れ"
+            ]
+          },
+          "right": {
+            "label": "✅ 正しい対処法",
+            "items": [
+              "タイムレンジを明示的に「カスタム指定」で設定する",
+              "JST変換: @timestamp の値 +9時間 = 日本時間",
+              "クエリ実行前にロググループが選択されているか確認",
+              "クエリ変更後は必ず「クエリの実行」を再クリック"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# ステップ④ requestId で前後を追う\n\n### ① 5xxログから requestId をコピー\n結果の1行をクリック → `requestId` の値をコピー\n\n### ② requestId で絞り込むクエリを実行\n\n```sql\nfields @timestamp, requestId, path, status, duration, @message\n| filter requestId = \"YOUR_REQUEST_ID_HERE\"\n| sort @timestamp asc\n```\n\n`YOUR_REQUEST_ID_HERE` の部分をコピーした値に置き換えてください\n\n> X-Ray側でも同じリクエストを探すと、ログとトレースを突き合わせられます",
+      "narration": "エラーのこんぽんげんいんを調べるには、requestIdで絞り込む方法が有効です。まずステップ3の結果から5xxログの1行をクリックして詳細を開き、requestIdのあたいをコピーしてください。次にそのIDを使って新しいクエリを実行すると、同じリクエストに関連するログを時系列で確認できます。X-Ray側でも同じリクエストを探すと、ログとトレースを突き合わせられます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# ステップ⑤ エラー率をグラフ化して追加\n\n### ① 5分ごとのエラー率を集計するクエリ\n\n```sql\nstats\n  count(*) as total,\n  sum(case(status >= 500, 1, 0)) as errors\n  by bin(5m)\n| display bin(5m), errors, total, errors * 100 / total as errorRate\n```\n\n### ② グラフとして表示する\n1. クエリ実行後、結果タブの **「可視化」** をクリック\n2. 5分ごとのエラー率を確認\n\n### ③ ダッシュボードに追加する\n右上の **「ダッシュボードに追加」** をクリック",
+      "narration": "次はエラー率をグラフで可視化してみましょう。ここではcount_ifではなく、case文を使って500以上なら1、それ以外なら0として合計します。これがLogs Insightsで安定して使える書き方です。さらに全体件数で割ることで、5分ごとのエラー率を計算します。クエリを実行したら可視化タブを開き、ダッシュボードへ追加してみましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# ステップ⑥ レイテンシを分析する\n\n**duration** = アプリが処理にかかった時間（ミリ秒）\n\n### p50 / p95 / p99 を調べるクエリ\n\n```sql\nstats\n  avg(duration) as avgMs,\n  pct(duration, 50) as p50Ms,\n  pct(duration, 95) as p95Ms,\n  pct(duration, 99) as p99Ms,\n  count(*) as requests\n  by bin(5m)\n```\n\n### 結果の見方\n- p50 : 典型的なレスポンス時間\n- p95 : 遅いリクエストの傾向\n- p99 : 最悪ケースに近い体感\n- `/api/process` を叩くと遅延を確認しやすい",
+      "narration": "最後のステップでは、アプリのレイテンシを分析します。今回のJSONログにはdurationという処理時間のフィールドがあります。pct関数を使うと、p50、p95、p99といったパーセンタイルを計算できます。/api/processは一部のリクエストで意図的に遅延するため、p95やp99の変化を確認しやすいエンドポイントです。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# ⚠️ よくあるハマりポイント②\n\n## クエリエラーが出たときの対処法",
+      "narration": "クエリを実行したときにエラーメッセージが出ることがあります。焦らずにエラーの種類ごとの対処法を確認してみましょう。ほとんどのエラーは単純なミスが原因ですので、チェックリストとして活用してください。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "クエリエラー 対処フロー",
+          "steps": [
+            {
+              "label": "エラーメッセージを確認",
+              "desc": "画面下部に赤字でエラー内容が表示される",
+              "color": "red"
+            },
+            {
+              "label": "\"syntax error\" → クエリ構文ミス",
+              "desc": "パイプ「|」の位置・スペルミスを確認。コードブロックからそのままコピーすると安全",
+              "color": "orange"
+            },
+            {
+              "label": "\"no log group selected\" → ロググループ未選択",
+              "desc": "画面上部のロググループ選択ドロップダウンを再確認",
+              "color": "orange"
+            },
+            {
+              "label": "結果が0件 → タイムレンジを広げる",
+              "desc": "「過去3時間」「過去1日」など範囲を広げて再実行",
+              "color": "blue"
+            },
+            {
+              "label": "正常に結果が表示される",
+              "desc": "結果が出たら「可視化」タブでグラフ確認へ進む",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# 今回使ったクエリ 一覧まとめ\n\n**① 5xxログ検索**\n```sql\nfields @timestamp, requestId, path, status, duration\n| filter status >= 500\n| sort @timestamp desc | limit 50\n```\n**② requestIdで絞り込み**\n```sql\nfields @timestamp, requestId, path, status, duration, @message\n| filter requestId = \"YOUR_REQUEST_ID\"\n| sort @timestamp asc\n```\n**③ 5分ごとのエラー率**\n```sql\nstats count(*) as total, sum(case(status >= 500, 1, 0)) as errors by bin(5m)\n```\n**④ レイテンシ分析**\n```sql\nstats avg(duration), pct(duration,95), pct(duration,99) by bin(5m)\n```",
+      "narration": "ここで今回使ったクエリを一枚にまとめました。ブックマークしておくと実務ですぐ使えます。今回のポイントは、JSONログのフィールドを直接使うこと、エラー率集計ではcase文を使うこと、そしてdurationからパーセンタイルを計算することです。日々の調査作業のスタートテンプレートとして活用してください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# このレクチャーのまとめ\n\n### 今日学んだこと 3つ\n\n1. **Logs Insightsの基本操作**\n   ロググループ選択 → クエリ実行 → 結果確認の流れをマスターした\n\n2. **requestIdを使ったエラー追跡**\n   エラーの前後ログを時系列で並べて根本原因を特定できる\n\n3. **集計・グラフ化でダッシュボード活用**\n   `stats`・`bin()`・`pct()`を使ってエラー傾向を可視化し\n   CloudWatchダッシュボードに追加できる\n\n---\n\n> 📌 **次のレクチャー**: CloudWatch アラームの設定と\n> SNS通知でエラーを即座に検知する方法",
+      "narration": "お疲れ様でした！このレクチャーでは3つのことを学びました。まずLogs Insightsの基本的な操作フローです。次に、requestIdを使ってエラーの前後ログを追う調査手法です。そして、statsやpctなどの集計関数でログを可視化し、ダッシュボードに組み込む方法です。次のレクチャーでは、このエラー検知をリアルタイムで通知するCloudWatchアラームの設定を学んでいきましょう。",
+      "diagram": null
+    }
+  ]
+}

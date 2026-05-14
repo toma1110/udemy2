@@ -24,9 +24,10 @@
 - Speaker ID: 3
 - Speed scale: 1.1
 - Audio count: 11
-- Total duration seconds: 187.381
+- Total duration seconds: 187.232
 - gTTS fallback: not used
 - Report: `audio/s1-l1/voicevox_report.md`
+- Pronunciation fix: `初学者` is written as `しょがくしゃ` in narration.
 
 ## Quality Checks
 

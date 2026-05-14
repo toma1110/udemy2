@@ -1,0 +1,93 @@
+{
+  "title": "s4-l2_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "Application SignalsでLatencyとAvailabilityを見る",
+      "message": "サービスと操作を軸に、体験指標を見る",
+      "narration": "このレクチャーでは、アプリケーションシグナルズでレイテンシとアベイラビリティを見る考え方を整理します。アプリケーションシグナルズは、サービスや操作を軸に、リクエストの成功、失敗、待ち時間を見やすくする機能です。エスエルオー設計の入口として使えます。",
+      "visual_notes": [
+        "Application Signals service map",
+        "Latency and Availability KPI cards",
+        "Service and operation labels"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "サービスと操作で見る",
+      "message": "どのサービスの、どの操作かを先に決める",
+      "narration": "アプリケーションシグナルズでは、サービス全体だけでなく、操作単位で体験を見ます。たとえば、ログイン、検索、決済のように、ユーザーが意識する操作を分けます。サービス名だけでまとめるより、どの操作が悪いのかを判断しやすくなります。",
+      "visual_notes": [
+        "Service node with operations: login/search/payment",
+        "Operation-level metric cards",
+        "User journey to service operation mapping"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "Latencyを見る",
+      "message": "ユーザーが待たされた時間を、操作単位で確認する",
+      "narration": "レイテンシは、ユーザーがどれだけ待たされたかを見る指標です。アプリケーションシグナルズでは、サービスや操作に紐づけてレイテンシを確認できます。単にサーバーが忙しいかではなく、どの操作が遅いのかを見られることが重要です。",
+      "visual_notes": [
+        "Latency chart for operation",
+        "p95 line and threshold line",
+        "Slow operation highlighted"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "Availabilityを見る",
+      "message": "リクエストが成功した割合を確認する",
+      "narration": "アベイラビリティは、リクエストが成功した割合を見ます。エラーが増えれば、ユーザー体験は悪化します。アプリケーションシグナルズでは、標準的なアプリケーション指標として、レイテンシとアベイラビリティをエスエルオー候補にしやすい形で扱えます。",
+      "visual_notes": [
+        "Availability percentage gauge",
+        "Good/bad request split",
+        "Error rate trend below"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "依存先も見る",
+      "message": "外向きリクエストの遅さや失敗を切り分ける",
+      "narration": "ユーザー体験の悪化は、自分のサービスだけで起きるとは限りません。データベース、外部エーピーアイ、別サービスへの依存先が遅い場合もあります。依存先を含めて見られると、エスエルアイ悪化後の原因分析に進みやすくなります。",
+      "visual_notes": [
+        "Service dependency map",
+        "Database/external API dependency cards",
+        "Latency/faults on outgoing requests"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "計装とデータ期間を確認する",
+      "message": "見えている数字には、前提条件がある",
+      "narration": "アプリケーションシグナルズの数字を使う前に、計装とデータ期間を確認します。対象のサービスが正しく検出されているか。十分なリクエストが集まっているか。短い期間の少ないデータだけで判断すると、実態より強い結論を出してしまうことがあります。",
+      "visual_notes": [
+        "Instrumentation checklist",
+        "Data volume and time window",
+        "Caution banner for sparse traffic"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "SLO作成時の注意",
+      "message": "初回作成ではサービスリンクロールが関係する",
+      "narration": "アプリケーションシグナルズでエスエルオーを作るときは、必要な権限とサービスリンクロールにも注意します。初回作成時には、クラウドウォッチがアプリケーションシグナルズ用のサービスリンクロールを作成する場合があります。ハンズオンでは、この前提をリードミーに明記します。",
+      "visual_notes": [
+        "IAM/service-linked role caution card",
+        "First SLO creation flow",
+        "README prerequisite marker"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ: 操作に近い指標を使う",
+      "message": "LatencyとAvailabilityを、SLO候補として見る",
+      "narration": "まとめです。アプリケーションシグナルズでは、サービスと操作を軸に、レイテンシとアベイラビリティを見ます。これは、エスエルアイをユーザー体験に近づける助けになります。次のレクチャーでは、期間ベースとリクエストベースのエスエルオーの違いを整理します。",
+      "visual_notes": [
+        "Service operation -> latency/availability -> SLO candidate",
+        "Arrow to period-based and request-based lecture",
+        "Key takeaway card"
+      ]
+    }
+  ]
+}

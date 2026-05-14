@@ -1,0 +1,95 @@
+{
+  "section": 5,
+  "lecture": 5,
+  "title": "ハンズオン: アラートを設計してSlackに飛ばす",
+  "duration_min": 25,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# ハンズオン\n## アラートを設計してSlackに飛ばす\n\n**CloudWatch Alarm → SNS → AWS Chatbot**\nの一連の流れを実際に構築しよう\n\n> Section 5 / Lecture 5",
+      "narration": "このレクチャーはハンズオン形式です。CloudWatchアラーム、SNS、AWSチャットボットという3つのサービスを連携させて、ALBのエラー率が上がったときにSlackへ通知が届く仕組みを実際に手を動かして作っていきます。25分ほどの内容ですので、AWSコンソールを開きながら一緒に進めてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# 今日作るもの\n\n**「ALBの5xxエラー率が1%を超えたらSlackに通知する」**\n\n### ゴールイメージ\n\n図のとおり、右から左へ信号が伝わっていきます。\n\n- ALBがエラーを検知\n- CloudWatch Alarmが閾値を判定\n- SNSがメッセージを配信\n- AWS ChatbotがSlackへ投稿",
+      "narration": "今回作るものの全体像を先に把握しておきましょう。ALBで5xxエラー、つまりサーバーサイドのエラーが1%を超えた瞬間に、Slackの指定チャンネルへアラートが飛ぶ仕組みです。CloudWatchアラーム、SNS、AWSチャットボットという3つのサービスが順番につながって動きます。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "アラート通知の全体フロー",
+          "steps": [
+            {
+              "label": "ALB",
+              "desc": "5xxエラー率が上昇",
+              "color": "red"
+            },
+            {
+              "label": "CloudWatch Alarm",
+              "desc": "1%超えを検知してALARM状態へ",
+              "color": "orange"
+            },
+            {
+              "label": "SNS Topic",
+              "desc": "アラームイベントをサブスクライバーへ配信",
+              "color": "blue"
+            },
+            {
+              "label": "AWS Chatbot",
+              "desc": "SNSメッセージを受け取りSlackへ投稿",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# 手順① SNS Topicの作成\n\n**SNS（Simple Notification Service）**とは、メッセージを複数の宛先に届ける「中継局」です。\n\n### 作業手順\n\n1. AWSコンソール → **SNS** → 「トピックの作成」\n2. タイプ: **Standard**（FIFOは順序保証が必要な場合のみ）\n3. 名前: `alb-5xx-alert-topic`\n4. その他はデフォルトのまま → 「作成」\n5. 作成後、**ARN**をメモしておく\n\n> ⚠️ FIFOタイプはAWS Chatbotと連携できないため必ずStandardを選択",
+      "narration": "まずはSNSトピックを作ります。SNSはメッセージの中継局で、CloudWatchアラームからのイベントをAWSチャットボットへ渡す役割を担います。タイプはStandardとFIFOの2種類がありますが、AWSチャットボットはFIFOに対応していないため、必ずStandardを選んでください。作成後に表示されるARNという識別子を後で使うのでメモしておきましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# 手順② AWS Chatbotの設定\n\n**AWS Chatbot**とは、AWSのアラートをSlackやAmazon Chimeに転送してくれるマネージドサービスです。\n\n### 作業手順\n\n1. AWSコンソール → **AWS Chatbot** → 「新しいクライアントの設定」\n2. チャットクライアント: **Slack** を選択\n3. 「Slackに接続」→ OAuth認証でワークスペースを承認\n4. チャンネル設定を作成:\n   - チャンネル名: 通知を飛ばしたいチャンネル（例: `#aws-alerts`）\n   - SNSトピック: 先ほど作成した `alb-5xx-alert-topic`\n5. IAMロール: 「新しいロールの作成」でOK",
+      "narration": "次はAWSチャットボットの設定です。AWSチャットボットはAWSとSlackを橋渡しするサービスで、一度設定すれば自動でメッセージを変換して投稿してくれます。Slackとの連携はOAuth認証で行いますので、Slackのワークスペース管理者権限が必要な点に注意してください。チャンネルには事前に通知専用チャンネルを作っておくとすっきり管理できます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# 手順③ CloudWatch Alarmの作成\n\n### 作業手順\n\n1. CloudWatch → 「アラームの作成」→ 「メトリクスの選択」\n2. **ApplicationELB** の2メトリクスを選択\n   - `HTTPCode_Target_5XX_Count`\n   - `RequestCount`\n3. Metric Mathで5xx率を作成\n   - `100 * HTTPCode_Target_5XX_Count / RequestCount`\n4. 条件: 5xx率が **1%超** でALARM\n5. アクション: SNSトピック `alb-5xx-alert-topic`\n6. 名前: `alb-5xx-error-rate-alarm`\n\n> 件数ではなく、割合でアラームを作るのがポイントです",
+      "narration": "いよいよCloudWatchアラームを作ります。監視するのは5xxの件数そのものではなく、5xxエラー率です。ApplicationELBのHTTPCode_Target_5XX_CountとRequestCountを選び、Metric Mathで100かける5xx件数わるリクエスト数、という式を作ります。これにより、リクエスト数が多いときも少ないときも、割合として影響度を判断できます。アクションには先ほど作ったSNSトピックを指定しましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# 手順④ Flapping対策の設定\n\n**Flapping（フラッピング）**とは、アラームが「OK↔ALARM」を短時間で繰り返す現象のこと。\nノイズが多くなり、本当に重要なアラートが埋もれてしまいます。\n\n### 設定値\n\n| 項目 | 値 | 意味 |\n|------|-----|------|\n| Evaluation Periods | **3** | 直近3分間を評価 |\n| Datapoints to Alarm | **2** | うち2回以上超えたらALARM |\n\n> 💡 「3回中2回」ルールで一時的なスパイクを無視できる",
+      "narration": "アラームを作るときに必ずセットで設定したいのがFlapping対策です。フラッピングとは、アラームがOKとALARMを短時間で行ったり来たりする現象で、Slackが大量の通知で埋め尽くされてしまいます。エバリュエーションピリオドを3、データポイントトゥアラームを2にすると、直近3分のうち2分以上で閾値を超えた場合だけアラームになります。一時的なスパイクを無視できる、非常に実用的な設定です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# 手順⑤ テスト: 2通りで確認する\n\n## 方法A: 実際に5xxを発生させる\n```bash\nfor i in {1..100}; do curl -s -o /dev/null -w \"%{http_code}\\n\" \\\n  http://<ALB-DNS-NAME>/api/data; done\n```\n\n## 方法B: 強制発報コマンド\n```bash\naws cloudwatch set-alarm-state \\\n  --alarm-name \"alb-5xx-error-rate-alarm\" \\\n  --state-value ALARM \\\n  --state-reason \"Manual test for Slack notification\"\n```\n\n> テスト後は `--state-value OK` で戻すのを忘れずに",
+      "narration": "構築が終わったら、Slackへ通知が届くかテストしましょう。方法は2つあります。1つ目は、実際に /api/data を連続で叩いて5xxを発生させる方法です。セクション2で作ったデモアプリは約20パーセントの確率で500を返すため、アラームの実動作を確認しやすくなっています。2つ目は、aws cloudwatch set-alarm-stateコマンドで強制的にALARM状態にする方法です。通知経路だけを素早く確認したい場合に便利です。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# 手順⑥ Slackで通知を確認する\n\n### 確認ポイント\n\n- 指定したチャンネルにメッセージが届いているか\n- アラーム名・状態・理由が正しく表示されているか\n- **「CloudWatchで表示」リンク**が機能しているか\n\n### 通知メッセージの見どころ\n\n```\n🚨 ALARM: alb-5xx-error-rate-alarm\nState: ALARM\nReason: Manual test for Slack notification\n[CloudWatchで表示] ← クリックでダッシュボードへ\n```\n\n> リンクからグラフを直接確認できるので、障害対応のスピードが上がります",
+      "narration": "コマンドを実行して数秒から数十秒待つと、Slackに通知が届きます。アラーム名・状態・理由が正しく表示されているか確認してください。特に注目してほしいのが「CloudWatchで表示」リンクです。このリンクをクリックするとCloudWatchのグラフに直接ジャンプできるので、実際の障害対応時に原因調査のスピードが大幅に上がります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# 手順⑦ 後片付け（必須！）\n\nテスト用リソースは**必ず削除**しましょう。放置すると意図しない課金が発生します。\n\n### 削除するリソースと手順\n\n| リソース | 削除場所 |\n|---------|----------|\n| CloudWatch Alarm | CloudWatch → アラーム → 削除 |\n| SNS Topic | SNS → トピック → 削除 |\n| AWS Chatbot設定 | Chatbot → チャンネル設定 → 削除 |\n\n```bash\n# CLIでまとめて削除する場合\naws cloudwatch delete-alarms \\\n  --alarm-names \"alb-5xx-error-rate-alarm\"\n\naws sns delete-topic \\\n  --topic-arn <先ほどメモしたARN>\n```",
+      "narration": "ハンズオンの最後に必ず後片付けをしてください。CloudWatchアラーム、SNSトピック、AWSチャットボットの設定の3つを削除します。SNSトピックはメッセージがなくてもトピックが存在するだけでは課金されませんが、習慣として不要なリソースは削除する癖をつけましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# このレクチャーのまとめ\n\n### 今日できるようになったこと\n\n1. **CloudWatch Alarm → SNS → AWS Chatbot** の連携を自分で構築できる\n\n2. **5xxエラー率** をMetric Mathで割合として監視できる\n\n3. **Evaluation Periods / Datapoints to Alarm** でFlappingを防げる\n\n4. `curl` と `set-alarm-state` の2通りで通知テストができる\n\n---\n\n> 次のセクションでは、SLI/SLOとエラーバジェットを学びます",
+      "narration": "お疲れ様でした。このレクチャーでは、CloudWatchアラーム、SNS、AWSチャットボットを連携させたSlack通知の構築を学びました。さらに、5xxエラーを件数ではなく割合として監視する方法、エバリュエーションピリオドとデータポイントトゥアラームを使ったFlapping対策、curlとset-alarm-stateの2通りの通知テストも確認しました。次のセクションでは、SLI、SLO、エラーバジェットを学んでいきましょう。",
+      "diagram": null
+    }
+  ]
+}

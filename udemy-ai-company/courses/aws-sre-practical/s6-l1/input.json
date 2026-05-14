@@ -1,0 +1,18 @@
+{
+  "section": 6,
+  "lecture": 1,
+  "title": "SLI（Service Level Indicator）とは",
+  "duration_min": 10,
+  "learning_objectives": "SLIの定義を理解し、自分のサービスに適したSLIを選定できるようになる。",
+  "key_points": [
+    "SLI（Service Level Indicator）: サービスの信頼性を測定する具体的な指標",
+    "良いSLIの条件: ユーザー体験に直結している・計測可能・理解しやすい",
+    "代表的なSLI: 可用性（成功率）/ レイテンシ / エラー率 / スループット",
+    "可用性SLIの計算式: 成功リクエスト数 / 全リクエスト数 × 100%",
+    "レイテンシSLIのポイント: 平均値ではなくパーセンタイル（p95/p99）を使う理由",
+    "AWSでのSLI計測: ALBアクセスログ / CloudWatch Metrics / X-Rayトレース",
+    "SLIを選ぶ際の注意: 計測できても意味のない指標（CPU使用率など）はSLIにしない",
+    "SLI vs KPI: SLIはユーザー体験の信頼性、KPIはビジネス成果。目的が違う"
+  ],
+  "notes": "SRE本（Google）のSLI概念をAWS実務に落とし込む。「CPUはSLIにならない」という反直感的な例で理解を深める。次のSLOへの橋渡しを意識する。"
+}

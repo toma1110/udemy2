@@ -43,7 +43,17 @@ JP_READING_FIXES: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"今リリース"), "いまりりーす"),
     (re.compile(r"右上"), "みぎうえ"),
     (re.compile(r"上で"), "うえで"),
-    (re.compile(r"(?<=[ぁ-んァ-ヶー])値(?=[をがにのは、。へとも])"), "あたい"),
+    (re.compile(r"時系列"), "じけいれつ"),
+    (re.compile(r"月末"), "げつまつ"),
+    (re.compile(r"10分(?!の|割)"), "じゅっぷん"),
+    (re.compile(r"緊急度"), "きんきゅうど"),
+    (re.compile(r"初学者"), "しょがくしゃ"),
+    (re.compile(r"空(?=では|でない|です|だ|なら|の|欄|文字|値|、|。|$)"), "から"),
+    (re.compile(r"触れる"), "さわれる"),
+    (re.compile(r"そんな方向け"), "そんなかたむけ"),
+    (re.compile(r"(目指す|担当している|進めたい)方(?=[です、。])"), r"\1かた"),
+    (re.compile(r"(そうした|こうした|この|その|あの)方(?=[がはをにの、。])"), r"\1かた"),
+    (re.compile(r"(?<![一-龯])値(?=[をがにのはで、。へとも])"), "あたい"),
 ]
 
 
@@ -118,8 +128,18 @@ RISKY_JP_TERMS: list[tuple[re.Pattern[str], str, str]] = [
     (re.compile(r"今リリース"), "いまりりーす", "「こんリリース」と読まれやすい"),
     (re.compile(r"右上"), "みぎうえ", "「みぎじょう」と読まれやすい"),
     (re.compile(r"上で"), "うえで", "「じょうで」と読まれやすい"),
+    (re.compile(r"時系列"), "じけいれつ", "「ときけいれつ」と読まれやすい"),
+    (re.compile(r"月末"), "げつまつ", "「つきまつ」と読まれやすい"),
+    (re.compile(r"10分(?!の|割)"), "じゅっぷん", "「じゅうぶん」と読まれやすい"),
+    (re.compile(r"緊急度"), "きんきゅうど", "「きんきゅうたび」と読まれやすい"),
+    (re.compile(r"初学者"), "しょがくしゃ", "「はつがくしゃ」と読まれやすい"),
+    (re.compile(r"空(?=では|でない|です|だ|なら|の|欄|文字|値|、|。|$)"), "から", "空欄や未設定の意味では「そら」ではなく「から」と読む"),
+    (re.compile(r"触れる"), "文脈に応じて、さわれる、または、ふれる", "文脈と異なる読みになりやすい"),
+    (re.compile(r"そんな方向け"), "そんなかたむけ", "対象者を表す場合は「ほうむけ」ではなく「かたむけ」と読む"),
+    (re.compile(r"(目指す|担当している|進めたい)方(?=[です、。])"), "目指すかた、担当しているかた、進めたいかた", "対象者を表す場合は「ほう」ではなく「かた」と読む"),
+    (re.compile(r"(そうした|こうした|この|その|あの)方(?=[がはをにの、。])"), "文脈に応じて、かた、または、ほう", "文脈と異なる読みになりやすい"),
     (re.compile(r"閾値"), "しきいち", "読みが揺れやすい"),
-    (re.compile(r"(?<=[ぁ-んァ-ヶー])値(?=[をがにのは、。へとも])"), "あたい", "「ね」と読まれやすい"),
+    (re.compile(r"(?<![一-龯])値(?=[をがにのはで、。へとも])"), "あたい", "「ね」と読まれやすい"),
 ]
 
 
@@ -181,16 +201,17 @@ def iter_target_files(paths: Iterable[Path]) -> Iterable[Path]:
     for path in paths:
         if path.is_dir():
             yield from path.rglob("script.json")
+            yield from path.rglob("*_script.json")
             yield from path.rglob("*_script.md")
             yield from path.rglob("lesson_*.md")
-        elif path.name == "script.json" or (
-            path.suffix.lower() == ".md" and (path.name.endswith("_script.md") or path.name.startswith("lesson_"))
-        ):
+        elif path.name == "script.json" or path.name.endswith("_script.json"):
+            yield path
+        elif path.suffix.lower() == ".md" and (path.name.endswith("_script.md") or path.name.startswith("lesson_")):
             yield path
 
 
 def extract_texts(path: Path) -> list[tuple[str, str]]:
-    if path.name == "script.json":
+    if path.suffix.lower() == ".json":
         with path.open(encoding="utf-8") as f:
             data = json.load(f)
         texts: list[tuple[str, str]] = []
@@ -207,11 +228,28 @@ def extract_texts(path: Path) -> list[tuple[str, str]]:
     buffer: list[str] = []
 
     for line in text.splitlines():
+        stripped = line.strip()
+        if collecting and (
+            line.startswith("## ")
+            or line.startswith("### ")
+            or re.match(r"^(Title|Message|Layout|Visual Notes):", stripped)
+        ):
+            narration_blocks.append((current_heading, "\n".join(buffer).strip()))
+            collecting = False
+            buffer = []
+
         if line.startswith("## "):
             current_heading = line.removeprefix("## ").strip() or current_heading
-        if line.strip() == "### Narration":
+
+        if stripped == "### Narration" or stripped.startswith("Narration:"):
             if collecting and buffer:
                 narration_blocks.append((current_heading, "\n".join(buffer).strip()))
+            inline = stripped.removeprefix("Narration:").strip() if stripped.startswith("Narration:") else ""
+            if inline:
+                narration_blocks.append((current_heading, inline))
+                collecting = False
+                buffer = []
+                continue
             collecting = True
             buffer = []
             continue

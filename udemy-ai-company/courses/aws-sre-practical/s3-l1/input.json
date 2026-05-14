@@ -1,0 +1,17 @@
+{
+  "section": 3,
+  "lecture": 1,
+  "title": "CloudWatch Metricsの基本",
+  "duration_min": 10,
+  "learning_objectives": "CloudWatch Metricsの仕組みを理解し、名前空間・ディメンション・統計の概念を説明できるようになる。",
+  "key_points": [
+    "メトリクスとは: 時系列の数値データ（CPU使用率・リクエスト数など）",
+    "名前空間（Namespace）: メトリクスをグループ化する論理的な区切り（例: AWS/EC2）",
+    "ディメンション（Dimension）: メトリクスを絞り込むキーバリュー（例: InstanceId=i-xxxx）",
+    "統計（Statistics）: Average / Sum / Maximum / Minimum / SampleCount",
+    "データ保持期間: 60秒以下は3時間、60秒は15日、5分は63日、1時間は15ヶ月",
+    "メトリクスの解像度: 標準（1分）と高解像度（1秒）の違い",
+    "CloudWatch Metrics APIの基本: GetMetricStatistics / GetMetricData"
+  ],
+  "notes": "概念説明がメインのレクチャー。名前空間・ディメンション・統計という3つの用語を丁寧に解説する。図解でデータ構造を可視化すると理解しやすい。次のレクチャーへの橋渡しとして標準/カスタムの違いを予告する。"
+}

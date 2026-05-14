@@ -1,0 +1,238 @@
+{
+  "section": 2,
+  "lecture": 3,
+  "title": "AWSのオブザーバビリティサービス全体像",
+  "duration_min": 8,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# AWSのオブザーバビリティサービス全体像\n\n### どのサービスが何を担当するのか、まず地図を描きます\n\nSection 2 - Lecture 3",
+      "narration": "このレクチャーでは、AWSが提供するオブザーバビリティ関連サービスを俯瞰します。個々の深掘りは後のレクチャーに譲り、まずはどのサービスが何を担当するのか、全体の地図をつかみましょう。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# オブザーバビリティの3本柱\n\n## メトリクス、ログ、トレースを分けて考えます",
+      "narration": "復習です。オブザーバビリティは、システムの内側で起きていることを外側から観測できる力です。基本になるのは、数値を見るメトリクス、出来事を残すログ、リクエストの流れを追うトレースの3つです。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "観測データの3本柱",
+          "subtitle": "まずはこの3種類に分けて考えると整理しやすくなります",
+          "cards": [
+            {
+              "icon": "chart",
+              "title": "Metrics",
+              "text": "CPU使用率などの数値"
+            },
+            {
+              "icon": "monitor",
+              "title": "Logs",
+              "text": "イベントの記録"
+            },
+            {
+              "icon": "flow",
+              "title": "Traces",
+              "text": "処理経路の追跡"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# AWSサービスマップ\n\n## 役割ごとに見ると、立ち位置が分かりやすくなります",
+      "narration": "AWSのオブザーバビリティサービスを役割ごとに整理します。CloudWatchは監視の中心です。X-Rayはトレース、CloudTrailは監査ログ、OpenSearchは大量ログの検索、Managed Grafanaは可視化を担当します。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "AWSオブザーバビリティの地図",
+          "subtitle": "用途が違うため、ひとつのサービスですべてを覚えようとしなくて大丈夫です",
+          "cards": [
+            {
+              "icon": "cloud",
+              "title": "CloudWatch",
+              "text": "監視の中心"
+            },
+            {
+              "icon": "flow",
+              "title": "X-Ray",
+              "text": "分散トレーシング"
+            },
+            {
+              "icon": "shield",
+              "title": "CloudTrail",
+              "text": "API監査ログ"
+            },
+            {
+              "icon": "chart",
+              "title": "OpenSearch",
+              "text": "ログ検索と分析"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# CloudWatchはAWS監視の中心\n\n## 本コースで最も多く扱うサービスです",
+      "narration": "AWSオブザーバビリティの中心にいるのがCloudWatchです。メトリクス、ログ、アラーム、ダッシュボードをひとつのサービスで扱えます。本コースでは、このCloudWatchをメインに学んでいきます。",
+      "diagram": {
+        "type": "infographic_grid",
+        "data": {
+          "title": "CloudWatchの主な役割",
+          "subtitle": "まず押さえるべきAWS標準の監視ハブです",
+          "cards": [
+            {
+              "icon": "chart",
+              "title": "Metrics",
+              "text": "リソース使用率"
+            },
+            {
+              "icon": "monitor",
+              "title": "Logs",
+              "text": "ログの一元管理"
+            },
+            {
+              "icon": "warning",
+              "title": "Alarms",
+              "text": "しきい値通知"
+            },
+            {
+              "icon": "check",
+              "title": "Dashboards",
+              "text": "グラフで可視化"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# 専門サービスの役割\n\n## CloudWatch以外も、用途で使い分けます",
+      "narration": "CloudWatch以外のAWSネイティブサービスも見ておきます。X-Rayは複数サービスをまたぐリクエストの流れを追います。CloudTrailは誰がいつ何をしたかを記録します。OpenSearch Serviceは大量ログを検索、分析するために使います。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "専門サービスの使いどころ",
+          "left": {
+            "label": "調査・監査",
+            "items": [
+              "X-Ray: ボトルネック調査",
+              "CloudTrail: API操作の監査",
+              "誰が何をしたかを追跡"
+            ]
+          },
+          "right": {
+            "label": "検索・分析",
+            "items": [
+              "OpenSearch: 大量ログ検索",
+              "Managed Grafana: 可視化",
+              "運用チーム向けの分析"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# OpenTelemetryとADOT\n\n## ベンダーに縛られないデータ収集標準も重要です",
+      "narration": "近年重要なのがOpenTelemetry、略してOTelです。メトリクス、ログ、トレースを特定のベンダーに縛られずに扱うための標準です。AWSではADOTという配布版を通じて、CloudWatchやX-Rayへデータを送れます。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "OTelデータをAWSへ送る流れ",
+          "steps": [
+            {
+              "label": "データを収集",
+              "desc": "メトリクス・ログ・トレースを扱う",
+              "color": "blue"
+            },
+            {
+              "label": "ADOTで収集",
+              "desc": "AWS対応のディストリビューション",
+              "color": "orange"
+            },
+            {
+              "label": "AWSへ送信",
+              "desc": "CloudWatchやX-Rayに連携",
+              "color": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# AWSネイティブ、OSS、SaaSの違い\n\n## どれが正解ではなく、運用条件で選びます",
+      "narration": "AWS外の選択肢も整理します。Datadogは統合監視SaaSで機能は豊富ですが、コストに注意が必要です。PrometheusとGrafanaはOSSの定番ですが、自前運用が必要です。まずはAWSネイティブを押さえ、必要に応じて広げるのが現実的です。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "選択肢の見方",
+          "left": {
+            "label": "AWSネイティブ",
+            "items": [
+              "CloudWatch中心に始めやすい",
+              "AWSサービスとの連携が強い",
+              "学習コストを抑えやすい"
+            ]
+          },
+          "right": {
+            "label": "OSS・SaaS",
+            "items": [
+              "Datadog: 統合監視SaaS",
+              "Prometheus: OSS監視の定番",
+              "要件に応じて追加する"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# 本コースが扱う範囲\n\n## まずCloudWatch、次にX-RayとOTelの入口へ進みます",
+      "narration": "本コースではAWSネイティブサービスを中心に学びます。まずCloudWatchのメトリクスとアラームを押さえ、次にログ管理とダッシュボードへ進みます。後半ではX-Rayの入門と、OpenTelemetry、ADOTの位置づけにも触れます。",
+      "diagram": {
+        "type": "roadmap",
+        "data": {
+          "title": "学習ロードマップ",
+          "steps": [
+            {
+              "label": "CloudWatch Metrics",
+              "sublabel": "メトリクスとアラーム",
+              "style": "highlight"
+            },
+            {
+              "label": "CloudWatch Logs",
+              "sublabel": "ログ管理と検索",
+              "style": "highlight"
+            },
+            {
+              "label": "Dashboards",
+              "sublabel": "可視化と運用",
+              "style": "highlight"
+            },
+            {
+              "label": "X-Ray",
+              "sublabel": "トレーシング入門",
+              "style": "normal"
+            },
+            {
+              "label": "OTel / ADOT",
+              "sublabel": "概念と位置づけ",
+              "style": "normal"
+            }
+          ],
+          "current": 0
+        }
+      }
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# このレクチャーのまとめ\n\n1. CloudWatchはAWSオブザーバビリティの中心\n2. X-Ray、CloudTrail、OpenSearchは用途別に使う\n3. OpenTelemetryとADOTはデータ収集標準として押さえる\n\n> 次のレクチャーからCloudWatchを深掘りします",
+      "narration": "このレクチャーのまとめです。CloudWatchはAWSオブザーバビリティの中心です。X-Ray、CloudTrail、OpenSearchは用途別に使います。そしてOpenTelemetryとADOTは、データ収集標準として押さえておきましょう。次のレクチャーからCloudWatchを深掘りしていきます。",
+      "diagram": null
+    }
+  ]
+}

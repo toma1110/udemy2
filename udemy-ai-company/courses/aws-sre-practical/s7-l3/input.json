@@ -1,0 +1,18 @@
+{
+  "section": 7,
+  "lecture": 3,
+  "title": "AWS Runbook / Systems Managerの活用",
+  "duration_min": 12,
+  "learning_objectives": "AWS Systems Manager の主要機能を理解し、Runbook（オートメーション）とSession Managerを使ったインシデント対応を実践できるようになる。",
+  "key_points": [
+    "AWS Systems Manager（SSM）の概要: EC2をエージェント経由でセキュアに管理するサービス群",
+    "Session Manager: SSH不要・踏み台不要でEC2にブラウザからアクセス。SSHキー管理が不要になる",
+    "Session ManagerのIAM設定: SSMSessionManagerRunAsPolicy を付与する",
+    "Run Command: SSHなしで複数EC2に一括コマンド実行（ログ収集・設定変更など）",
+    "SSM Automation（Runbook）: GUIで定義した手順書をワンクリックで実行できる自動化",
+    "AWS提供の既製Runbook: EC2再起動 / AMIバックアップ / ディスク拡張 など100+種類",
+    "カスタムRunbookの作成: YAML/JSONで独自の自動対応フローを定義",
+    "Incident Manager（AWS Incident Manager）: インシデント管理・対応計画・事後分析を統合管理"
+  ],
+  "notes": "Session ManagerはSSH鍵管理から解放される実用的なツールとして強調する。Runbookの自動化は夜間の自動復旧に使えることを示す。"
+}

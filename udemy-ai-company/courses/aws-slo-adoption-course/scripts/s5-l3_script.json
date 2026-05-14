@@ -1,0 +1,97 @@
+{
+  "title": "s5-l3_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "SLO、Alarm、SNS、Dashboardを作成する",
+      "message": "作成、投入、確認の順で進める",
+      "narration": "このレクチャーでは、実際にスタックを作成します。標準構成では、エスエヌエス、クラウドウォッチアラーム、ダッシュボードを作ります。そのあと、サンプルメトリクスを投入して、グラフとアラームが見る対象を用意します。",
+      "visual_notes": [
+        "Create stack flow",
+        "Standard resources: SNS / CloudWatch Alarms / Dashboard",
+        "Sample metrics injection"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "環境変数を決める",
+      "message": "STACK_NAME、AWS_REGION、PROJECT_NAMEを固定する",
+      "narration": "まず、スタック名、リージョン、プロジェクト名を決めます。ハンズオンでは毎回同じ名前を使うと、作成、更新、削除の対象がぶれません。既存スタックとぶつからない名前を選ぶのも大事です。",
+      "visual_notes": [
+        "STACK_NAME example",
+        "AWS_REGION example",
+        "PROJECT_NAME example",
+        "Naming rule: unique and disposable"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "validate",
+      "message": "作る前にテンプレートを検証する",
+      "narration": "最初に、検証コマンドを実行します。ここでは、テンプレートの構文やリソース定義がクラウドフォーメーションとして読めるかを確認します。作成に失敗してから直すより、先に検証する方が安全です。",
+      "visual_notes": [
+        "Command: ./validate.sh validate",
+        "CloudFormation validate-template",
+        "Stop before resource creation if invalid"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "create",
+      "message": "CloudFormation deployでスタックを作る",
+      "narration": "検証が通ったら、作成コマンドを実行します。スタック作成では、テンプレートのパラメーターを渡し、クラウドフォーメーションがリソースを作ります。メール通知を使う場合は、確認メールの承認も忘れないようにします。",
+      "visual_notes": [
+        "Command: ./validate.sh create",
+        "cloudformation deploy",
+        "Optional SNS email confirmation"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "put-metrics",
+      "message": "AvailabilityとLatencyのサンプル値を入れる",
+      "narration": "スタック作成後に、サンプルメトリクスを投入します。アベイラビリティには九十九点九パーセント、レイテンシには百二十ミリ秒を入れます。これにより、ダッシュボードに表示する時系列データができます。",
+      "visual_notes": [
+        "Command: ./validate.sh put-metrics",
+        "Availability: 99.9 percent",
+        "Latency: 120 milliseconds",
+        "Namespace and dimensions"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "Outputsを見る",
+      "message": "作成された名前とARNを確認する",
+      "narration": "作成が終わったら、アウトプッツを確認します。通知トピックの識別子、アラーム名、ダッシュボード名が出力されます。これらは、次のスモークテストで存在確認に使う値です。",
+      "visual_notes": [
+        "AlarmTopicArn",
+        "AvailabilityAlarmName",
+        "LatencyAlarmName",
+        "DashboardName"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "画面でも確認する",
+      "message": "CLI確認とコンソール確認を組み合わせる",
+      "narration": "エーダブリューエスシーエルアイで確認するだけでなく、マネジメントコンソールでも見ておくと理解しやすくなります。アラームの状態、ダッシュボードのグラフ、通知トピックを確認し、テンプレートと実リソースを結びつけます。",
+      "visual_notes": [
+        "CloudWatch Alarms page",
+        "Dashboard page",
+        "SNS topic page",
+        "Match resources with template"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ: 作成後は確認対象を持つ",
+      "message": "作れた、ではなく、確認できた、まで進める",
+      "narration": "まとめです。クラウドフォーメーションの作成は、リソースができたところで終わりではありません。メトリクスを投入し、出力を確認し、次のスモークテストで存在確認できる状態まで進めます。",
+      "visual_notes": [
+        "Created resources -> metrics -> outputs -> smoke test",
+        "Arrow to Lecture 5-4",
+        "Hands-on checkpoint"
+      ]
+    }
+  ]
+}

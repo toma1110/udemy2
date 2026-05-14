@@ -1,0 +1,137 @@
+{
+  "section": 4,
+  "lecture": 3,
+  "title": "Logs Insightsクエリ入門",
+  "duration_min": 12,
+  "slides": [
+    {
+      "slide_number": 1,
+      "marp_content": "# Logs Insightsクエリ入門\n\n### SQLライクなクエリでログを自在に分析する\n\n**Section 4 / Lecture 3**",
+      "narration": "このレクチャーでは、CloudWatch Logs Insightsのクエリ言語を学んでいきます。ログを眺めるだけでなく、エラーを素早く検索したり、時系列で集計したり、レイテンシの傾向を掴んだりと、現場で使える分析スキルをしっかり身に付けていきましょう。クエリは実務でコピペして使えるレベルのものをたくさん紹介しますので、ぜひ手を動かしながら進めてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 2,
+      "marp_content": "# Logs Insights とは？\n\n> ロググループに対して **SQLライクなクエリ** を実行できる、AWSマネージドのログ分析サービス\n\n- CloudWatchに保存されたログをそのまま分析できる\n- サーバー不要・追加インフラゼロ\n- 実行した **スキャンデータ量に応じた従量課金**\n- 最大 **50のロググループ** を横断クエリ可能",
+      "narration": "Logs Insightsとは、CloudWatchに保存されたログに対して、SQLに似た専用クエリ言語で分析を行えるサービスです。データベースやサーバーを別途用意する必要はなく、ログが届いた瞬間からすぐに分析できます。料金はスキャンしたデータ量に応じた従量課金なので、絞り込みを効かせれば無駄なコストも抑えられます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 3,
+      "marp_content": "# 5大コマンドを覚えよう\n\nこの5つを組み合わせるだけで大半のユースケースに対応できます。",
+      "narration": "Logs Insightsのクエリは、たった5つのコマンドで構成されています。fields・filter・stats・sort・limitです。この5つを順番につないでパイプ記号で区切るだけでクエリが完成します。特にfields・filter・statsの3つを押さえれば、日常的な調査の大半をカバーできます。ひとつずつ確認していきましょう。",
+      "diagram": {
+        "type": "flow",
+        "data": {
+          "title": "5大コマンド",
+          "steps": [
+            {
+              "label": "fields",
+              "desc": "表示するフィールドを選択する",
+              "color": "blue"
+            },
+            {
+              "label": "filter",
+              "desc": "条件に一致するログだけに絞り込む",
+              "color": "orange"
+            },
+            {
+              "label": "stats",
+              "desc": "集計・計算を行う（count / avg / pct など）",
+              "color": "green"
+            },
+            {
+              "label": "sort",
+              "desc": "結果を昇順・降順に並べる",
+              "color": "lblue"
+            },
+            {
+              "label": "limit",
+              "desc": "返す件数の上限を指定する",
+              "color": "lblue"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slide_number": 4,
+      "marp_content": "# 基本クエリ構文\n\n```sql\nfields @timestamp, @message\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 20\n```\n\n- `fields` : 表示する列を指定（`@timestamp` `@message` はビルトインフィールド）\n- `filter` : `/ERROR/` は正規表現。大文字小文字を区別する\n- `sort @timestamp desc` : 新しいログを先頭に\n- `limit 20` : 最新20件だけ取得",
+      "narration": "これが最もシンプルなエラー検索クエリです。fieldsでタイムスタンプとメッセージを表示し、filterでERRORという文字列を含む行だけを絞り込み、新しい順に並べて20件取得しています。@timestampと@messageはCloudWatchが自動で付与するビルトインフィールドです。このクエリはそのままコピペして使えますので、まず手元のロググループで試してみてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 5,
+      "marp_content": "# エラー数をタイムラインで集計する\n\n```sql\nfilter @message like /ERROR/\n| stats count(*) as errorCount by bin(5m)\n| sort @timestamp asc\n```\n\n- `stats count(*)` : 条件に一致した行数を数える\n- `bin(5m)` : 5分ごとの時間バケットにまとめる\n- **結果は棒グラフで可視化可能**（Visualization タブを確認）\n\n> `bin(1h)` `bin(30m)` など粒度は自由に変更できます",
+      "narration": "次は集計クエリです。statsコマンドにcount(*)とbin関数を組み合わせることで、5分ごとのエラー発生件数をタイムライン形式で集計できます。クエリ結果画面のVisualizationタブに切り替えると自動で棒グラフが描かれますので、エラーが急増した時間帯を一目で特定できます。binの時間幅は用途に合わせて自由に変えてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 6,
+      "marp_content": "# JSONログとの相乗効果\n\nアプリが**構造化ログ（JSON形式）**を出力していれば、フィールドを直接参照できます。\n\n```json\n{ \"level\": \"ERROR\", \"requestId\": \"abc-123\", \"duration\": 342 }\n```\n\n```sql\n-- レベルで絞り込み＆requestIdごとに集計\nfilter level = 'ERROR'\n| stats count(*) as errCount by requestId\n| sort errCount desc\n| limit 10\n```\n\n> `@message like /ERROR/` より **高精度・高速** にフィルタできる",
+      "narration": "アプリケーションのログをJSON形式で出力している場合、Logs InsightsはJSONのキーを自動でフィールドとして認識します。たとえばlevelフィールドやrequestIdフィールドを直接指定できるため、文字列検索より正確で高速なフィルタリングが可能です。構造化ログとLogs Insightsの組み合わせは現場でも非常に強力ですので、ぜひ取り入れてみてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 7,
+      "marp_content": "# レイテンシ分析クエリ\n\n```sql\nfilter ispresent(duration)\n| stats avg(duration)      as avg_ms,\n        max(duration)      as max_ms,\n        pct(duration, 95)  as p95_ms,\n        pct(duration, 99)  as p99_ms\n  by bin(1h)\n| sort @timestamp asc\n```\n\n- `ispresent()` : フィールドが存在する行だけを対象に\n- `pct(field, 99)` : **パーセンタイル**（全体の99%が収まる値）を計算\n- 平均だけでなく **p95・p99** を見ることで遅延スパイクを検出",
+      "narration": "レイテンシ、つまり処理時間の分析クエリです。平均値だけを見ていると、一部のリクエストが極端に遅くなっているケースを見逃してしまいます。そこでp95やp99というパーセンタイル値を合わせて確認します。パーセンタイルとは、全リクエストのうち99%が収まる応答時間のことです。このクエリでパフォーマンス劣化の兆候を1時間単位で追跡できます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 8,
+      "marp_content": "# 複数ロググループへの同時クエリ\n\nコンソール上部の **「Select log groups」** から複数選択するだけ\n\n- 最大 **50ロググループ** を横断して検索可能\n- マイクロサービス構成でも **一度のクエリで横断調査**\n- **クロスアカウントも対応**（CloudWatch Cross-Account Observability を設定）\n\n```sql\n-- 複数サービスのERRORを一括集計\nfilter @message like /ERROR/\n| stats count(*) as errorCount by @logStream\n| sort errorCount desc\n```\n\n> `@logStream` でどのサービス・コンテナから来たか判別できる",
+      "narration": "Logs Insightsはひとつのロググループだけでなく、最大50のロググループを同時に対象にできます。マイクロサービスのように複数のサービスが連携している環境では、横断クエリが非常に便利です。さらにCloudWatch Cross-Account Observabilityの設定を行えば、複数のAWSアカウントをまたいだ検索も可能になります。@logStreamフィールドを使えばどのサービスからのログかも一目でわかります。",
+      "diagram": null
+    },
+    {
+      "slide_number": 9,
+      "marp_content": "# クエリ結果をダッシュボードに追加する\n\n## 手順\n\n1. Logs Insightsでクエリを実行\n2. 右上の **「Add to dashboard」** ボタンをクリック\n3. 追加先の CloudWatch ダッシュボードを選択（新規作成も可）\n4. ウィジェットの種類（棒グラフ・折れ線グラフ・テーブル）を選択\n5. **「Add to dashboard」** で完了\n\n> 一度追加すれば、ダッシュボードが定期的に自動更新される",
+      "narration": "クエリ結果はそのままCloudWatchダッシュボードに追加できます。「Add to dashboard」ボタンひとつで、棒グラフや折れ線グラフとして貼り付けられます。一度追加すれば、ダッシュボードを開くたびに最新のデータに自動更新されます。エラー傾向やレイテンシの推移を常時モニタリングするパネルとして活用してみてください。",
+      "diagram": null
+    },
+    {
+      "slide_number": 10,
+      "marp_content": "# よく使うクエリ チートシート\n\n| 目的 | クエリの骨格 |\n|------|------|\n| エラー検索 | `filter @message like /ERROR/` \\| `sort @timestamp desc` \\| `limit 20` |\n| 時系列エラー集計 | `filter @message like /ERROR/` \\| `stats count(*) by bin(5m)` |\n| JSONフィールド集計 | `filter level = 'ERROR'` \\| `stats count(*) by requestId` |\n| レイテンシ分析 | `stats avg(duration), pct(duration,99) by bin(1h)` |\n| サービス別集計 | `stats count(*) as cnt by @logStream` \\| `sort cnt desc` |",
+      "narration": "よく使うクエリをチートシートとしてまとめました。エラー検索・時系列集計・JSONフィールド集計・レイテンシ分析・サービス別集計の5パターンです。このスライドはスクリーンショットで保存しておくと、現場でそのまま使えて便利です。基本はfields・filter・statsの3コマンドの組み合わせで、ほとんどの調査はカバーできます。",
+      "diagram": null
+    },
+    {
+      "slide_number": 11,
+      "marp_content": "# Before / After：Logs Insights導入効果",
+      "narration": "Logs Insights導入前と後で、ログ調査のアプローチがどう変わるか比較してみましょう。導入前はログファイルをダウンロードしてgrepや目視で確認するケースが多く、障害時に時間を取られていました。導入後はコンソールうえで即座にクエリを実行でき、パターン分析や時系列の可視化まで数分で完結します。特に深夜の障害対応でこの差は非常に大きく感じられます。",
+      "diagram": {
+        "type": "comparison",
+        "data": {
+          "title": "Logs Insights 導入 Before / After",
+          "left": {
+            "label": "Before（従来の調査）",
+            "items": [
+              "ログをS3にエクスポートしてダウンロード",
+              "grep・awkで手作業フィルタリング",
+              "Excelで集計・グラフ作成",
+              "障害調査に30分〜1時間かかる",
+              "複数サービスの横断は困難"
+            ]
+          },
+          "right": {
+            "label": "After（Logs Insights活用）",
+            "items": [
+              "コンソールからクエリを即実行",
+              "filterで瞬時にエラーを絞り込み",
+              "statsで自動集計・グラフ化",
+              "初動調査が5分以内に完了",
+              "50ロググループを横断クエリ"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slide_number": 12,
+      "marp_content": "# まとめ\n\n## このレクチャーで学んだこと\n\n1. **5大コマンド（fields / filter / stats / sort / limit）** を組み合わせれば、エラー検索・集計・レイテンシ分析の大半に対応できる\n\n2. **JSON構造化ログ**との組み合わせで、フィールド単位の高精度なフィルタ・集計が可能になる\n\n3. クエリ結果は **CloudWatchダッシュボードに追加**でき、常時モニタリングの仕組みに組み込める\n\n---\n\n> 次のレクチャー: **CloudWatch アラームとアクションの設定**",
+      "narration": "今回のレクチャーのまとめです。ひとつ目は、fields・filter・stats・sort・limitの5大コマンドを組み合わせるだけで、エラー検索から集計・可視化まで対応できるということです。ふたつ目は、JSON構造化ログとの組み合わせで分析の精度と速度が大幅に上がることです。みっつ目は、クエリ結果をダッシュボードに追加して常時モニタリングに活用できることです。次のレクチャーでは、CloudWatchアラームの設定に進んでいきます。",
+      "diagram": null
+    }
+  ]
+}

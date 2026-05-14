@@ -14,7 +14,9 @@
 
 # Hands-on Scope
 
-# CloudFormation Scope
+# Hands-on IaC Scope
+
+# Production IaC Positioning
 
 # Cost Warning
 

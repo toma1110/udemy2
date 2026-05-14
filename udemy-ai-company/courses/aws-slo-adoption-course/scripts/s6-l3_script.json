@@ -1,0 +1,91 @@
+{
+  "title": "短期窓と長期窓の組み合わせ",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "短期窓と長期窓の組み合わせ",
+      "message": "速い検知と、ノイズ抑制を両立する",
+      "narration": "このレクチャーでは、バーンレートアラートでよく使う、短期窓と長期窓の組み合わせを扱います。短期窓は変化に早く反応します。長期窓は一時的なノイズを抑えます。この二つを組み合わせることで、見逃しと誤報を減らします。",
+      "visual_notes": [
+        "Short window and long window",
+        "two time-series panels",
+        "noise vs detection"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "短期窓",
+      "message": "数分の悪化にすばやく反応する",
+      "narration": "短期窓は、いっぷん、五分、十分のような短い範囲で状態を見ます。急な障害には早く気づけますが、少数のエラーや一時的な揺れにも反応しやすくなります。短期窓だけで通知すると、誤報が増えがちです。",
+      "visual_notes": [
+        "Short window details",
+        "1m/5m/10m",
+        "fast but noisy"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "長期窓",
+      "message": "数十分から数時間の傾向を見る",
+      "narration": "長期窓は、三十分、一時間、六時間のような長い範囲で状態を見ます。一時的なノイズに強く、継続的な悪化を見つけやすい一方で、検知は遅くなります。長期窓だけでは、急な障害への初動が遅れることがあります。",
+      "visual_notes": [
+        "Long window details",
+        "30m/1h/6h",
+        "stable but slower"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "両方を満たす条件",
+      "message": "短期も長期も悪いときに通知する",
+      "narration": "実運用では、短期窓と長期窓の両方がしきいちを超えたときに通知する設計がよく使われます。短期だけ悪い場合は一時的なノイズかもしれません。長期も悪いなら、継続的にエラーバジェットを使っている可能性が高くなります。",
+      "visual_notes": [
+        "AND condition",
+        "short window alarm + long window alarm -> page"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "高いバーンレート",
+      "message": "短い窓でも、強い悪化はすぐ拾う",
+      "narration": "高いバーンレートは、短時間でも強い悪化を示します。たとえば、十四倍のように高い速度で予算を消費しているなら、短期窓でも早めに拾う価値があります。これは、ユーザー影響が急速に広がるケースへの備えです。",
+      "visual_notes": [
+        "High burn rate",
+        "urgent lane",
+        "14x threshold"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "低いバーンレート",
+      "message": "弱い悪化は、長い窓で継続性を見る",
+      "narration": "一方で、低いバーンレートの悪化は、すぐに緊急対応するほどではないかもしれません。その場合は、長い窓で継続しているかを見ます。ゆっくり予算を削っている問題は、週次レビューや計画的改善にもつなげられます。",
+      "visual_notes": [
+        "Low burn rate",
+        "slow drain over hours",
+        "planned improvement"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "設計の考え方",
+      "message": "通知したい緊急度から逆算する",
+      "narration": "しきいちや時間窓は、暗記するものではありません。どれくらい速く予算が減ったら、誰を呼びたいのかから逆算します。深夜に起こす通知なのか、営業時間内に見る通知なのかで、短期窓と長期窓の組み合わせは変わります。",
+      "visual_notes": [
+        "Alert policy design",
+        "who gets notified",
+        "urgency ladder"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "まとめ",
+      "message": "短期窓は速さ、長期窓は信頼度を担当する",
+      "narration": "まとめです。短期窓は早く気づくため、長期窓は一時的なノイズを抑えるために使います。両方を組み合わせることで、必要な通知だけを出しやすくなります。次は、この考え方を使って、バーンレートアラームを設計します。",
+      "visual_notes": [
+        "Summary",
+        "short=fast, long=confidence, next=alarm design"
+      ]
+    }
+  ]
+}

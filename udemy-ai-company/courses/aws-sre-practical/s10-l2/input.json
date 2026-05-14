@@ -1,0 +1,18 @@
+{
+  "section": 10,
+  "lecture": 2,
+  "title": "次に学ぶべきこと（SOA・DevOps Pro・Terraform）",
+  "duration_min": 10,
+  "learning_objectives": "このコースの次のステップとして取り組むべき学習領域・資格・ツールを把握し、自分のキャリア目標に合った学習計画を立てられるようになる。",
+  "key_points": [
+    "AWS資格の次のステップ: SOA-C02（SysOps Administrator）/ DVA-C02（Developer）/ SAP-C02（Solutions Architect Pro）",
+    "DevOps Professional（DOP-C02）: CI/CD・IaCに特化。このコースの知識が土台になる",
+    "Infrastructure as Code: Terraform / AWS CDK / CloudFormation の使い分け",
+    "Terraformが人気の理由: マルチクラウド対応・コミュニティの豊富さ",
+    "コンテナ・Kubernetes: ECS / EKS の基礎。マイクロサービス運用の必須スキル",
+    "カオスエンジニアリング: AWS FIS（Fault Injection Simulator）で意図的な障害テスト",
+    "FinOps: コストをエンジニアリングで管理する文化・実践",
+    "推奨学習リソース: 「SRE本（Google）」「Infrastructure as Code（O'Reilly）」/ AWS公式ハンズオン"
+  ],
+  "notes": "受講者の次のアクションを具体的に示す。「全部やろうとしなくていい」というメッセージで圧倒されないよう配慮する。Terraformはこのコースの次に自然に繋がる内容として推奨する。"
+}

@@ -1,0 +1,55 @@
+{
+  "course_id": "aws-slo-adoption-course",
+  "lecture_id": "s6-l4",
+  "manifest_s3_uri": "s3://udemy-render-batch-dev-renderartifactbucket-jw3jlecsukqc/aws-slo-adoption-course/s6-l4-two-stage/manifest.json",
+  "started_at": "2026-05-11T17:54:04Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 1.1,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 17.088,
+      "size_bytes": 820268
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 15.179,
+      "size_bytes": 728620
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 17.28,
+      "size_bytes": 829484
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 15.2,
+      "size_bytes": 729644
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 15.221,
+      "size_bytes": 730668
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 16.736,
+      "size_bytes": 803372
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 18.208,
+      "size_bytes": 874028
+    },
+    {
+      "slide_number": 8,
+      "duration_seconds": 18.688,
+      "size_bytes": 897068
+    }
+  ],
+  "audio_count": 8,
+  "total_duration_seconds": 133.6,
+  "ended_at": "2026-05-11T17:55:11Z",
+  "elapsed_seconds": 66.628
+}

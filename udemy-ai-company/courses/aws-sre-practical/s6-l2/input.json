@@ -1,0 +1,18 @@
+{
+  "section": 6,
+  "lecture": 2,
+  "title": "SLO（Service Level Objective）の設計方法",
+  "duration_min": 12,
+  "learning_objectives": "SLOの意味と設計プロセスを理解し、自分のサービスに適切な目標値を設定できるようになる。",
+  "key_points": [
+    "SLO（Service Level Objective）: SLIに対して設定する目標値（例: 可用性 99.9%以上）",
+    "SLA との違い: SLOは内部目標（守れなかったときの内部改善指標）、SLAは顧客との契約",
+    "SLOは高ければ良いわけではない: 99.999%は年間5分しかダウンできない。コストと設計が跳ね上がる",
+    "適切なSLO設定の考え方: ユーザーが『不満を感じる』直前の水準に設定する",
+    "Time Window: Rolling 28日 vs Calendar月次の違い",
+    "SLOの文書化: target / measurement window / SLI の3点セットで定義する",
+    "複数SLOの組み合わせ: 可用性SLO + レイテンシSLO を並行して設定する",
+    "内部SLOと公開SLOのバッファ設計: 内部99.95%、SLA99.9%という安全マージン"
+  ],
+  "notes": "「99.9% vs 99.99%の差」を年間ダウンタイム換算（8.7時間 vs 52分）で実感させる表を入れる。SLAとの混同を解消することが最重要。"
+}
