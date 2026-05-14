@@ -9,7 +9,7 @@ Reviewer AI: AI-QA-01
 
 # Execution
 Priority: high
-Status: Backlog
+Status: Content Review
 Auto Execute: yes
 Requires CEO Approval: no
 Cost Impact: none
@@ -80,3 +80,25 @@ Blocked By:
 Notes:
 - GitHub Issue: #156 https://github.com/toma1110/udemy2/issues/156
 - `courses/aws-sre-practical/course_spec.md` は現時点で未配置。図解整備時は公開リポジトリREADME、CLI_COMMANDS、CloudFormationテンプレートを事実ソースとして扱い、course_spec整備は別途必要。
+
+# Implementation Notes
+
+実装完了:
+- `docs/architecture.drawio` を追加し、CloudFormation作成リソース、監視データ、通知、コスト通知の流れを図解
+- `docs/ARCHITECTURE.md` を追加し、スタック別リソースとデータフローを説明
+- `docs/HANDSON_FLOW.md` を追加し、01から06までの操作順と確認画面を整理
+- `docs/CLOUDWATCH_GUIDE.md` を追加し、Dashboard / Logs Insights / Metric Filter / Alarm / Metrics の使い分けを説明
+- `docs/SIGNAL_EXAMPLES.md` を追加し、正常系・異常系ログ、Logs Insightsクエリ、メトリクス確認CLIを掲載
+- `README.md` と `CLI_COMMANDS.md` に補助資料リンクを追加
+
+Verification:
+- `01` から `06` のCloudFormationテンプレート、README、CLI_COMMANDSを照合
+- draw.io XML well-formedness確認済み
+- `validate_drawio.py` によるdraw.io構成検証済み
+- Markdown相対リンクの存在確認済み
+- AWSリソース作成、CloudFormation stack作成/更新/削除は未実施
+
+Reviewer Handoff:
+- Worker: AI-Production-01
+- Reviewer: AI-QA-01
+- 次工程はAI-QA-01による内容レビュー。Worker != Reviewer を維持するため、このチケットは `Content Review` とする。
