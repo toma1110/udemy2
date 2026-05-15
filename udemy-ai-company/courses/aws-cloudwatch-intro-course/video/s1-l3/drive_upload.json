@@ -1,0 +1,24 @@
+{
+  "id": "1Fv1gD5oAWqtvEo8V6saUq8G_Qd3NnZ61",
+  "name": "vid001-cloudwatch-intro-s1-l3-logs-20260515.mp4",
+  "trashed": false,
+  "parents": [
+    "1emxiqW5p04dQ9TJ_Q1c1HNWCsmI2TKzv"
+  ],
+  "webViewLink": "https://drive.google.com/file/d/1Fv1gD5oAWqtvEo8V6saUq8G_Qd3NnZ61/view?usp=drivesdk",
+  "permissions": [
+    {
+      "type": "anyone",
+      "role": "reader"
+    },
+    {
+      "type": "user",
+      "role": "owner"
+    },
+    {
+      "type": "user",
+      "role": "writer"
+    }
+  ],
+  "size": "6224327"
+}

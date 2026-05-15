@@ -70,6 +70,20 @@
 | Frame checks | PASS | `frame_check_*s.png` generated for new lectures |
 | Slide/audio counts match | PASS | Build reports show matching counts |
 
+## Google Drive QA
+
+| Lecture | Result | URL |
+| --- | --- | --- |
+| `s1-l1` | PASS | https://drive.google.com/file/d/1JzSBq-AtW2JkA96w8AQWTLuU_B2gZwsv/view?usp=drivesdk |
+| `s1-l2` | PASS | https://drive.google.com/file/d/1Sk1IUlEoxLOq738GAsQa_BPHPrxMvKNk/view?usp=drivesdk |
+| `s1-l3` | PASS | https://drive.google.com/file/d/1Fv1gD5oAWqtvEo8V6saUq8G_Qd3NnZ61/view?usp=drivesdk |
+| `s2-l1` | PASS | https://drive.google.com/file/d/1VKM4zuXR7qHOBAYmzELYhfdeCSyviNN4/view?usp=drivesdk |
+| `s2-l2` | PASS | https://drive.google.com/file/d/1zqGYIMhWSOsgmsOT9CJYCvd7KG-mpZE1/view?usp=drivesdk |
+| `s3-l1` | PASS | https://drive.google.com/file/d/1K5c_be_bMuYs3Lmu4OVTqDF-xl1FgA0g/view?usp=drivesdk |
+
+- Sharing: `anyone reader`
+- Upload summary: `qa/vid001_drive_upload_summary.md`
+
 ## Hands-on QA
 
 | Check | Result | Notes |
@@ -86,4 +100,4 @@
 
 ## Final Decision
 
-PASS. The expanded course has a coherent 6-lecture structure, Logs Insights demand is addressed, and all lectures have GPT-Image2-derived slides, VOICEVOX audio, and MP4 output.
+PASS. The expanded course has a coherent 6-lecture structure, Logs Insights demand is addressed, and all lectures have GPT-Image2-derived slides, VOICEVOX audio, MP4 output, and Google Drive review URLs.
