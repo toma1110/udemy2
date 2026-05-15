@@ -51,6 +51,7 @@ def main() -> int:
     parser.add_argument("--course-root", type=Path, default=Path("udemy-ai-company/courses/aws-slo-adoption-course"))
     parser.add_argument("--dynamic", action="store_true", help="Apply a subtle zoom motion to each slide.")
     parser.add_argument("--fps", type=int, default=1)
+    parser.add_argument("--reuse-segments", action="store_true", help="Reuse existing segment MP4 files when resuming a build.")
     args = parser.parse_args()
 
     lecture = args.lecture
@@ -67,7 +68,8 @@ def main() -> int:
     if not slides:
         raise SystemExit(f"no slides found: {slide_dir}")
 
-    shutil.rmtree(segment_dir, ignore_errors=True)
+    if not args.reuse_segments:
+        shutil.rmtree(segment_dir, ignore_errors=True)
     segment_dir.mkdir(parents=True, exist_ok=True)
     video_dir.mkdir(parents=True, exist_ok=True)
 
@@ -76,6 +78,13 @@ def main() -> int:
         print(f"{lecture}: encoding segment {index}/{len(slides)}", flush=True)
         segment = segment_dir / f"segment_{index:03d}.mp4"
         segment_paths.append(segment)
+        if args.reuse_segments and segment.exists() and segment.stat().st_size > 0:
+            try:
+                probe_duration(segment)
+                print(f"{lecture}: reusing segment {index}/{len(slides)}", flush=True)
+                continue
+            except (subprocess.CalledProcessError, KeyError, ValueError, json.JSONDecodeError):
+                segment.unlink(missing_ok=True)
         if args.dynamic:
             fps = max(1, args.fps)
             duration = probe_duration(audio)

@@ -1,8 +1,8 @@
-# AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図
+# AWS CloudWatch入門: Metrics・Logs Insights・Alarm・Dashboardで学ぶ監視の基本
 
 ## Course Title
 
-AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図
+AWS CloudWatch入門: Metrics・Logs Insights・Alarm・Dashboardで学ぶ監視の基本
 
 ## Course ID
 
@@ -11,14 +11,30 @@ AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図
 ## Source Candidate
 
 - Market research ID: `VID-001`
-- Candidate title: `AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図`
+- Original candidate title: `AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図`
+- Course direction: 1本の短尺動画候補を、CloudWatch初学者向けの複数レクチャー講座へ拡張する
 - Market basis: `C-03`, `K-01`, `P-05`
-- Differentiation source: 日本語、図解、短尺、初学者向け
+- Differentiation source: 日本語、図解、短尺レクチャー、Logs Insights需要、初学者向け
+
+## Course Positioning
+
+本コースは、CloudWatchの用語と画面を「運用監視の地図」として理解するための入門コースです。
+
+1本目の動画品質を基準に、同じトーンで以下まで広げます。
+
+- Metricsの基本
+- Logsの基本
+- Logs Insightsのクエリ入門
+- Logs Insightsを使った障害調査の型
+- Alarm、Dashboard、調査フローのつなぎ方
+
+本コースはCloudWatch実践ハンズオン講座の前段です。リソース作成は必須にせず、既存のCloudWatch画面やREADMEのワークシートだけで学習を完了できる構成にします。
 
 ## Target Audience
 
 - AWSを学び始めたが、CloudWatchの用語が点で散らばって見える人
-- Metrics、Logs、Alarm、Dashboardの違いを説明できず、監視学習で止まっている人
+- Metrics、Logs、Logs Insights、Alarm、Dashboardの違いを説明できず、監視学習で止まっている人
+- エラー調査でCloudWatch Logs Insightsを使いたいが、最初のクエリの型が分からない人
 - SREや運用監視に進む前に、CloudWatchの全体像を短時間でつかみたい人
 - 実務でダッシュボードやアラームを見ているが、裏側のつながりを整理したい人
 
@@ -26,83 +42,79 @@ AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図
 
 - AWSマネジメントコンソールの基本的な画面遷移を見たことがある
 - サーバー、ログ、メトリクス、通知という言葉を聞いたことがある
-- AWSアカウントはあると望ましいが、本レクチャーの中心部分はリソース作成なしで学習できる
+- AWSアカウントはあると望ましいが、本コースの中心部分はリソース作成なしで学習できる
 - AWS CLI、CloudFormation、CDK、Terraformの事前準備は不要
 
 ## Learning Objectives
 
+受講後、受講者は以下を説明または実行できる状態になります。
+
 - CloudWatchがAWSリソースとアプリケーションを監視するためのサービスであると説明できる
-- Metrics、Logs、Alarm、Dashboardの役割を分けて説明できる
+- Metrics、Logs、Logs Insights、Alarm、Dashboardの役割を分けて説明できる
 - namespace、metric、dimension、statistic、periodの基本関係を説明できる
+- log group、log stream、ログイベントの関係を説明できる
+- Logs Insightsで`fields`、`filter`、`sort`、`limit`、`stats`、`bin`の基本形を読める
+- Logs Insightsのクエリでは、ロググループと時間範囲を絞る理由を説明できる
 - Alarmが「メトリクス」「条件」「状態」「アクション」で構成されることを説明できる
 - Dashboardはデータ保存場所ではなく、メトリクスやアラームを見るための表示面だと説明できる
-- 障害調査時に、Dashboard、Alarm、Metrics、Logsのどこから見始めるかを判断できる
+- 障害調査時に、Dashboard、Alarm、Metrics、Logs Insightsのどこから見始めるかを判断できる
 - ハンズオン用CloudFormationと実運用IaCの位置づけを混同せず説明できる
 
 ## Course Promise
 
-受講後、CloudWatchの画面や会話で出てくる主要部品を地図として理解し、次にCloudWatch Alarm、Logs Insights、SLO監視などを学ぶための土台を作れる状態になります。
+受講後、CloudWatchの主要部品を地図として理解し、Logs Insightsでログを読み始め、AlarmやDashboardを使った監視の基本設計へ進むための土台を作れる状態になります。
 
 ## Differentiation
 
-- 初学者が混乱しやすい「メトリクス」「ログ」「アラーム」「ダッシュボード」を1枚の地図で整理する
+- 初学者が混乱しやすい「メトリクス」「ログ」「ログインサイト」「アラーム」「ダッシュボード」を地図で整理する
+- Logs Insightsを単なる機能紹介ではなく、障害調査で使うクエリの型として扱う
 - AWS公式ドキュメントの用語に寄せつつ、実務での見方に翻訳する
-- リソース作成を必須にせず、特別な準備なしで学べる短尺講座にする
-- 後続のSRE、SLO、CloudWatch実践講座へ自然につながる導入動画にする
+- リソース作成を必須にせず、特別な準備なしで学べる短尺レクチャー群にする
+- 後続のSRE、SLO、CloudWatch実践、Terraform監視講座へ自然につながる導入講座にする
 - VOICEVOXで読み上げやすい日本語にし、英字略語はナレーション内で読み表記へ寄せる
 
 ## Chapter Structure
 
-本候補は1本の短尺動画として制作する。
+本コースは6レクチャー構成とする。
 
-1. CloudWatchの地図
-   - 監視の入口としてのCloudWatch
-   - 4つの基本部品
-
-2. Metrics
-   - 数値の時系列
-   - namespace、metric、dimension
-   - statisticとperiod
-
-3. Logs
-   - 出来事の記録
-   - log groupとlog stream
-   - メトリクスとの違い
-
-4. Alarm
-   - 条件と状態
-   - 通知や自動アクションとの関係
-   - OK、ALARM、INSUFFICIENT_DATAの考え方
-
-5. Dashboard
-   - 監視情報を見る画面
-   - データソースではなく表示面
-   - 障害調査時の見方
-
-6. ハンズオンと実運用IaCの位置づけ
-   - 本動画ではリソース作成なし
-   - ハンズオンで作る場合はCloudFormationで再現性を優先
-   - 実運用ではCDKまたはTerraformを使う前提
+| Section | Section Title | Section Learning Goal | Lecture | Lecture Title | Lecture Learning Goal |
+| --- | --- | --- | --- | --- | --- |
+| 1 | CloudWatchの地図 | CloudWatchの部品を役割ごとに分けて説明できる | `s1-l1` | CloudWatchの地図 | Metrics、Logs、Alarm、Dashboardの違いとつながりを説明できる |
+| 1 | CloudWatchの地図 | CloudWatchの部品を役割ごとに分けて説明できる | `s1-l2` | Metricsの基本 | namespace、metric、dimension、statistic、periodを使ってメトリクスを探す考え方を説明できる |
+| 1 | CloudWatchの地図 | CloudWatchの部品を役割ごとに分けて説明できる | `s1-l3` | Logsの基本 | log group、log stream、ログイベントを区別し、メトリクスとの違いを説明できる |
+| 2 | Logs Insightsでログを読む | Logs Insightsの基本クエリを読み、調査の入口を作れる | `s2-l1` | Logs Insights入門 | `fields`、`filter`、`sort`、`limit`、`stats`、`bin`の基本形を読める |
+| 2 | Logs Insightsでログを読む | Logs Insightsの基本クエリを読み、調査の入口を作れる | `s2-l2` | Logs Insightsで障害調査 | 最近のエラー、エラー件数、遅延、リクエスト単位の追跡という調査の型を説明できる |
+| 3 | Alarm/Dashboardと調査フロー | 監視情報を見て、次に深掘りする場所を判断できる | `s3-l1` | Alarm/Dashboardと次の一歩 | Alarm、Dashboard、Metrics、Logs Insightsを使った障害時の見始め方を説明できる |
 
 ## Hands-on Scope
 
-本動画のハンズオン範囲は「概念図とサンプルメトリクス確認」です。
+本コースのハンズオン範囲は「リソース作成なしでCloudWatchの見方を確認する」ことです。
 
 - AWSリソース作成は必須にしない
 - AWSアカウントがある場合はCloudWatchコンソールで画面を確認する
-- 既存リソースがない場合でも、READMEの表と地図だけで完了できる
-- CloudWatchの各画面で「何を見る場所か」を確認する
+- 既存ロググループがある場合だけ、Logs Insightsで短い時間範囲のサンプルクエリを試す
+- 既存リソースがない場合でも、READMEの表とサンプルクエリの読解だけで完了できる
 - ダッシュボード、アラーム、ロググループ、メトリクスを新規作成しない
+- サンプルクエリは既存ログに対して読む・試す用途に限定し、ログ投入やアプリ作成はしない
+
+## Hands-on Resources
+
+| Resource Title | Path | Purpose |
+| --- | --- | --- |
+| CloudWatch地図ワークシート | `handson/README.md` | Metrics、Logs、Alarm、Dashboardの役割を整理する |
+| Metrics確認メモ | `handson/README.md#metrics確認メモ` | namespace、metric、dimensionを既存画面で確認する |
+| Logs Insightsクエリ読解 | `handson/README.md#logs-insightsクエリ読解` | 基本クエリをリソース作成なしで読めるようにする |
+| 障害調査の見始め方チェック | `handson/README.md#障害調査の見始め方チェック` | Dashboard、Alarm、Metrics、Logs Insightsの順番を整理する |
 
 ## CloudFormation Scope
 
-本動画ではCloudFormationテンプレートを作成しない。
+本コースではCloudFormationテンプレートを作成しない。
 
 理由:
 
-- 初学者向けの地図動画であり、実リソース作成より概念整理を優先するため
+- 初学者向けの地図とLogs Insights導入コースであり、実リソース作成より概念整理と読解を優先するため
 - 「実行に特別な用意がいらない」ハンズオンにするため
-- リソース作成を伴うCloudWatch実践動画は後続候補へ分離するため
+- リソース作成を伴うCloudWatch実践動画は後続コースへ分離するため
 
 位置づけ:
 
@@ -112,38 +124,52 @@ AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図
 
 ## Cost Warning
 
-本動画の中心ハンズオンではAWSリソースを作成しないため、追加課金が発生しない構成にする。
+本コースの中心ハンズオンではAWSリソースを作成しない。
 
-ただし、受講者が任意でCloudWatchリソースを作成した場合は、以下に料金が発生する可能性がある。
+ただし、受講者が任意でCloudWatch画面やLogs Insightsを操作した場合は、以下に料金が発生する可能性がある。
 
-- カスタムメトリクス
 - ログ取り込み、ログ保存、ログ検索
+- Logs Insightsクエリでスキャンしたログデータ
+- カスタムメトリクス
 - アラーム
 - ダッシュボード
 - 通知連携
 
-動画とREADMEでは、手順外のリソース作成をしないこと、作成した場合は削除することを明記する。
+Logs Insightsを試す場合は、公式ドキュメントの推奨に合わせて、対象ロググループを必要最小限にし、時間範囲を短くし、不要なクエリをキャンセルする。ダッシュボードにLogs Insights結果を追加すると、更新のたびにクエリが実行される可能性があるため、本コースでは行わない。
+
+## Production Rules
+
+- 完成動画のスライドPNGは必ずGPT-Image2由来にする
+- 完成動画に表示するタイトル、短いラベル、図解内テキストもGPT-Image2に生成させる
+- ローカル描画のみのスライドは下書き・検証用に限る
+- ローカル文字合成したスライドを完成動画に使わない
+- 音声はVOICEVOXを使う
+- 1レクチャー1メッセージ群で、1スライド1メッセージを守る
+- WorkerとReviewerを分離する
 
 ## Definition of Done
 
 - `course_spec.md` がSource of Truthとして成立している
 - AWS公式ドキュメントに基づく用語確認レポートが存在する
 - `README.md` と `handson/README.md` が存在し、リソース作成なしで再現できる
-- `scripts/s1-l1_script.md` と `scripts/s1-l1_script.json` が存在する
+- 全レクチャーの `scripts/*_script.md` と `scripts/*_script.json` が存在する
 - ナレーション本文がVOICEVOX向けにチェック済みである
-- スライド設計が存在し、1スライド1メッセージになっている
-- スライドPNG、VOICEVOX音声、MP4、QAレポートが作成済みである
+- 全レクチャーのGPT-Image2プロンプトが存在する
+- GPT-Image2 source PNG、最終PNG、contact sheetが各レクチャーに存在する
+- VOICEVOX音声、MP4、QAレポートが各レクチャーに存在する
+- `*_slide_generation_report.md` で `Final PNGs are GPT-Image2-derived: PASS` になっている
 - WorkerとReviewerが別AIである
 
 ## Out of Scope
 
 - CloudWatch Alarm、SNS、Dashboardの新規作成ハンズオン
-- Logs Insightsクエリの実践
+- 新規ロググループやサンプルアプリの作成
 - CloudWatch Agent、OpenTelemetry、Application Signalsの導入
 - SLO、エラーバジェット、バーンレート設計
 - 本番監視基盤の設計代行
 - マルチアカウント、マルチリージョンの運用設計
 - CDKまたはTerraformによる本番IaC実装
+- Logs Insightsの高度な`pattern`、`diff`、`anomaly`、`join`、`subqueries`の実践
 
 ## Voice and Terminology Rules
 
@@ -155,16 +181,20 @@ AWS CloudWatch入門: Metrics/Logs/Alarm/Dashboardの地図
 | CloudWatch | クラウドウォッチ |
 | Metrics | メトリクス |
 | Logs | ログ |
+| Logs Insights | ログインサイト |
 | Alarm | アラーム |
 | Dashboard | ダッシュボード |
 | Namespace | ネームスペース |
 | Dimension | ディメンション |
 | Statistic | スタティスティック |
 | Period | ピリオド |
+| Lambda | ラムダ |
+| API Gateway | エーピーアイゲートウェイ |
 | CloudFormation | クラウドフォーメーション |
 | CDK | シーディーケー |
 | Terraform | テラフォーム |
 | IaC | アイエーシー |
+| CLI | シーエルアイ |
 
 台本生成後は必ず以下を実行する。
 
@@ -178,5 +208,7 @@ python3 udemy-ai-company/tools/narration_checker.py udemy-ai-company/courses/aws
   - https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html
 - Amazon CloudWatch User Guide: Amazon CloudWatch concepts
   - https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html
-- AWS Prescriptive Guidance: Logging and monitoring with Amazon CloudWatch
-  - https://docs.aws.amazon.com/prescriptive-guidance/latest/logging-monitoring-for-application-owners/cloudwatch.html
+- Amazon CloudWatch Logs User Guide: CloudWatch Logs Insights query syntax
+  - https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html
+- Amazon CloudWatch Logs User Guide: Sample queries
+  - https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax-examples.html
