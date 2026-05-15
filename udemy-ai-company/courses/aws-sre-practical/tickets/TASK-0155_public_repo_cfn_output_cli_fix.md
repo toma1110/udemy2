@@ -9,7 +9,7 @@ Reviewer AI: AI-QA-01
 
 # Execution
 Priority: high
-Status: Engineering Review
+Status: Done
 Auto Execute: yes
 Requires CEO Approval: no
 Cost Impact: none
@@ -77,3 +77,8 @@ Notes:
   - `aws cloudformation validate-template` PASS: `02-cloudwatch-dashboard.yaml`
   - `aws cloudformation validate-template` PASS: `05-alarms-sns.yaml`
 - Full stack create/update/delete verification not executed because it creates billable AWS resources and requires CEO approval.
+- Final review cleanup completed:
+  - Public `CLI_COMMANDS.md` の旧TODOアプリ表記と手動 clone 手順を削除し、UserDataで自動作成されるエラー率デモアプリの確認手順に更新
+  - Course internal `CLI_COMMANDS.md` も同じ方針に合わせて更新
+  - Public `README.md` の「手動セットアップ手順」FAQを、自動セットアップ確認手順の案内に更新
+  - `TODO アプリ` / `sre-todo-app` / `git clone` の残存が公開資料と内部CLIにないことを確認

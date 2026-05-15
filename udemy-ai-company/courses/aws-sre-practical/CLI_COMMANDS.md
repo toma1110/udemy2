@@ -4,36 +4,33 @@
 
 セクション2 レクチャー5のハンズオンでは、CloudWatch Agent と X-Ray の設定コマンドもここにまとめています。動画内の図では一部を短縮表示しているため、実際に実行する場合はこのファイルのコマンドを確認してください。
 
-## Section 2 Lecture 5: Flask TODO App
+## Section 2 Lecture 5: エラー率デモアプリ
 
-EC2 に SSH 接続したあと、GitHub からサンプルアプリを取得して起動します。
+`01-base-infrastructure.yaml` で作成する EC2 には、エラー率デモアプリ、systemd サービス、CloudWatch Agent 設定が UserData で自動作成されます。
+GitHub からアプリを clone したり、手動で依存ライブラリを入れたりする必要はありません。
 
 ```bash
-# サンプルアプリを取得
-cd /home/ec2-user
-git clone https://github.com/toma1110/sre-todo-app.git
-cd sre-todo-app
+# EC2 に SSH 接続
+ssh -i ~/.ssh/your-key-pair.pem ec2-user@<EC2-Public-IP>
 
-# 依存ライブラリをインストール
-pip3 install -r requirements.txt
+# アプリ本体の確認
+ls -la /home/ec2-user/app/app.py
 
-# CloudFormation Outputs の RDS エンドポイントを指定
-export DB_HOST="<RDSエンドポイント>"
-export DB_PORT="3306"
-export DB_USER="admin"
-export DB_PASSWORD="<RDSのパスワード>"
-export DB_NAME="sreapp"
+# systemd サービスの確認
+sudo systemctl status todo-app --no-pager
 
-# Flaskアプリを起動
-python3 app.py
+# ログ確認
+sudo tail -f /var/log/todo-app.log
 ```
 
-ブラウザから ALB の DNS 名にアクセスして TODO アプリが表示されれば成功です。
+ブラウザから ALB の DNS 名にアクセスして JSON レスポンスが表示されれば成功です。
 
 動作確認用のエンドポイントです。
 
 ```bash
-curl http://localhost:5000/health
+curl http://localhost:8080/
+curl http://localhost:8080/api/data
+curl http://localhost:8080/api/process
 ```
 
 ## Section 2 Lecture 5: CloudWatch Agent
@@ -62,30 +59,12 @@ CloudWatch 側では、名前空間 `CWAgent` に `mem_used_percent` と `disk_u
 
 ## Section 2 Lecture 5: X-Ray
 
-X-Ray を使う場合は、EC2 の IAM ロールに X-Ray 送信用ポリシーを付けたうえで、アプリ側に X-Ray SDK の計装を追加します。
+X-Ray を使う場合、`01-base-infrastructure.yaml` が EC2 の IAM ロールとアプリ側の X-Ray SDK 計装を自動設定します。
 
 ```bash
-# EC2 ロールに X-Ray 書き込み権限を付与
-aws iam attach-role-policy \
-  --role-name sre-handson-app-role \
-  --policy-arn arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
-
-# Python アプリで使う SDK をインストール
-pip3 install aws-xray-sdk
-
-# アプリ再起動後、X-Ray のサービスグラフを確認
+# X-Ray のサービスグラフを確認
 aws xray get-service-graph \
   --start-time "$(date -u -d '15 minutes ago' +%Y-%m-%dT%H:%M:%SZ)" \
   --end-time "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   --region ap-northeast-1
-```
-
-Flask アプリに追加する最小の計装例です。
-
-```python
-from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
-
-xray_recorder.configure(service="sre-todo-app")
-XRayMiddleware(app, xray_recorder)
 ```
