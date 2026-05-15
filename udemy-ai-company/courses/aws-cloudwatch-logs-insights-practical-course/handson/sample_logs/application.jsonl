@@ -1,0 +1,8 @@
+{"timestamp":"2026-05-15T09:00:00Z","service":"checkout","level":"INFO","requestId":"req-1001","path":"/checkout","statusCode":200,"durationMs":180,"message":"checkout completed"}
+{"timestamp":"2026-05-15T09:00:01Z","service":"catalog","level":"INFO","requestId":"req-1002","path":"/items","statusCode":200,"durationMs":95,"message":"catalog list returned"}
+{"timestamp":"2026-05-15T09:00:02Z","service":"checkout","level":"ERROR","requestId":"req-1003","path":"/checkout","statusCode":502,"durationMs":1420,"errorType":"PaymentTimeout","message":"payment provider timeout after 1200ms"}
+{"timestamp":"2026-05-15T09:00:03Z","service":"payment","level":"ERROR","requestId":"req-1003","path":"/payment/charge","statusCode":504,"durationMs":1280,"errorType":"PaymentTimeout","message":"upstream gateway timeout"}
+{"timestamp":"2026-05-15T09:00:04Z","service":"checkout","level":"WARN","requestId":"req-1004","path":"/checkout","statusCode":429,"durationMs":230,"message":"rate limit warning"}
+{"timestamp":"2026-05-15T09:00:05Z","service":"checkout","level":"ERROR","requestId":"req-1005","path":"/checkout","statusCode":500,"durationMs":620,"errorType":"ValidationException","message":"Exception while validating cart payload"}
+{"timestamp":"2026-05-15T09:00:06Z","service":"auth","level":"INFO","requestId":"req-1006","path":"/login","statusCode":200,"durationMs":140,"message":"login completed"}
+{"timestamp":"2026-05-15T09:00:07Z","service":"checkout","level":"INFO","requestId":"req-1007","path":"/checkout","statusCode":200,"durationMs":210,"message":"checkout completed"}

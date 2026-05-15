@@ -1,0 +1,8 @@
+START RequestId: req-1003 Version: $LATEST
+2026-05-15T09:00:02.100Z req-1003 ERROR payment provider timeout after 1200ms
+END RequestId: req-1003
+REPORT RequestId: req-1003 Duration: 1420.00 ms Billed Duration: 1421 ms Memory Size: 512 MB Max Memory Used: 201 MB Init Duration: 120.00 ms
+START RequestId: req-1005 Version: $LATEST
+2026-05-15T09:00:05.100Z req-1005 ERROR Exception while validating cart payload
+END RequestId: req-1005
+REPORT RequestId: req-1005 Duration: 620.00 ms Billed Duration: 621 ms Memory Size: 512 MB Max Memory Used: 190 MB
