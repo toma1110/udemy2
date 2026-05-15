@@ -5,6 +5,7 @@
 ## Source of Truth
 
 - `course_spec.md`
+- `course_curriculum.md`
 
 ## 制作方針
 
@@ -14,6 +15,18 @@
 - stack create/update/deleteはCEO承認後にのみ実行する
 - 完成動画のスライドと表示文字はGPT-Image2で生成する
 - VID-001の動画品質を基準にする
+
+## 講座構成
+
+- Section 1: Alarm + SNS通知の地図
+- Section 2: CloudFormationで作る
+- Section 3: 運用と後片付け
+
+## ハンズオンリソース
+
+- `Alarm + SNS通知の全体像チェックシート`
+- `CloudFormationテンプレート読解とStack作成手順`
+- `更新・削除・トラブルシュート確認リスト`
 
 ## ディレクトリ
 

@@ -1,0 +1,75 @@
+{
+  "title": "s1-l3_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "SNS Topicとメール確認",
+      "message": "Topicが通知の中継点になる",
+      "narration": "このレクチャーでは、エスエヌエストピックとメール確認を整理します。クラウドウォッチアラームは、直接メールを送るのではなく、エスエヌエストピックへ通知を送ります。トピックが中継点になり、登録された宛先へ配信します。",
+      "visual_notes": [
+        "AlarmからSNS Topic、Emailへ流れる図",
+        "Topicを中央の中継点として強調"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "Topicは通知チャネル",
+      "message": "AlarmはTopicへ1回送ればよい",
+      "narration": "トピックは通知チャネルです。アラーム側は、通知先が増えても、基本的にはトピックへ送るだけです。メール、別のエンドポイント、将来の拡張は、トピック側のサブスクリプションとして扱えます。",
+      "visual_notes": [
+        "AlarmからTopicへ一本の矢印",
+        "Topicから複数宛先へ広がる構成"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "Subscriptionは宛先",
+      "message": "誰に、どの方式で届けるかを決める",
+      "narration": "サブスクリプションは、トピックからどこへ届けるかを決める設定です。VID-002ではメールを使います。プロトコルはメール、エンドポイントは通知を受けるメールアドレスです。",
+      "visual_notes": [
+        "Protocol=email、Endpoint=mail addressの設定カード",
+        "Topicにぶら下がる宛先"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "メール確認",
+      "message": "承認するまでPendingのまま",
+      "narration": "メールサブスクリプションでは、受信者の確認が必要です。スタックを作ると確認メールが届きます。そのメールのリンクを開くまで、状態はペンディングコンファメーションのままです。この状態では通知は届きません。",
+      "visual_notes": [
+        "メール受信箱、Confirmリンク、PendingからConfirmedへの流れ",
+        "PendingConfirmationを赤、Confirmedを緑"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "Topic Policy",
+      "message": "CloudWatchがpublishできる許可を置く",
+      "narration": "トピックポリシーは、誰がトピックへ発行できるかを決めます。今回のテンプレートでは、クラウドウォッチのサービスが、同じアカウントのアラームから発行できるようにします。通知が届かない時は、この許可も確認します。",
+      "visual_notes": [
+        "CloudWatchからTopicへ通る許可ゲート",
+        "SourceAccountとSourceArnを短く表示"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "届かない時",
+      "message": "確認、Action、Policyの順に見る",
+      "narration": "通知が届かない時は、順番に見ます。まずメール確認が終わっているか。次にアラームのアクションが有効で、トピックのエーアールエヌが入っているか。最後にトピックポリシーで発行が許可されているかを確認します。",
+      "visual_notes": [
+        "三段チェックリスト",
+        "Email Confirm、AlarmActions、Topic Policy"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "最小から広げる",
+      "message": "まずメール、次に運用設計へ",
+      "narration": "この講座では、最初の通知体験を小さく作るため、メール通知に絞ります。実運用では、複数宛先、暗号化、チームの受け取り方、通知疲れを防ぐ設計も必要です。まずは最小構成を正しく理解します。",
+      "visual_notes": [
+        "最小構成から実運用設計へ広がる階段",
+        "Email、Encryption、Team routingのラベル"
+      ]
+    }
+  ]
+}

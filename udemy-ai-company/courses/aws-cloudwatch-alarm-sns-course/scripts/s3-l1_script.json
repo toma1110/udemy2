@@ -1,0 +1,85 @@
+{
+  "title": "s3-l1_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "運用の終わりまで見る",
+      "message": "作成、更新、削除までがハンズオン",
+      "narration": "このレクチャーでは、更新、削除、トラブルシュートをまとめます。ハンズオンは、作れたら終わりではありません。変更できること、消せること、通知が届かない時に切り分けられることまで確認して完了です。",
+      "visual_notes": [
+        "Create、Update、Delete、Troubleshootの流れ",
+        "最後まで完了するチェックリスト"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "Stack Update",
+      "message": "しきいちを変えて変更管理を体験する",
+      "narration": "更新では、アラームのしきいちを変えます。テンプレートとパラメータを使って変更を反映することで、手作業ではなく、スタックとして管理する感覚をつかみます。更新後は、アラームの設定値を確認します。",
+      "visual_notes": [
+        "AlarmThresholdが1から2へ変わる図",
+        "update-stackと設定確認"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "Stack Delete",
+      "message": "削除まで実行して残りを防ぐ",
+      "narration": "削除では、スタックを消して、アラームとトピックを残さないようにします。ハンズオン後の削除は、コストと不要な通知を防ぐために重要です。削除完了まで待ち、必要ならコンソールで残りがないか確認します。",
+      "visual_notes": [
+        "delete-stackからDELETE_COMPLETE",
+        "AlarmとTopicが消える図"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "メールが届かない",
+      "message": "まずPendingConfirmationを見る",
+      "narration": "メールが届かない時は、まずサブスクリプションの状態を見ます。ペンディングコンファメーションのままなら、確認メールの承認が終わっていません。迷惑メールや入力したアドレスの間違いも確認します。",
+      "visual_notes": [
+        "Subscription statusチェック",
+        "PendingConfirmationからConfirmedへの変更"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "Alarmが通知しない",
+      "message": "ActionsEnabledとAlarmActionsを見る",
+      "narration": "アラーム経由で通知されない時は、アクション設定を確認します。アクションズイネーブルドが有効か。アラームアクションにエスエヌエストピックのエーアールエヌが入っているか。状態変化が起きているかを順に見ます。",
+      "visual_notes": [
+        "Alarm設定画面の抽象図",
+        "ActionsEnabled、AlarmActions、State change"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "Policyと暗号化",
+      "message": "publish権限とKMS設計を分けて見る",
+      "narration": "トピックポリシーは、クラウドウォッチからの発行許可を持ちます。暗号化したトピックを実運用で使う場合は、カスタマーマネージドキーと、クラウドウォッチ向けのキーポリシーも設計対象です。VID-002では、初学者向けに暗号化なしの最小構成にしています。",
+      "visual_notes": [
+        "Topic PolicyとKMS Keyを別レイヤーで表示",
+        "教材範囲と実運用範囲を分ける"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "実運用IaC",
+      "message": "CloudFormation教材からCDK/Terraform運用へ",
+      "narration": "この講座では、追加ツールを減らし、受講者が再現しやすいようにクラウドフォーメーションを使います。実運用では、チーム開発、テスト、再利用性を考え、シーディーケーかテラフォームで保守する前提にします。",
+      "visual_notes": [
+        "教材CloudFormationからCDK/Terraformへ橋渡し",
+        "LearningとProductionを左右比較"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "完了条件",
+      "message": "README通りに再現し、最後に消せる",
+      "narration": "VID-002の完了条件は明確です。README通りに作成し、メール確認と通知テストを行い、しきいち更新を確認し、最後に削除できることです。動画を見るだけでなく、手順として再現できることをゴールにします。",
+      "visual_notes": [
+        "完了チェックリスト",
+        "Create、Confirm、Test、Update、Deleteの5項目"
+      ]
+    }
+  ]
+}

@@ -6,19 +6,20 @@ CloudFormationで作るCloudWatch Alarm + SNS通知
 
 ## Subtitle
 
-AWS初学者向けに、CloudWatch AlarmからSNSメール通知までを作成、確認、削除まで再現します。
+AWS初学者向けに、CloudWatch Alarmの評価条件からSNSメール通知、CloudFormationでの作成、更新、削除までを再現します。
 
 ## Description
 
 CloudWatch AlarmとSNS通知は、AWS監視の最初の実践ステップです。
 
-この講座では、CloudFormationを使ってSNS Topic、Email Subscription、Topic Policy、CloudWatch Alarmを作成し、通知確認、更新、削除までをREADME通りに進めます。
+この講座では、CloudWatch Alarmの評価条件、SNS Topicとメール確認、CloudFormationテンプレートの読み方、通知確認、更新、削除までをREADME通りに進めます。
 
 CloudFormationは教材ハンズオンで追加ツールを減らすために使います。実運用では、保守性やチーム開発を考慮してCDKまたはTerraformを推奨する位置づけも説明します。
 
 ## Learning Goals
 
 - CloudWatch Alarmの条件、状態、アクションを説明できる
+- しきいち、期間、評価回数、データポイントを説明できる
 - SNS TopicとEmail Subscriptionの役割を説明できる
 - CloudFormationテンプレートでAlarm + SNS通知の最小構成を読める
 - メール確認、通知テスト、削除までの流れを再現できる

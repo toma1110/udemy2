@@ -1,0 +1,85 @@
+{
+  "title": "s2-l2_script",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "作成前の注意",
+      "message": "AWS操作はCEO承認後に実行する",
+      "narration": "このレクチャーでは、スタック作成と通知テストの手順を説明します。実際のスタック作成、更新、削除は、AWS料金に関係するため、CEO承認後にだけ実行します。講座の手順は、README通りに再現できる形で整理します。",
+      "visual_notes": [
+        "承認ゲート、AWS操作、確認の流れ",
+        "Cost注意とDeleteまでのチェック"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "Stack Create",
+      "message": "template.yamlとメールアドレスを指定する",
+      "narration": "作成では、クラウドフォーメーションにテンプレートを渡し、通知先メールアドレスをパラメータとして指定します。メールなしで構成だけ確認したい場合は、通知先を空にできます。メール通知まで見る場合は、受け取れるアドレスを指定します。",
+      "visual_notes": [
+        "template.yaml、NotificationEmail、AlarmThresholdの入力",
+        "create-stackの流れ"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "作成完了待ち",
+      "message": "CREATE_COMPLETEを確認してから進む",
+      "narration": "スタック作成中は、リソースが順番に作られます。状態がクリエイトコンプリートになるまで待ちます。失敗した場合は、イベント欄でどのリソースが失敗したかを確認します。焦って次の確認に進まないことが大事です。",
+      "visual_notes": [
+        "Stack status timeline",
+        "CREATE_IN_PROGRESSからCREATE_COMPLETE"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "メール確認",
+      "message": "Confirmしないと通知は届かない",
+      "narration": "メールアドレスを指定した場合は、エスエヌエスから確認メールが届きます。リンクを開いて承認するまで、サブスクリプションはペンディングです。スタック作成が成功していても、メール確認前は通知が届きません。",
+      "visual_notes": [
+        "Inboxに届く確認メール",
+        "PendingConfirmationからConfirmed"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "Smoke Test",
+      "message": "Alarm、Topic、Subscriptionを確認する",
+      "narration": "作成後は、スモークテストで最低限の確認をします。スタックのアウトプットからアラーム名とトピックのエーアールエヌを取り出し、アラーム、トピック、サブスクリプションを確認します。存在確認と設定確認を分けるのがポイントです。",
+      "visual_notes": [
+        "Alarm exists、Topic exists、Subscription statusの3チェック",
+        "smoke_test.shの位置づけ"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "SNS Publish Test",
+      "message": "まずTopicへ直接送って通り道を見る",
+      "narration": "通知テストは、まずエスエヌエストピックへ直接送ります。これで、トピックからメールまでの通り道を確認できます。ここで届かなければ、メール確認やサブスクリプションの状態を見るべきです。",
+      "visual_notes": [
+        "SNS direct publishからEmailまでの矢印",
+        "Alarmを経由しないテストであることを明示"
+      ]
+    },
+    {
+      "slide_number": 7,
+      "title": "Alarm State Test",
+      "message": "CLIが使える場合だけ状態を手動で変える",
+      "narration": "エーダブリューエスシーエルアイを使える場合だけ、アラーム状態を手動でアラームに変えるテストもできます。これはアラームアクションの確認に便利です。テスト後はオーケーへ戻し、検証用の操作だと記録します。",
+      "visual_notes": [
+        "set-alarm-state ALARMからOKへ戻す流れ",
+        "optional CLI testのラベル"
+      ]
+    },
+    {
+      "slide_number": 8,
+      "title": "次に見るもの",
+      "message": "更新、削除、届かない時の確認へ進む",
+      "narration": "作成と通知確認ができたら、次は更新と削除です。ハンズオンでは、しきいちを変えて更新し、最後にスタックを削除します。通知が届かない場合の確認ポイントも、次のレクチャーでまとめます。",
+      "visual_notes": [
+        "Create、Confirm、Test、Update、Deleteの流れ",
+        "次の運用レクチャーへ接続"
+      ]
+    }
+  ]
+}
