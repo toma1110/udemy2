@@ -12,7 +12,7 @@ Reviewer AI: AI-Ops-01
 ## Execution
 
 Priority: high
-Status: Planned
+Status: Done
 
 ## Inputs
 
@@ -51,7 +51,8 @@ Rules:
 ## Blocking
 
 Blocked By:
-- `TASK-0167`
+- None
 
 Notes:
+- 2026-05-15: slide/audio/video/Drive/production QA reportsを作成済み。
 - 人間の最終視聴レビューはUdemy公開前に実施する。

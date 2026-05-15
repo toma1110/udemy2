@@ -1,0 +1,65 @@
+{
+  "title": "pattern/anomalyで未知の変化を見る",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "未知の変化",
+      "message": "読めない量を、型にまとめる",
+      "narration": "このセクションでは、2026年版の発展機能を扱います。まずはパターンとアノマリーです。ログが多すぎて読めない時、似たログを型にまとめ、いつもと違う変化を見つける入口になります。",
+      "visual_notes": [
+        "Many logs clustered into patterns",
+        "Unknown change highlighted"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "pattern",
+      "message": "似たログを自動でまとめる",
+      "narration": "パターンは、似た構造のログを自動でまとめます。エラー文の中で変わる数字、リクエストアイディー、時間などはトークンとして扱われます。まず全体にどんな種類のログが多いかを見るのに向いています。",
+      "visual_notes": [
+        "Log lines grouped into pattern cards",
+        "Tokens for varying parts"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "anomaly",
+      "message": "いつもと違うパターンを見つける",
+      "narration": "アノマリーは、パターンをもとに、通常と違うログの変化を見つけます。新しいパターン、頻度の急増、数値の変化などを入口にできます。原因そのものではなく、調査のきっかけとして使います。",
+      "visual_notes": [
+        "Normal pattern vs unusual pattern",
+        "Anomaly signal marker"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "使いどころ",
+      "message": "エラー文言が多すぎる時に使う",
+      "narration": "使いどころは、エラー文言が多すぎて、どれから読むべきか分からない時です。まずパターンで分類し、サンプル数や比率を見ます。気になるパターンを見つけたら、普通のフィルターやパースで深掘りします。",
+      "visual_notes": [
+        "Pattern first, then filter and parse",
+        "Investigation funnel"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "注意点",
+      "message": "発展機能ほど小さく試す",
+      "narration": "発展機能は便利ですが、スキャン範囲が広いほど時間と料金が増えやすくなります。ログクラスによって使えないコマンドもあります。最初は対象ロググループと時間範囲を絞り、小さく試します。",
+      "visual_notes": [
+        "Advanced query caution",
+        "Small scope first"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "次の行動",
+      "message": "パターンから具体ログへ戻る",
+      "narration": "パターンやアノマリーで気になる変化を見つけたら、そこで終わりではありません。該当する時間帯、サービス、ログストリームへ戻り、具体的なログを読みます。発展機能は、入口を見つけるために使います。",
+      "visual_notes": [
+        "Pattern result back to concrete log events",
+        "Next action cards"
+      ]
+    }
+  ]
+}

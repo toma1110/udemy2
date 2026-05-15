@@ -12,7 +12,7 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: high
-Status: Planned
+Status: Done
 
 ## Inputs
 
@@ -49,7 +49,8 @@ Rules:
 ## Blocking
 
 Blocked By:
-- `TASK-0165`
+- None
 
 Notes:
-- 完成動画にローカル描画スライドを使わない。
+- 2026-05-15: GPT-Image2 source PNG 48枚、1920x1080 final PNG 48枚、各レクチャーcontact sheetを作成済み。
+- 完成動画にローカル描画スライドは使わない。

@@ -21,9 +21,9 @@
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Production Status |
 | --- | --- | --- | --- | --- |
-| `s1-l1` | Logs Insights実践の地図 | 障害調査でLogs Insightsが担当する範囲を説明できる | 調査フロー地図 | Planned |
-| `s1-l2` | ロググループと時間範囲 | スキャン量を抑える実行前チェックを説明できる | Logs Insights安全運転チェック | Planned |
-| `s1-l3` | 基本構文: fields/filter/sort/limit | 直近ログとエラー検索の基本クエリを読める | 基本クエリ読解 | Planned |
+| `s1-l1` | Logs Insights実践の地図 | 障害調査でLogs Insightsが担当する範囲を説明できる | 調査フロー地図 | Produced |
+| `s1-l2` | ロググループと時間範囲 | スキャン量を抑える実行前チェックを説明できる | Logs Insights安全運転チェック | Produced |
+| `s1-l3` | 基本構文: fields/filter/sort/limit | 直近ログとエラー検索の基本クエリを読める | 基本クエリ読解 | Produced |
 
 ## Section 2: 障害調査クエリ集
 
@@ -39,9 +39,9 @@
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Production Status |
 | --- | --- | --- | --- | --- |
-| `s2-l1` | エラーと例外を探す | ERROR、Exception、timeout、5xxの探し方を説明できる | エラー検索クエリ | Planned |
-| `s2-l2` | stats/binで傾向を見る | 時間ごとの件数、上位エラー、遅延パーセンタイルを集計できる | 傾向集計クエリ | Planned |
-| `s2-l3` | parseとrequestId追跡 | 非構造ログから値を取り出し、requestIdで一連の出来事を追える | requestId追跡クエリ | Planned |
+| `s2-l1` | エラーと例外を探す | ERROR、Exception、timeout、5xxの探し方を説明できる | エラー検索クエリ | Produced |
+| `s2-l2` | stats/binで傾向を見る | 時間ごとの件数、上位エラー、遅延パーセンタイルを集計できる | 傾向集計クエリ | Produced |
+| `s2-l3` | parseとrequestId追跡 | 非構造ログから値を取り出し、requestIdで一連の出来事を追える | requestId追跡クエリ | Produced |
 
 ## Section 3: 2026年版の発展機能
 
@@ -57,8 +57,8 @@
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Production Status |
 | --- | --- | --- | --- | --- |
-| `s3-l1` | pattern/anomalyで未知の変化を見る | ログパターンと異常検知を調査入口として説明できる | pattern/anomaly読解 | Planned |
-| `s3-l2` | JOIN/subquery/SOURCEの入口 | 複数ロググループ相関、入れ子クエリ、タグ指定の位置づけを説明できる | JOIN/subquery/SOURCEメモ | Planned |
+| `s3-l1` | pattern/anomalyで未知の変化を見る | ログパターンと異常検知を調査入口として説明できる | pattern/anomaly読解 | Produced |
+| `s3-l2` | JOIN/subquery/SOURCEの入口 | 複数ロググループ相関、入れ子クエリ、タグ指定の位置づけを説明できる | JOIN/subquery/SOURCEメモ | Produced |
 
 ## Hands-on Resources
 

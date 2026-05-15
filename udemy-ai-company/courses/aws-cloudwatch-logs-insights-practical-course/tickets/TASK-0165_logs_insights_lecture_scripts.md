@@ -12,7 +12,7 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: high
-Status: Planned
+Status: Done
 
 ## Inputs
 
@@ -67,4 +67,4 @@ Blocked By:
 - None
 
 Notes:
-- 1レクチャーあたり7から9枚程度を目安にする。
+- 2026-05-15: 8レクチャー、各6スライド構成で台本MarkdownとJSONを作成済み。

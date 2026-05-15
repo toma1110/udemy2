@@ -12,7 +12,7 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: high
-Status: Planned
+Status: Done
 
 ## Inputs
 
@@ -50,7 +50,8 @@ Rules:
 ## Blocking
 
 Blocked By:
-- `TASK-0166`
+- None
 
 Notes:
+- 2026-05-15: VOICEVOX WAV 48本、MP4 8本、Drive metadata 8件を作成済み。
 - AWSリソース作成は不要。動画制作とDrive uploadは通常制作作業。

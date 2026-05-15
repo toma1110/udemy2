@@ -1,0 +1,65 @@
+{
+  "title": "エラーと例外を探す",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "エラー検索",
+      "message": "まず異常らしいログを集める",
+      "narration": "このセクションでは、障害調査のクエリ集を扱います。最初はエラー検索です。エラー、例外、タイムアウト、5xxのように、異常らしいログを集めて、調査の入口を作ります。",
+      "visual_notes": [
+        "Error search over logs",
+        "ERROR, Exception, timeout, 5xx labels"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "levelを見る",
+      "message": "構造化ログならERRORで絞る",
+      "narration": "JSONの構造化ログなら、レベルというフィールドを使えることがあります。レベルがエラーのログだけに絞ると、メッセージ全文を検索するより読みやすくなります。まず自分のログにどんなフィールドがあるかを見ます。",
+      "visual_notes": [
+        "JSON field level = ERROR",
+        "Structured log table"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "messageを見る",
+      "message": "非構造ログは文字列で探す",
+      "narration": "フィールドが整っていないログでは、アットメッセージを検索します。エラー、エクセプション、タイムアウトなどの文字を含む行を探します。ただし文字列検索は広くなりやすいので、時間範囲を短くします。",
+      "visual_notes": [
+        "@message text search",
+        "regex style filter"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "5xxとtimeout",
+      "message": "HTTP失敗と待ち時間の失敗を見る",
+      "narration": "APIのログでは、ステータスコードが500以上の行を探します。アプリログでは、タイムアウトという言葉や、エラータイプを見ることがあります。ログ形式ごとに、失敗を表すフィールドは変わります。",
+      "visual_notes": [
+        "API 5xx card and timeout card",
+        "statusCode >= 500"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "フィールド名を合わせる",
+      "message": "クエリは現場ログへ調整する",
+      "narration": "講座のクエリは型です。実際のログでは、ステータスコード、エラータイプ、リクエストアイディーなどの名前が違うことがあります。クエリをコピーして終わりではなく、自分のログのフィールド名へ合わせます。",
+      "visual_notes": [
+        "Template query adapted to real log fields",
+        "Field mapping table"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "結果から行動へ",
+      "message": "時間、対象、種類を次の確認へつなげる",
+      "narration": "エラー検索の結果で見るのは、時間、対象、種類です。いつ増えたか。どのサービスか。どのエラーか。この3つが見えたら、次は時間帯の集計や、リクエスト単位の追跡へ進みます。",
+      "visual_notes": [
+        "Result table branching to trend and request trace",
+        "Time, service, error type"
+      ]
+    }
+  ]
+}

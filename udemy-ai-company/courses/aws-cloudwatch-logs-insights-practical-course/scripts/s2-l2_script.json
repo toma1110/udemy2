@@ -1,0 +1,65 @@
+{
+  "title": "stats/binで傾向を見る",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "傾向を見る",
+      "message": "件数を時間帯でまとめる",
+      "narration": "このレクチャーでは、スタッツとビンを使って、ログの傾向を見ます。エラーがあるかだけでなく、いつ増えたのか、どの種類が多いのか、どのパスが遅いのかを集計します。",
+      "visual_notes": [
+        "Error count trend chart",
+        "stats and bin blocks"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "count by bin",
+      "message": "5分ごとの件数を見る",
+      "narration": "最初の型は、件数を数えて、5分ごとにまとめるクエリです。スタッツのカウントで件数を数え、ビン5分で時間帯に分けます。これで、エラーが増えた時間帯を見つけやすくなります。",
+      "visual_notes": [
+        "count(*) by bin(5m)",
+        "Time buckets with bars"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "上位エラー",
+      "message": "多い種類から見る",
+      "narration": "次は上位エラーです。エラータイプやサービスごとに件数を集計し、多い順に並べます。すべてのログを読むのではなく、件数が多い種類から見ることで、影響が大きい問題に近づけます。",
+      "visual_notes": [
+        "Top error types table",
+        "service and errorType columns"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "遅延を見る",
+      "message": "平均だけでなくp95とp99を見る",
+      "narration": "遅延調査では、平均だけでは足りません。ピー95やピー99を見ると、遅い側のユーザー体験を拾いやすくなります。エンドポイントごとに、平均、ピー95、ピー99、最大値を並べます。",
+      "visual_notes": [
+        "Latency percentile chart",
+        "p95 and p99 highlighted"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "binの注意",
+      "message": "300sではなく5mを使う",
+      "narration": "時間のまとめ方には注意があります。5分を表す時は、ビン5mのように書きます。秒で300sと書くと、単位ごとの上限に引っかかることがあります。講座では、5m、1hのように読みやすい単位を使います。",
+      "visual_notes": [
+        "Correct bin(5m), avoid bin(300s)",
+        "Small warning callout"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "読み方",
+      "message": "いつ、何が、どれだけ増えたか",
+      "narration": "集計結果で見るのは、いつ、何が、どれだけ増えたかです。時間帯、サービス、エラー種別、遅延の上位を確認します。ここで絞れたら、次はリクエストアイディーで具体的なログへ戻ります。",
+      "visual_notes": [
+        "Aggregate result to request trace transition",
+        "When, what, how much"
+      ]
+    }
+  ]
+}

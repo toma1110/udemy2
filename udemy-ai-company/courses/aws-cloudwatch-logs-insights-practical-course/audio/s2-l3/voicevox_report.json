@@ -1,0 +1,45 @@
+{
+  "course_id": "aws-cloudwatch-logs-insights-practical-course",
+  "lecture_id": "s2-l3",
+  "script_json": "udemy-ai-company/courses/aws-cloudwatch-logs-insights-practical-course/scripts/s2-l3_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-cloudwatch-logs-insights-practical-course/audio/s2-l3",
+  "started_at": "2026-05-15T13:46:23Z",
+  "ended_at": "2026-05-15T13:47:58Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 1.1,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 13.248,
+      "size_bytes": 635948
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 14.4,
+      "size_bytes": 691244
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 14.304,
+      "size_bytes": 686636
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 14.741,
+      "size_bytes": 707628
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 14.88,
+      "size_bytes": 714284
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 14.187,
+      "size_bytes": 681004
+    }
+  ],
+  "audio_count": 6,
+  "total_duration_seconds": 85.76
+}

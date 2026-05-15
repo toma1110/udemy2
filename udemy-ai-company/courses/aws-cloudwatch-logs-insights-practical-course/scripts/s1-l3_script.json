@@ -1,0 +1,65 @@
+{
+  "title": "基本構文: fields/filter/sort/limit",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "基本構文",
+      "message": "表示、絞り込み、並べ替え、件数制限",
+      "narration": "このレクチャーでは、ログインサイトの基本構文を扱います。最初に覚えるのは、フィールズ、フィルター、ソート、リミットです。表示する列を選び、条件で絞り、新しい順に並べ、件数を抑えます。",
+      "visual_notes": [
+        "Query pipeline with four commands",
+        "fields filter sort limit"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "fields",
+      "message": "見たい列を選ぶ",
+      "narration": "フィールズは、結果に表示する列を選ぶコマンドです。よく使うのは、アットタイムスタンプ、アットメッセージ、アットログストリームです。JSONログなら、サービス名やステータスコードなどのフィールドも表示できます。",
+      "visual_notes": [
+        "Select columns from log event",
+        "@timestamp, @message, @logStream"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "filter",
+      "message": "必要な行だけに絞る",
+      "narration": "フィルターは、必要なログだけに絞るコマンドです。レベルがエラー、ステータスコードが500以上、メッセージにタイムアウトを含む、というように条件を置きます。最初は単純な条件から始めます。",
+      "visual_notes": [
+        "Many rows filtered into error rows",
+        "ERROR, statusCode >= 500, timeout"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "sortとlimit",
+      "message": "新しい順に、小さく見る",
+      "narration": "ソートは並べ替えです。障害調査では、アットタイムスタンプの降順で新しいログから見ます。リミットは件数制限です。最初は50件や100件に抑えて、条件が合っているか確認します。",
+      "visual_notes": [
+        "Latest logs first",
+        "limit 50 as guardrail"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "pipeでつなぐ",
+      "message": "クエリは左から順に処理される",
+      "narration": "ログインサイトでは、コマンドをパイプでつなぎます。表示列を選び、絞り込み、並べ替え、件数制限へ進みます。この流れを読めると、知らないクエリも分解して理解できます。",
+      "visual_notes": [
+        "Pipe character between command blocks",
+        "Left to right processing"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "最初のクエリ",
+      "message": "直近ログを見る型を持つ",
+      "narration": "最初の型は、直近ログを見るクエリです。タイムスタンプ、メッセージ、ログストリームを表示し、新しい順に並べ、50件に絞ります。まずこれで、ログがどんな形かを見ます。",
+      "visual_notes": [
+        "Query card for recent events",
+        "Result table preview"
+      ]
+    }
+  ]
+}
