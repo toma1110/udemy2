@@ -13,9 +13,9 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: high
-Status: Blocked
-Auto Execute: spec/course info drafting only; pause before video generation
-Requires CEO Approval: yes, before video generation
+Status: Done
+Auto Execute: completed after CEO curriculum approval
+Requires CEO Approval: satisfied on 2026-05-17 before video generation
 Cost Impact: non-AWS content generation only
 
 ## Inputs
@@ -43,6 +43,7 @@ Expected Output:
 - regenerated GPT-Image2 slide PNGs where script changes require visual changes
 - regenerated VOICEVOX audio and MP4s for all affected lectures after CEO approval
 - updated QA and drive-upload follow-up plan
+- local regenerated MP4s totaling 34.31 minutes
 
 ## Quality Gate
 
@@ -69,8 +70,11 @@ Rules:
 ## Blocking
 
 Blocked By:
-- CEO priority decision
-- CEO approval of updated `course_spec.md` and `course_infomation.md` before video regeneration
+- None
 
 Notes:
-- Current audit: 8 lecture MP4s, about 11.7 minutes total. The course needs roughly 18.3 additional lecture minutes or equivalent approved restructuring.
+- CEO approved the Logs Insights curriculum on 2026-05-17.
+- Regenerated 8 normal lecture MP4s with GPT-Image2-derived slides and VOICEVOX audio.
+- Final local lecture runtime: 2058.560 seconds, about 34.31 minutes.
+- No AWS Logs Insights query execution, AWS resource mutation, or Google Drive mutation was performed in this ticket.
+- Existing 2026-05-15 Drive uploads are superseded and need a separate upload follow-up if publication review requires Drive links.

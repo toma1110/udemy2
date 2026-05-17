@@ -9,13 +9,13 @@ Source of Truth: `course_spec.md`
 - Course Information: `course_infomation.md`
 - Target Lecture Count: 8
 - Target Main Lecture Runtime: 32〜40分
-- Current Audit Result: 2026-05-17時点で通常レクチャー8本、合計約11.7分。Udemy標準コースの30分要件を満たしていない。
+- Current Audit Result: 2026-05-17に通常レクチャー8本を再生成済み。合計2058.560秒、約34.31分で、Udemy標準コースの30分要件を満たしている。
 
 ## Curriculum Review Gate
 
-- 動画再生成前にCEOが `course_spec.md`、`course_infomation.md`、この `course_curriculum.md` を確認・承認する。
+- 2026-05-17にCEOがカリキュラムを承認済み。
 - プロモーション動画は通常レクチャーの30分要件に含めない。
-- CEO承認後は、全レクチャーの台本、GPT-Image2スライド、VOICEVOX音声、MP4を一括で再生成してよい。
+- 2026-05-17に全レクチャーの台本、VOICEVOX音声、MP4を一括で再生成済み。
 - 完成動画のスライドと表示文字はGPT-Image2由来PNGに限定する。
 - WorkerとReviewerは分離する。
 
@@ -27,9 +27,9 @@ Hands-on Resource Title: `Logs Insights安全運転チェック`
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
 | --- | --- | --- | --- | --- | --- |
-| `s1-l1` | Logs Insights実践の地図 | 障害調査でLogs Insightsが担当する範囲と、Metrics/Alarmとの違いを説明できる | 調査フロー地図 | 4〜5分 | Produced - regenerate for runtime |
-| `s1-l2` | ロググループと時間範囲 | スキャン量を抑えるために、対象ロググループと時間範囲を絞る理由を説明できる | Logs Insights安全運転チェック | 4〜5分 | Produced - regenerate for runtime |
-| `s1-l3` | 基本構文: fields/filter/sort/limit | 直近ログを見る基本形、並び替え、件数制限、料金注意を説明できる | 基本クエリ読解 | 4〜5分 | Produced - regenerate for runtime |
+| `s1-l1` | Logs Insights実践の地図 | 障害調査でLogs Insightsが担当する範囲と、Metrics/Alarmとの違いを説明できる | 調査フロー地図 | 4〜5分 | Produced - runtime remediated 2026-05-17 |
+| `s1-l2` | ロググループと時間範囲 | スキャン量を抑えるために、対象ロググループと時間範囲を絞る理由を説明できる | Logs Insights安全運転チェック | 4〜5分 | Produced - runtime remediated 2026-05-17 |
+| `s1-l3` | 基本構文: fields/filter/sort/limit | 直近ログを見る基本形、並び替え、件数制限、料金注意を説明できる | 基本クエリ読解 | 4〜5分 | Produced - runtime remediated 2026-05-17 |
 
 ## Section 2: 障害調査クエリ集
 
@@ -39,9 +39,9 @@ Hands-on Resource Title: `障害調査クエリ集`
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
 | --- | --- | --- | --- | --- | --- |
-| `s2-l1` | エラーと例外を探す | ERROR、Exception、timeout、5xxを探すクエリと、誤検知しやすい条件を説明できる | エラー検索クエリ | 4〜5分 | Produced - regenerate for runtime |
-| `s2-l2` | stats/binで傾向を見る | `stats` と `bin()` で時間ごとの件数、上位エラー、遅延傾向を集計できる | 傾向集計クエリ | 4〜5分 | Produced - regenerate for runtime |
-| `s2-l3` | parseとrequestId追跡 | JSONログ、非構造ログ、`parse`、requestId、`dedup` の使い分けを説明できる | requestId追跡クエリ | 4〜5分 | Produced - regenerate for runtime |
+| `s2-l1` | エラーと例外を探す | ERROR、Exception、timeout、5xxを探すクエリと、誤検知しやすい条件を説明できる | エラー検索クエリ | 4〜5分 | Produced - runtime remediated 2026-05-17 |
+| `s2-l2` | stats/binで傾向を見る | `stats` と `bin()` で時間ごとの件数、上位エラー、遅延傾向を集計できる | 傾向集計クエリ | 4〜5分 | Produced - runtime remediated 2026-05-17 |
+| `s2-l3` | parseとrequestId追跡 | JSONログ、非構造ログ、`parse`、requestId、`dedup` の使い分けを説明できる | requestId追跡クエリ | 4〜5分 | Produced - runtime remediated 2026-05-17 |
 
 ## Section 3: 2026年版の発展機能
 
@@ -51,8 +51,8 @@ Hands-on Resource Title: `2026年版Logs Insights発展機能メモ`
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
 | --- | --- | --- | --- | --- | --- |
-| `s3-l1` | pattern/anomalyで未知の変化を見る | ログパターンと異常検知を、未知の変化を見つける入口として説明できる | pattern/anomaly読解 | 4〜5分 | Produced - regenerate for runtime |
-| `s3-l2` | JOIN/subquery/SOURCEの入口 | 複数ロググループ相関、入れ子クエリ、タグ指定クエリの位置づけと注意点を説明できる | JOIN/subquery/SOURCEメモ | 4〜5分 | Produced - regenerate for runtime |
+| `s3-l1` | pattern/anomalyで未知の変化を見る | ログパターンと異常検知を、未知の変化を見つける入口として説明できる | pattern/anomaly読解 | 4〜5分 | Produced - runtime remediated 2026-05-17 |
+| `s3-l2` | JOIN/subquery/SOURCEの入口 | 複数ロググループ相関、入れ子クエリ、タグ指定クエリの位置づけと注意点を説明できる | JOIN/subquery/SOURCEメモ | 4〜5分 | Produced - runtime remediated 2026-05-17 |
 
 ## Hands-on Resources
 

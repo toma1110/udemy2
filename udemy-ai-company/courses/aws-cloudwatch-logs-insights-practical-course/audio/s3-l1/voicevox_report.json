@@ -3,43 +3,43 @@
   "lecture_id": "s3-l1",
   "script_json": "udemy-ai-company/courses/aws-cloudwatch-logs-insights-practical-course/scripts/s3-l1_script.json",
   "audio_dir": "udemy-ai-company/courses/aws-cloudwatch-logs-insights-practical-course/audio/s3-l1",
-  "started_at": "2026-05-15T13:48:49Z",
-  "ended_at": "2026-05-15T13:50:20Z",
+  "started_at": "2026-05-17T07:47:56Z",
+  "ended_at": "2026-05-17T07:51:55Z",
   "status": "pass",
   "speaker_id": 3,
-  "speed_scale": 1.1,
+  "speed_scale": 1.0,
   "audio": [
     {
       "slide_number": 1,
-      "duration_seconds": 14.261,
-      "size_bytes": 684588
+      "duration_seconds": 49.771,
+      "size_bytes": 2389036
     },
     {
       "slide_number": 2,
-      "duration_seconds": 14.272,
-      "size_bytes": 685100
+      "duration_seconds": 41.248,
+      "size_bytes": 1979948
     },
     {
       "slide_number": 3,
-      "duration_seconds": 14.731,
-      "size_bytes": 707116
+      "duration_seconds": 55.264,
+      "size_bytes": 2652716
     },
     {
       "slide_number": 4,
-      "duration_seconds": 14.432,
-      "size_bytes": 692780
+      "duration_seconds": 27.445,
+      "size_bytes": 1317420
     },
     {
       "slide_number": 5,
-      "duration_seconds": 14.016,
-      "size_bytes": 672812
+      "duration_seconds": 40.576,
+      "size_bytes": 1947692
     },
     {
       "slide_number": 6,
-      "duration_seconds": 15.136,
-      "size_bytes": 726572
+      "duration_seconds": 39.797,
+      "size_bytes": 1910316
     }
   ],
   "audio_count": 6,
-  "total_duration_seconds": 86.848
+  "total_duration_seconds": 254.101
 }

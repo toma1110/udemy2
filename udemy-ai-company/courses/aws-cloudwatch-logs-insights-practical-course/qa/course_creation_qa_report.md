@@ -26,4 +26,4 @@
 
 Status: PASS for course creation package.
 
-Video production remains planned and should proceed through `TASK-0165` onward.
+Video production was remediated in `TASK-0213` on 2026-05-17; local MP4s now exceed 30 minutes total.

@@ -1,8 +1,14 @@
 # Drive Upload Summary
 
+## Superseded Notice
+
+- Status: superseded for the 2026-05-17 remediated lecture videos.
+- The Drive URLs below point to the 2026-05-15 short videos.
+- `TASK-0213` did not perform Google Drive mutation; uploading the regenerated 34.31 minute set requires a separate approval/task.
+
 ## Result
 
-- Status: pass
+- Status: pass for 2026-05-15 upload; superseded for current remediated MP4s
 - Upload date: 2026-05-15
 - Sharing: anyone with link can read
 - Worker: AI-Production-01
