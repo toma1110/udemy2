@@ -1,0 +1,89 @@
+# s2-l2 Owner、Runbook、Escalationを決める
+
+Course: `aws-alert-design-practical-course`
+
+Segments: 7
+
+## Slide 1: Owner、Runbook、Escalationを決める
+
+Message: 通知後に誰が何をし、いつ引き継ぐかを設計する
+
+### Narration
+
+このレクチャーでは、オーナー、ランブック、エスカレーションをアラート設計に入れる理由を学びます。アラートが鳴ったあとに動けない原因は、メトリクスの設定ミスだけではありません。誰が見るのか、何をするのか、いつ助けを呼ぶのかが決まっていないことが大きな原因です。つまり、良いアラートは技術設定だけでなく、運用の責任範囲まで含めて設計します。
+
+### Visual Notes
+
+Alert routed to owner, runbook, escalation timeline, severity matrix. Segment 1.
+
+## Slide 2: Owner、Runbook、Escalationを決める
+
+Message: 通知後に誰が何をし、いつ引き継ぐかを設計する
+
+### Narration
+
+まずオーナーです。オーナーとは、その通知を最初に受け取り、初動判断をする責任を持つチームまたは役割です。オーナーがない通知は、全員に届いても誰も担当しない通知になりがちです。たとえば、注文サービス、認証サービス、通知基盤、データ基盤のように、サービス単位でオーナーを決めます。個人名だけにすると休暇や異動で止まりやすいので、チームやオンコールローテーションに紐づける方が安定します。
+
+### Visual Notes
+
+Alert routed to owner, runbook, escalation timeline, severity matrix. Segment 2.
+
+## Slide 3: Owner、Runbook、Escalationを決める
+
+Message: 通知後に誰が何をし、いつ引き継ぐかを設計する
+
+### Narration
+
+次にセベリティです。セベリティは、どれくらい急ぐかを決めるための分類です。セベリティ高なら、ユーザー影響が大きく、すぐに対応が必要です。セベリティ中なら、影響は限定的だが営業時間内または短時間で確認したい状態です。セベリティ低なら、すぐ人を呼ばず、後で確認するだけでよいかもしれません。この分類がないと、すべての通知が同じ重さに見えます。結果として、重要な通知も軽い通知も同じチャンネルへ流れます。
+
+### Visual Notes
+
+Alert routed to owner, runbook, escalation timeline, severity matrix. Segment 3.
+
+## Slide 4: Owner、Runbook、Escalationを決める
+
+Message: 通知後に誰が何をし、いつ引き継ぐかを設計する
+
+### Narration
+
+三つ目はランブックです。ランブックには、通知を受けたあとに最初に見るものを書きます。ダッシュボード、ログ、直近デプロイ、依存先の状態、影響範囲、緩和策、エスカレーション条件です。ここで大切なのは、完璧な原因分析手順を書くことではありません。最初の五分で迷わないための入口を書くことです。詳しい調査は後で進めます。まずは、ユーザー影響があるか、悪化しているか、切り戻しや縮退運転が必要かを判断できるようにします。
+
+### Visual Notes
+
+Alert routed to owner, runbook, escalation timeline, severity matrix. Segment 4.
+
+## Slide 5: Owner、Runbook、Escalationを決める
+
+Message: 通知後に誰が何をし、いつ引き継ぐかを設計する
+
+### Narration
+
+四つ目はエスカレーションです。エスカレーションは、担当者の能力不足を意味するものではありません。時間内に判断できない、影響が広がっている、権限が必要、複数チームが関係する、というときに、適切な人へ渡すための設計です。たとえば、五分で影響確認、十五分でサービス責任者へ連絡、三十分でインシデントチャンネルを開く、というように時間で区切ると、抱え込みを防げます。
+
+### Visual Notes
+
+Alert routed to owner, runbook, escalation timeline, severity matrix. Segment 5.
+
+## Slide 6: Owner、Runbook、Escalationを決める
+
+Message: 通知後に誰が何をし、いつ引き継ぐかを設計する
+
+### Narration
+
+通知本文には、すべてを長く書く必要はありません。短い通知に、セベリティ、オーナー、影響、ランブックリンク、エスカレーション条件を入れます。たとえば、セベリティ中、決済チーム、注文完了遅延の可能性、最初に決済ダッシュボードと直近デプロイを確認、十五分で改善しなければサービス責任者へ連絡、という形です。これなら受け取った人は、最初の行動を選べます。
+
+### Visual Notes
+
+Alert routed to owner, runbook, escalation timeline, severity matrix. Segment 6.
+
+## Slide 7: Owner、Runbook、Escalationを決める
+
+Message: 通知後に誰が何をし、いつ引き継ぐかを設計する
+
+### Narration
+
+最後に、レビュー観点です。アラート一覧を見たときに、オーナーが未入力のものはありませんか。セベリティが全部同じになっていませんか。ランブックリンクが古くなっていませんか。エスカレーション先が個人の記憶に依存していませんか。アラート設計は、作って終わりではなく、運用しながら更新するものです。通知後に人が動けるように、オーナー、ランブック、エスカレーションを必ずセットで考えます。
+
+### Visual Notes
+
+Alert routed to owner, runbook, escalation timeline, severity matrix. Segment 7.

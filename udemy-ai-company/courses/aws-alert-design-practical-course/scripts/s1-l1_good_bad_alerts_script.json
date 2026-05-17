@@ -1,0 +1,65 @@
+{
+  "course_id": "aws-alert-design-practical-course",
+  "section": 1,
+  "lecture": 1,
+  "title": "深夜3時に動けるアラートとは",
+  "duration_min": 9,
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "良いアラートと悪いアラート",
+      "message": "深夜3時に動けるか",
+      "narration": "このレクチャーでは、良いアラートと悪いアラートの違いを学びます。判断基準はとてもシンプルです。深夜3時に通知で起こされたとき、次の5分で何をすべきか分かるか。この問いに答えられないアラートは、設定値が正しく見えても、運用では役に立ちにくいアラートです。",
+      "visual_notes": "Night on-call notification, split between confusion and clear action."
+    },
+    {
+      "slide_number": 2,
+      "title": "良いアラートの3条件",
+      "message": "Actionable / Timely / Meaningful",
+      "narration": "良いアラートには、三つの条件があります。一つ目はアクション可能であること。受け取った人が次に何を確認するか分かる状態です。二つ目はタイムリーであること。問題が大きくなる前に届くことです。三つ目は意味があること。毎日鳴るノイズではなく、対応する価値がある通知であることです。",
+      "visual_notes": "Three pillars: action, timing, signal quality."
+    },
+    {
+      "slide_number": 3,
+      "title": "悪い例",
+      "message": "CPUが高いだけでは動けない",
+      "narration": "悪い例を見てみましょう。アラート名は、シーピーユーハイ。本文は、シーピーユーが80パーセントを超えました。通知先は全員向けチャンネル。これだけでは、どのサービスに影響しているのか、緊急なのか、誰が対応するのか、何を確認するのかが分かりません。多くの人に届いているようで、実際には誰も動かない通知になりがちです。",
+      "visual_notes": "Noisy generic alert card with missing impact, owner, runbook."
+    },
+    {
+      "slide_number": 4,
+      "title": "良い例",
+      "message": "影響・Owner・Runbookを入れる",
+      "narration": "良い例では、通知を行動に変えます。たとえば、決済エーピーアイのピーナインティナインレイテンシが5分間で悪化し、3回中3回しきいちを超えた。影響は一部ユーザーの決済遅延。担当は決済チームのオンコール担当。ランブックは決済レイテンシ対応手順。ここまで書いてあれば、受け取った人はまず何を見るべきか判断できます。",
+      "visual_notes": "Alert card with severity, impact, owner, runbook and clear next action."
+    },
+    {
+      "slide_number": 5,
+      "title": "鳴りすぎを防ぐ",
+      "message": "M out of Nでノイズを減らす",
+      "narration": "クラウドウォッチアラームでは、期間、評価回数、アラームにするデータポイント数で、いつアラーム状態にするかを決めます。たとえば1分ごとに5回評価し、そのうち3回しきいちを超えたら通知する、という設計ができます。これは、エヌ回中エム回の考え方です。一瞬だけ跳ねたメトリクスで毎回起こされないように、評価窓を設計します。",
+      "visual_notes": "Timeline of five data points, three breaching points trigger alarm."
+    },
+    {
+      "slide_number": 6,
+      "title": "欠損データを考える",
+      "message": "メトリクスの性質で選ぶ",
+      "narration": "欠損データ、つまりデータがない時間の扱いも重要です。常に出るはずのメトリクスが消えたなら、問題の可能性があります。一方で、エラーが起きたときだけ出るメトリクスなら、データがないことは正常かもしれません。欠損データをすべて異常にすると、不要な通知が増えます。逆にすべて正常扱いにすると、検知すべき異常を見逃すことがあります。",
+      "visual_notes": "Continuous metric lane and error-only metric lane."
+    },
+    {
+      "slide_number": 7,
+      "title": "まとめるアラート",
+      "message": "Composite Alarmで判断を絞る",
+      "narration": "複数の個別アラートが同じ障害で一斉に鳴ると、対応者は何から見るべきか迷います。コンポジットアラームは、複数のアラーム状態を、アンド、オア、ノットで組み合わせ、上位の一つのアラートにまとめる選択肢です。たとえば、シーピーユーが高いだけではなく、同時にレイテンシも悪化している場合に通知する、といった設計ができます。",
+      "visual_notes": "Several low-level alarms feeding one composite alarm, reduced notification noise."
+    },
+    {
+      "slide_number": 8,
+      "title": "深夜3時チェック",
+      "message": "次の5分で何をするか",
+      "narration": "最後に、アラートを作るたびにこのチェックをしてください。アラート名だけで影響範囲が分かるか。セベリティがあるか。オーナーがいるか。ランブックがあるか。エスカレーション先が決まっているか。そして、次の5分で何をするか言えるか。これに答えられるアラートが、良いアラートです。",
+      "visual_notes": "Checklist with five checks, on-call engineer moving from alert to runbook."
+    }
+  ]
+}

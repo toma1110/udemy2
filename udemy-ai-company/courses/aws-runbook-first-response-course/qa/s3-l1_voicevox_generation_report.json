@@ -1,0 +1,60 @@
+{
+  "course_id": "aws-runbook-first-response-course",
+  "lecture_id": "s3-l1",
+  "script_json": "udemy-ai-company/courses/aws-runbook-first-response-course/scripts/s3-l1_mitigation_rollback_escalation_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-runbook-first-response-course/audio/s3-l1",
+  "started_at": "2026-05-17T16:08:34Z",
+  "ended_at": "2026-05-17T16:17:18Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 0.72,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 43.712,
+      "size_bytes": 2098220
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 49.12,
+      "size_bytes": 2357804
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 49.568,
+      "size_bytes": 2379308
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 48.181,
+      "size_bytes": 2312748
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 40.469,
+      "size_bytes": 1942572
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 34.069,
+      "size_bytes": 1635372
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 40.779,
+      "size_bytes": 1957420
+    },
+    {
+      "slide_number": 8,
+      "duration_seconds": 25.589,
+      "size_bytes": 1228332
+    },
+    {
+      "slide_number": 9,
+      "duration_seconds": 25.931,
+      "size_bytes": 1244716
+    }
+  ],
+  "audio_count": 9,
+  "total_duration_seconds": 357.419
+}

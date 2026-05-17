@@ -1,0 +1,50 @@
+{
+  "course_id": "aws-alert-design-practical-course",
+  "lecture_id": "s3-l1",
+  "script_json": "udemy-ai-company/courses/aws-alert-design-practical-course/scripts/s3-l1_cloudwatch_alarm_evaluation_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-alert-design-practical-course/audio/s3-l1",
+  "started_at": "2026-05-17T15:38:40Z",
+  "ended_at": "2026-05-17T15:43:21Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 0.72,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 45.237,
+      "size_bytes": 2171436
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 47.179,
+      "size_bytes": 2264620
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 44.128,
+      "size_bytes": 2118188
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 41.504,
+      "size_bytes": 1992236
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 40.597,
+      "size_bytes": 1948716
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 40.96,
+      "size_bytes": 1966124
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 46.229,
+      "size_bytes": 2219052
+    }
+  ],
+  "audio_count": 7,
+  "total_duration_seconds": 305.835
+}

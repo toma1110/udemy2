@@ -1,0 +1,50 @@
+{
+  "course_id": "aws-alert-design-practical-course",
+  "lecture_id": "s1-l2",
+  "script_json": "udemy-ai-company/courses/aws-alert-design-practical-course/scripts/s1-l2_bad_to_good_alerts_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-alert-design-practical-course/audio/s1-l2",
+  "started_at": "2026-05-17T15:22:52Z",
+  "ended_at": "2026-05-17T15:28:21Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 0.72,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 65.685,
+      "size_bytes": 3152940
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 51.68,
+      "size_bytes": 2480684
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 56.277,
+      "size_bytes": 2701356
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 46.933,
+      "size_bytes": 2252844
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 55.883,
+      "size_bytes": 2682412
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 38.496,
+      "size_bytes": 1847852
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 38.432,
+      "size_bytes": 1844780
+    }
+  ],
+  "audio_count": 7,
+  "total_duration_seconds": 353.387
+}

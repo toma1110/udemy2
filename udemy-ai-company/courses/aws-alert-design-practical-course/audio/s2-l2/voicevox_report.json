@@ -1,0 +1,50 @@
+{
+  "course_id": "aws-alert-design-practical-course",
+  "lecture_id": "s2-l2",
+  "script_json": "udemy-ai-company/courses/aws-alert-design-practical-course/scripts/s2-l2_owner_runbook_escalation_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-alert-design-practical-course/audio/s2-l2",
+  "started_at": "2026-05-17T15:33:31Z",
+  "ended_at": "2026-05-17T15:38:36Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 0.72,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 40.288,
+      "size_bytes": 1933868
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 46.24,
+      "size_bytes": 2219564
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 49.6,
+      "size_bytes": 2380844
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 53.941,
+      "size_bytes": 2589228
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 46.923,
+      "size_bytes": 2252332
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 46.581,
+      "size_bytes": 2235948
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 45.141,
+      "size_bytes": 2166828
+    }
+  ],
+  "audio_count": 7,
+  "total_duration_seconds": 328.715
+}

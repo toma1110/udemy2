@@ -101,18 +101,18 @@ v1ではCloudFormationテンプレートを作成しない。
 
 追加検証としてCloudWatch Alarm、SNS、Composite Alarm、CloudFormation stackを作成する場合は料金が発生する可能性があるため、CEO承認後に実施し、削除手順をQAへ残します。
 
-## Udemy成立尺是正方針
+## Udemy成立尺是正完了実績
 
-2026-05-17の既存コース動画監査では、course spec上は6レクチャー構成だが、通常レクチャーMP4は1本、合計尺は約3.1分のみである。
+2026-05-17に、全6レクチャーの台本、GPT-Image2由来スライド、VOICEVOX音声、MP4生成、Google Driveアップロードを完了した。
 
-是正後の制作方針:
-
-- レクチャー数は現行の6本を維持する
-- 各レクチャーをおおむね5〜6分に設計し、講義本編の計画尺を30〜36分にする
-- 未作成の `s1-l2`、`s2-l1`、`s2-l2`、`s3-l1`、`s3-l2` を含め、全レクチャーを完成対象にする
-- プロモーション動画は30分要件に含めない
-- 動画生成前に、CEOが更新後の `course_spec.md` と `course_infomation.md` を確認・承認する
-- CEO承認後は、全レクチャーの台本、GPT-Image2スライド、VOICEVOX音声、MP4を一括で生成してよい
+- 完成レクチャー数: 6本
+- 講義本編の合計動画尺: 1914.164秒、約31.90分
+- Udemy成立尺ゲート: PASS、30分以上
+- 未作成だった `s1-l2`、`s2-l1`、`s2-l2`、`s3-l1`、`s3-l2` も完成済み
+- プロモーション動画は30分要件に含めていない
+- 標準範囲ではAWSリソースを作成していない
+- Driveアップロード報告: `qa/course_drive_upload_report.md`
+- 動画制作QA報告: `qa/course_video_production_report.md`
 
 ## Production Rules
 
@@ -128,7 +128,7 @@ v1ではCloudFormationテンプレートを作成しない。
 
 - `course_spec.md` がSource of Truthとして成立している
 - 通常レクチャーが5本以上、講義本編の合計動画尺が30分以上である
-- 動画生成前にCEOが `course_spec.md` と `course_infomation.md` を確認・承認している
+- CEO依頼に基づき2026-05-17に動画生成とDriveアップロードを完了している
 - AWS公式ドキュメントに基づく仕様確認レポートが存在する
 - `course_infomation.md` にUdemy登録情報、歓迎メッセージ、お祝いメッセージがある
 - `course_curriculum.md` にセクションタイトル、学習目標、制作対象レクチャーがある

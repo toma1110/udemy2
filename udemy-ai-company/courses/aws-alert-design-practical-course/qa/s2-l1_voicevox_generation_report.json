@@ -1,0 +1,50 @@
+{
+  "course_id": "aws-alert-design-practical-course",
+  "lecture_id": "s2-l1",
+  "script_json": "udemy-ai-company/courses/aws-alert-design-practical-course/scripts/s2-l1_reduce_alert_noise_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-alert-design-practical-course/audio/s2-l1",
+  "started_at": "2026-05-17T15:28:25Z",
+  "ended_at": "2026-05-17T15:33:28Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 0.72,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 45.376,
+      "size_bytes": 2178092
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 51.296,
+      "size_bytes": 2462252
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 48.032,
+      "size_bytes": 2305580
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 55.776,
+      "size_bytes": 2677292
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 35.787,
+      "size_bytes": 1717804
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 44.725,
+      "size_bytes": 2146860
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 43.648,
+      "size_bytes": 2095148
+    }
+  ],
+  "audio_count": 7,
+  "total_duration_seconds": 324.64
+}

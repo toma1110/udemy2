@@ -1,0 +1,89 @@
+# s3-l1 CloudWatch Alarmの評価設定を読む
+
+Course: `aws-alert-design-practical-course`
+
+Segments: 7
+
+## Slide 1: CloudWatch Alarmの評価設定を読む
+
+Message: Period、Evaluation Periods、Datapoints to AlarmをM out of Nで読む
+
+### Narration
+
+このレクチャーでは、クラウドウォッチアラームの評価設定を、運用判断として読めるようにします。アラーム設定には、期間、評価期間、アラームにするデータポイント数があります。画面では別々の項目に見えますが、まとめると、どれくらいの時間、どれくらい悪い状態が続いたら通知するか、という設計です。ここを理解すると、なぜアラートが鳴ったのか、なぜ鳴らなかったのかを説明しやすくなります。
+
+### Visual Notes
+
+Metric graph and alarm evaluation window with period, evaluation periods, datapoints. Segment 1.
+
+## Slide 2: CloudWatch Alarmの評価設定を読む
+
+Message: Period、Evaluation Periods、Datapoints to AlarmをM out of Nで読む
+
+### Narration
+
+まず期間です。期間は、一つのデータポイントを何秒または何分で集計するかです。一分ごとに見るのか、五分ごとに見るのかで、アラームの反応速度と安定性が変わります。一分は早く反応できますが、一時的な揺れも拾いやすくなります。五分は安定しますが、検知は遅くなります。ユーザー影響が急に出るサービスでは短め、緩やかに変化するバッチや容量監視では長め、というように目的に合わせます。
+
+### Visual Notes
+
+Metric graph and alarm evaluation window with period, evaluation periods, datapoints. Segment 2.
+
+## Slide 3: CloudWatch Alarmの評価設定を読む
+
+Message: Period、Evaluation Periods、Datapoints to AlarmをM out of Nで読む
+
+### Narration
+
+次に評価期間です。評価期間は、何個のデータポイントを見て判断するかです。たとえば期間一分、評価期間五なら、直近五分間の五個のデータポイントを見ます。ここで、すべて悪いときだけ通知するのか、一部が悪ければ通知するのかを決めるのが、アラームにするデータポイント数です。五個中三個が悪ければ通知するなら、五回中三回、つまりエムアウトオブエヌの考え方になります。
+
+### Visual Notes
+
+Metric graph and alarm evaluation window with period, evaluation periods, datapoints. Segment 3.
+
+## Slide 4: CloudWatch Alarmの評価設定を読む
+
+Message: Period、Evaluation Periods、Datapoints to AlarmをM out of Nで読む
+
+### Narration
+
+この設定を読むときは、しきいちの数字だけを見ないでください。しきいち八十パーセントでも、一分一回で即通知するのか、五分間で三回超えたら通知するのかでは、運用品質が違います。前者は敏感ですがノイズが増えます。後者は少し遅れますが、継続した悪化だけを拾いやすくなります。どちらが正しいかは、サービスの性質と対応の必要性で決まります。
+
+### Visual Notes
+
+Metric graph and alarm evaluation window with period, evaluation periods, datapoints. Segment 4.
+
+## Slide 5: CloudWatch Alarmの評価設定を読む
+
+Message: Period、Evaluation Periods、Datapoints to AlarmをM out of Nで読む
+
+### Narration
+
+また、評価設定はセベリティと関係します。セベリティ高のアラートは、検知を遅らせすぎてはいけません。エラー率急増や可用性低下のようにユーザー影響が強いものは、短い期間で早く通知します。一方、ディスク使用率の増加やキューの緩やかな増加は、少し長めの評価窓で十分なことがあります。早く鳴るべきものと、落ち着いて見るべきものを分けます。
+
+### Visual Notes
+
+Metric graph and alarm evaluation window with period, evaluation periods, datapoints. Segment 5.
+
+## Slide 6: CloudWatch Alarmの評価設定を読む
+
+Message: Period、Evaluation Periods、Datapoints to AlarmをM out of Nで読む
+
+### Narration
+
+トラブルシュートでは、実際に鳴った時刻とグラフを見比べます。アラームが鳴った時刻の前に、評価窓の中で何個のデータポイントがしきいちを超えていたかを確認します。データポイントが足りない場合は、欠損データの扱いも関係します。想定より遅く鳴る、または鳴らない場合は、期間、評価期間、データポイント数、欠損データの扱いをセットで見直します。
+
+### Visual Notes
+
+Metric graph and alarm evaluation window with period, evaluation periods, datapoints. Segment 6.
+
+## Slide 7: CloudWatch Alarmの評価設定を読む
+
+Message: Period、Evaluation Periods、Datapoints to AlarmをM out of Nで読む
+
+### Narration
+
+最後に、設計レビューの質問です。このアラームは、一瞬の悪化で鳴るべきでしょうか。それとも数分続いたら鳴るべきでしょうか。何回中何回悪ければ、人が見る価値がありますか。鳴ったとき、サービス影響を判断できる情報がありますか。クラウドウォッチアラームの評価設定は、単なる画面項目ではなく、対応者を起こす条件です。この前提で読むと、ノイズを減らしながら必要な検知を残せます。
+
+### Visual Notes
+
+Metric graph and alarm evaluation window with period, evaluation periods, datapoints. Segment 7.

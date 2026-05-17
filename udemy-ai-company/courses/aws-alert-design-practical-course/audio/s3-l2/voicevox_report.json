@@ -1,0 +1,50 @@
+{
+  "course_id": "aws-alert-design-practical-course",
+  "lecture_id": "s3-l2",
+  "script_json": "udemy-ai-company/courses/aws-alert-design-practical-course/scripts/s3-l2_missing_data_composite_alarm_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-alert-design-practical-course/audio/s3-l2",
+  "started_at": "2026-05-17T15:43:25Z",
+  "ended_at": "2026-05-17T15:48:21Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 0.72,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 38.656,
+      "size_bytes": 1855532
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 47.168,
+      "size_bytes": 2264108
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 44.907,
+      "size_bytes": 2155564
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 50.613,
+      "size_bytes": 2429484
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 47.179,
+      "size_bytes": 2264620
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 41.995,
+      "size_bytes": 2015788
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 44.779,
+      "size_bytes": 2149420
+    }
+  ],
+  "audio_count": 7,
+  "total_duration_seconds": 315.296
+}

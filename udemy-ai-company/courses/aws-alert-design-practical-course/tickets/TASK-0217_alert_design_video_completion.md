@@ -13,9 +13,9 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: medium
-Status: Blocked
-Auto Execute: spec/course info drafting only; pause before video generation
-Requires CEO Approval: yes, before video generation
+Status: Done
+Auto Execute: completed after CEO request for video generation and Drive upload
+Requires CEO Approval: satisfied by 2026-05-17 user request
 Cost Impact: non-AWS content generation only
 
 ## Inputs
@@ -34,9 +34,9 @@ Dependencies:
 ## Deliverables
 
 Expected Output:
-- updated `course_spec.md` with at least 30 minutes planned lecture video runtime
+- updated `course_spec.md` with completed 30+ minute lecture video runtime
 - updated `course_infomation.md`
-- completed scripts, GPT-Image2 slides, VOICEVOX audio, and MP4s after CEO approval
+- completed scripts, GPT-Image2 slides, VOICEVOX audio, MP4s, and Drive uploads
 - updated course-level QA report
 
 ## Quality Gate
@@ -62,8 +62,10 @@ Rules:
 ## Blocking
 
 Blocked By:
-- CEO priority decision
-- CEO approval of updated `course_spec.md` and `course_infomation.md` before video generation
+- none
 
 Notes:
-- Current audit: 6 spec lectures, 1 lecture MP4, about 3.1 minutes total. Missing `s1-l2`, `s2-l1`, `s2-l2`, `s3-l1`, and `s3-l2`.
+- Completed on 2026-05-17.
+- Final course: 6 lecture MP4s, 1914.164 seconds, about 31.90 minutes.
+- All lecture MP4s passed faststart/decode checks and were uploaded to Google Drive with anyone-reader sharing.
+- Course reports: `qa/course_video_production_report.md`, `qa/course_drive_upload_report.md`.

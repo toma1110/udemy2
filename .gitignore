@@ -8,6 +8,7 @@ __pycache__/
 
 # Generated course media: keep local or upload to Drive, do not store in Git.
 udemy-ai-company/courses/**/slides/**/*.png
+udemy-ai-company/courses/**/qa/*_contact_sheet.png
 udemy-ai-company/courses/**/audio/**/*.wav
 udemy-ai-company/courses/**/video/**/*.mp4
 udemy-ai-company/courses/**/output*.mp4

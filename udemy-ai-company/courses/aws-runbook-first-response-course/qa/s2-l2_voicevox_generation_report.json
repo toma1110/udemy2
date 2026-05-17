@@ -1,0 +1,60 @@
+{
+  "course_id": "aws-runbook-first-response-course",
+  "lecture_id": "s2-l2",
+  "script_json": "udemy-ai-company/courses/aws-runbook-first-response-course/scripts/s2-l2_short_first_checks_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-runbook-first-response-course/audio/s2-l2",
+  "started_at": "2026-05-17T16:02:42Z",
+  "ended_at": "2026-05-17T16:08:30Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 0.72,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 33.92,
+      "size_bytes": 1628204
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 37.952,
+      "size_bytes": 1821740
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 41.579,
+      "size_bytes": 1995820
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 44.288,
+      "size_bytes": 2125868
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 46.411,
+      "size_bytes": 2227756
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 38.987,
+      "size_bytes": 1871404
+    },
+    {
+      "slide_number": 7,
+      "duration_seconds": 32.992,
+      "size_bytes": 1583660
+    },
+    {
+      "slide_number": 8,
+      "duration_seconds": 31.413,
+      "size_bytes": 1507884
+    },
+    {
+      "slide_number": 9,
+      "duration_seconds": 25.003,
+      "size_bytes": 1200172
+    }
+  ],
+  "audio_count": 9,
+  "total_duration_seconds": 332.544
+}

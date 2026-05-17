@@ -121,6 +121,7 @@ def start_engine(engine_path: Path) -> subprocess.Popen[str]:
         raise FileNotFoundError(f"VOICEVOX engine not found: {engine_path}")
     process = subprocess.Popen(
         [str(engine_path), "--host", "127.0.0.1", "--port", "50021"],
+        stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         text=True,
@@ -159,7 +160,8 @@ def synthesize_chunk(text: str, speaker_id: int, speed_scale: float) -> bytes:
 def generate_wav(text: str, output_path: Path, speaker_id: int, speed_scale: float) -> float:
     chunks = split_text_chunks(normalize_for_voicevox(text))
     wav_parts: list[bytes] = []
-    for chunk in chunks:
+    for index, chunk in enumerate(chunks, 1):
+        print(f"  chunk {index}/{len(chunks)} -> {output_path.name}", flush=True)
         for attempt in range(1, 4):
             try:
                 wav_parts.append(synthesize_chunk(chunk, speaker_id, speed_scale))
