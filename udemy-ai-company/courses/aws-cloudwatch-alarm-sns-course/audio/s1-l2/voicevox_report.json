@@ -3,48 +3,48 @@
   "lecture_id": "s1-l2",
   "script_json": "udemy-ai-company/courses/aws-cloudwatch-alarm-sns-course/scripts/s1-l2_script.json",
   "audio_dir": "udemy-ai-company/courses/aws-cloudwatch-alarm-sns-course/audio/s1-l2",
-  "started_at": "2026-05-15T08:54:47Z",
-  "ended_at": "2026-05-15T08:56:49Z",
+  "started_at": "2026-05-17T12:14:10Z",
+  "ended_at": "2026-05-17T12:20:04Z",
   "status": "pass",
   "speaker_id": 3,
-  "speed_scale": 1.1,
+  "speed_scale": 1.0,
   "audio": [
     {
       "slide_number": 1,
-      "duration_seconds": 17.824,
-      "size_bytes": 855596
+      "duration_seconds": 54.549,
+      "size_bytes": 2618412
     },
     {
       "slide_number": 2,
-      "duration_seconds": 17.515,
-      "size_bytes": 840748
+      "duration_seconds": 53.941,
+      "size_bytes": 2589228
     },
     {
       "slide_number": 3,
-      "duration_seconds": 15.957,
-      "size_bytes": 765996
+      "duration_seconds": 54.059,
+      "size_bytes": 2594860
     },
     {
       "slide_number": 4,
-      "duration_seconds": 18.155,
-      "size_bytes": 871468
+      "duration_seconds": 56.875,
+      "size_bytes": 2730028
     },
     {
       "slide_number": 5,
-      "duration_seconds": 15.605,
-      "size_bytes": 749100
+      "duration_seconds": 51.381,
+      "size_bytes": 2466348
     },
     {
       "slide_number": 6,
-      "duration_seconds": 16.747,
-      "size_bytes": 803884
+      "duration_seconds": 46.752,
+      "size_bytes": 2244140
     },
     {
       "slide_number": 7,
-      "duration_seconds": 17.173,
-      "size_bytes": 824364
+      "duration_seconds": 57.44,
+      "size_bytes": 2757164
     }
   ],
   "audio_count": 7,
-  "total_duration_seconds": 118.976
+  "total_duration_seconds": 374.997
 }

@@ -103,18 +103,21 @@ CloudWatch Alarm、SNS通知、CloudWatchの利用状況により料金が発生
 
 本講座では、EC2、RDS、ALBなど長時間稼働する高コストリソースは作りません。
 
-## Udemy成立尺是正方針
+## Udemy成立尺是正結果
 
 2026-05-17の既存コース動画監査では、通常レクチャーMP4は6本存在するが、合計尺は約13.3分でUdemy標準コースの30分要件に届いていない。
 
-是正後の制作方針:
+2026-05-17に、CEOの動画作成依頼を動画再生成承認として扱い、全6レクチャーの台本、VOICEVOX音声、MP4を再生成した。
 
-- レクチャー数は現行の6本を維持する
-- 各レクチャーをおおむね5〜7分に再設計し、講義本編の計画尺を30〜42分にする
-- Alarm評価条件、SNSメール確認、CloudFormationテンプレート読解、通知が届かない時の切り分け、削除確認を十分な手順説明に拡張する
-- プロモーション動画は30分要件に含めない
-- 動画再生成前に、CEOが更新後の `course_spec.md` と `course_infomation.md` を確認・承認する
-- CEO承認後は、全レクチャーの台本、GPT-Image2スライド、VOICEVOX音声、MP4を一括で再生成してよい
+是正後の制作結果:
+
+- レクチャー数は現行の6本を維持した
+- 講義本編の合計動画尺は2115.726秒、35.26分
+- Alarm評価条件、SNSメール確認、CloudFormationテンプレート読解、通知が届かない時の切り分け、削除確認をナレーションで拡張した
+- プロモーション動画は30分要件に含めていない
+- 完成動画は既存のGPT-Image2由来スライドPNGとVOICEVOX音声で再生成した
+- MP4は全6本でfaststartとdecode検証に合格した
+- Google Driveアップロードは本依頼に含まれていないため未実施。別途CEO承認後に実行する
 
 ## Promotion Video Scope
 
@@ -129,15 +132,16 @@ CloudWatch Alarm、SNS通知、CloudWatchの利用状況により料金が発生
 ## Definition of Done
 
 - AWS公式ドキュメントに基づく仕様確認レポートが存在する
-- 通常レクチャーが5本以上、講義本編の合計動画尺が30分以上である
-- 動画再生成前にCEOが `course_spec.md` と `course_infomation.md` を確認・承認している
+- 通常レクチャーが5本以上、講義本編の合計動画尺が30分以上である（2026-05-17時点で6本、35.26分）
+- 動画再生成前にCEOが動画作成を依頼している
 - CloudFormationテンプレート、README、validate script、smoke test scriptが存在する
 - stack create/update/deleteはCEO承認後にだけ実行し、結果を検証レポートに残す
 - 台本とREADMEが一致している
 - `course_curriculum.md` にセクションタイトル、セクション学習目標、ハンズオンリソースタイトルがある
 - スライドと表示文字はGPT-Image2生成である
 - VID-001品質基準と比較し、品質低下がないことをQAで確認する
-- VOICEVOX音声、MP4、Drive URL、QAレポートが作成済みである
+- VOICEVOX音声、MP4、QAレポートが作成済みである
+- Drive URLはGoogle Driveアップロード承認後に追加する
 - プロモーション動画の台本、GPT-Image2素材、VOICEVOX音声、MP4、Drive URL、QAレポートが存在する
 - WorkerとReviewerが別AIである
 

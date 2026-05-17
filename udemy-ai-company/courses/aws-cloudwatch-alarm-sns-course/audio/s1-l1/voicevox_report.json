@@ -3,68 +3,68 @@
   "lecture_id": "s1-l1",
   "script_json": "udemy-ai-company/courses/aws-cloudwatch-alarm-sns-course/scripts/s1-l1_script.json",
   "audio_dir": "udemy-ai-company/courses/aws-cloudwatch-alarm-sns-course/audio/s1-l1",
-  "started_at": "2026-05-14T22:37:04Z",
-  "ended_at": "2026-05-14T22:40:05Z",
+  "started_at": "2026-05-17T12:07:59Z",
+  "ended_at": "2026-05-17T12:14:09Z",
   "status": "pass",
   "speaker_id": 3,
-  "speed_scale": 1.1,
+  "speed_scale": 1.0,
   "audio": [
     {
       "slide_number": 1,
-      "duration_seconds": 16.8,
-      "size_bytes": 806444
+      "duration_seconds": 36.747,
+      "size_bytes": 1763884
     },
     {
       "slide_number": 2,
-      "duration_seconds": 16.117,
-      "size_bytes": 773676
+      "duration_seconds": 37.771,
+      "size_bytes": 1813036
     },
     {
       "slide_number": 3,
-      "duration_seconds": 17.035,
-      "size_bytes": 817708
+      "duration_seconds": 35.755,
+      "size_bytes": 1716268
     },
     {
       "slide_number": 4,
-      "duration_seconds": 15.819,
-      "size_bytes": 759340
+      "duration_seconds": 34.667,
+      "size_bytes": 1664044
     },
     {
       "slide_number": 5,
-      "duration_seconds": 15.936,
-      "size_bytes": 764972
+      "duration_seconds": 34.411,
+      "size_bytes": 1651756
     },
     {
       "slide_number": 6,
-      "duration_seconds": 16.203,
-      "size_bytes": 777772
+      "duration_seconds": 34.667,
+      "size_bytes": 1664044
     },
     {
       "slide_number": 7,
-      "duration_seconds": 15.616,
-      "size_bytes": 749612
+      "duration_seconds": 34.197,
+      "size_bytes": 1641516
     },
     {
       "slide_number": 8,
-      "duration_seconds": 18.261,
-      "size_bytes": 876588
+      "duration_seconds": 32.907,
+      "size_bytes": 1579564
     },
     {
       "slide_number": 9,
-      "duration_seconds": 17.952,
-      "size_bytes": 861740
+      "duration_seconds": 33.621,
+      "size_bytes": 1613868
     },
     {
       "slide_number": 10,
-      "duration_seconds": 17.717,
-      "size_bytes": 850476
+      "duration_seconds": 34.197,
+      "size_bytes": 1641516
     },
     {
       "slide_number": 11,
-      "duration_seconds": 19.776,
-      "size_bytes": 949292
+      "duration_seconds": 34.389,
+      "size_bytes": 1650732
     }
   ],
   "audio_count": 11,
-  "total_duration_seconds": 187.232
+  "total_duration_seconds": 383.328
 }

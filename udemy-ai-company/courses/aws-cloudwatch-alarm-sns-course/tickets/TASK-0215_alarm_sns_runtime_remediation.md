@@ -13,9 +13,9 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: high
-Status: Blocked
-Auto Execute: spec/course info drafting only; pause before video generation
-Requires CEO Approval: yes, before video generation
+Status: Video Produced
+Auto Execute: completed for video generation after CEO request on 2026-05-17
+Requires CEO Approval: satisfied for video generation; Google Drive upload still requires separate approval
 Cost Impact: non-AWS content generation only
 
 ## Inputs
@@ -43,8 +43,8 @@ Expected Output:
 ## Quality Gate
 
 Definition of Done:
-- CEO approved `course_spec.md` and `course_infomation.md` before video regeneration starts
-- final course has at least 5 lectures and at least 30 minutes of lecture video content
+- CEO approved video regeneration by explicit request on 2026-05-17
+- final course has 6 lectures and 2115.726 seconds / 35.26 minutes of lecture video content
 - promo video is not counted toward the 30-minute requirement
 - CloudWatch Alarm, SNS, threshold design, and cost warnings remain accurate
 - GPT-Image2 and VOICEVOX production rules are preserved
@@ -57,14 +57,15 @@ Rules:
 - Planner != Worker
 - Worker != Reviewer
 - course_spec is source of truth
-- video generation requires CEO approval of `course_spec.md` and `course_infomation.md` first
+- video generation was approved by CEO request on 2026-05-17
 - AWS and Google Drive mutations require separate CEO approval
 
 ## Blocking
 
 Blocked By:
-- CEO priority decision
-- CEO approval of updated `course_spec.md` and `course_infomation.md` before video regeneration
+- Google Drive upload approval, if Drive upload is requested
 
 Notes:
-- Current audit: 6 lecture MP4s, about 13.3 minutes total.
+- Previous audit: 6 lecture MP4s, about 13.3 minutes total.
+- Current production result: 6 lecture MP4s, 2115.726 seconds / 35.26 minutes total.
+- Google Drive upload was not performed in this task because the user requested video creation only.
