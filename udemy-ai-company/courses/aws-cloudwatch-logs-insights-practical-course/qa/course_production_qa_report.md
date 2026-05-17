@@ -21,7 +21,7 @@
 | Final slide PNG | 48 fitted 1920x1080 PNG files reused for final videos |
 | VOICEVOX WAV | 48 WAV files regenerated on 2026-05-17 |
 | MP4 video | 8 final MP4 files regenerated on 2026-05-17 |
-| Drive upload | Not performed for remediated videos in `TASK-0213`; existing 2026-05-15 uploads are superseded |
+| Drive upload | 8 remediated videos uploaded in `TASK-0222` with anyone-reader sharing |
 
 ## Quality Gate
 
@@ -38,5 +38,5 @@
 
 ## Residual Risk
 
-- Google Drive upload and transcoding review for the remediated 2026-05-17 MP4 files remains a separate follow-up because `TASK-0213` forbids Drive mutation unless separately approved.
+- Google Drive upload for the remediated 2026-05-17 MP4 files was completed in `TASK-0222`; transcoding status may complete asynchronously on Drive.
 - GPT-Image2-generated small text may contain minor visual imperfections; the primary title/subtitle and diagram intent are usable for review.

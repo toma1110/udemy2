@@ -32,4 +32,4 @@
 - Frame check PNG files were extracted for each lecture.
 - Total lecture video duration is over 30 minutes; promo video is not counted.
 - No AWS Logs Insights query execution was performed for this remediation.
-- Google Drive upload was not performed in `TASK-0213`; existing 2026-05-15 Drive files are superseded by these local MP4s.
+- Google Drive upload was completed separately in `TASK-0222`; Drive URLs are recorded in `qa/drive_upload_summary.md`.

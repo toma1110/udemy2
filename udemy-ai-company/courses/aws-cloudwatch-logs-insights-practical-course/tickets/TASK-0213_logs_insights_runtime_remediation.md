@@ -77,4 +77,4 @@ Notes:
 - Regenerated 8 normal lecture MP4s with GPT-Image2-derived slides and VOICEVOX audio.
 - Final local lecture runtime: 2058.560 seconds, about 34.31 minutes.
 - No AWS Logs Insights query execution, AWS resource mutation, or Google Drive mutation was performed in this ticket.
-- Existing 2026-05-15 Drive uploads are superseded and need a separate upload follow-up if publication review requires Drive links.
+- Existing 2026-05-15 Drive uploads are superseded. Follow-up Drive upload completed in `TASK-0222`.

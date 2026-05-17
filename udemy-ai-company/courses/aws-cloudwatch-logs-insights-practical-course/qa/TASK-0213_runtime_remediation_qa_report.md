@@ -22,7 +22,7 @@
 | MP4 validation | PASS | Build pipeline ran FFmpeg decode validation for all final MP4s. |
 | Faststart | PASS | All build reports have `faststart: true`. |
 | AWS mutation | PASS | No AWS query execution or resource creation performed. |
-| Google Drive mutation | PASS | No Drive upload performed in this ticket; upload remains a follow-up. |
+| Google Drive mutation | PASS | No Drive upload was performed in TASK-0213. Follow-up upload completed in TASK-0222. |
 
 ## Lecture Runtime
 
@@ -39,5 +39,5 @@
 
 ## Residual Risk
 
-- Drive URLs in `qa/drive_upload_summary.md` point to the superseded 2026-05-15 short videos until a separate upload task is approved.
-- This QA is local artifact validation; platform upload/transcoding review is outside `TASK-0213`.
+- Drive URLs in `qa/drive_upload_summary.md` now point to the TASK-0222 runtime-remediated uploads.
+- Platform upload was completed separately in `TASK-0222`; Google Drive transcoding may still complete asynchronously.
