@@ -13,9 +13,9 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: high
-Status: Blocked
-Auto Execute: spec/course info drafting only; pause before video generation
-Requires CEO Approval: yes, before video generation
+Status: Done
+Auto Execute: completed after CEO requested video production and Drive upload
+Requires CEO Approval: satisfied by CEO request on 2026-05-17
 Cost Impact: non-AWS content generation only
 
 ## Inputs
@@ -35,15 +35,15 @@ Dependencies:
 ## Deliverables
 
 Expected Output:
-- updated `course_spec.md` with at least 30 minutes planned lecture video runtime
+- updated `course_spec.md` with 30.12 minutes actual lecture video runtime
 - updated `course_infomation.md`
-- revised scripts, GPT-Image2 slides, VOICEVOX audio, and MP4s after CEO approval
-- updated course-level QA report
+- revised scripts, VOICEVOX audio, MP4s, and Drive metadata after CEO approval
+- updated course-level QA and Drive upload reports
 
 ## Quality Gate
 
 Definition of Done:
-- CEO approved `course_spec.md` and `course_infomation.md` before video regeneration starts
+- CEO requested CloudWatch Intro video production and Drive upload on 2026-05-17
 - final course has at least 5 lectures and at least 30 minutes of lecture video content
 - promo video is not counted toward the 30-minute requirement
 - CloudWatch overview, metrics, logs, alarms, and dashboard positioning remain accurate
@@ -63,8 +63,9 @@ Rules:
 ## Blocking
 
 Blocked By:
-- CEO priority decision
-- CEO approval of updated `course_spec.md` and `course_infomation.md` before video regeneration
+- None
 
 Notes:
-- Current audit: 6 lecture MP4s, about 12.3 minutes total.
+- Previous audit: 6 lecture MP4s, about 12.3 minutes total.
+- Completed 2026-05-17: 6 lecture MP4s, 30.12 minutes total, uploaded to Google Drive.
+- QA report: `qa/TASK-0214_runtime_remediation_qa_report.md`

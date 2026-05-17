@@ -9,13 +9,13 @@ Source of Truth: `course_spec.md`
 - Course Information: `course_infomation.md`
 - Target Lecture Count: 6
 - Target Main Lecture Runtime: 30〜36分
-- Current Audit Result: 2026-05-17時点で通常レクチャー6本、合計約12.3分。Udemy標準コースの30分要件を満たしていない。
+- Current Audit Result: 2026-05-17に通常レクチャー6本を再生成し、合計30.12分でUdemy標準コースの30分要件を満たした。
 
 ## Curriculum Review Gate
 
-- 動画再生成前にCEOが `course_spec.md`、`course_infomation.md`、この `course_curriculum.md` を確認・承認する。
+- CEO依頼により2026-05-17に動画再生成とDriveアップロードを実施した。
 - プロモーション動画は通常レクチャーの30分要件に含めない。
-- CEO承認後は、全レクチャーの台本、GPT-Image2スライド、VOICEVOX音声、MP4を一括で再生成してよい。
+- 全レクチャーの台本、VOICEVOX音声、MP4を再生成し、Driveアップロードまで完了した。
 - 完成動画のスライドと表示文字はGPT-Image2由来PNGに限定する。
 - WorkerとReviewerは分離する。
 
@@ -27,9 +27,9 @@ Hands-on Resource Title: `CloudWatch地図ワークシート`
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
 | --- | --- | --- | --- | --- | --- |
-| `s1-l1` | CloudWatchの地図 | Metrics、Logs、Alarm、Dashboardの違いと、障害調査での位置づけを説明できる | CloudWatch地図ワークシート | 5〜6分 | Produced - regenerate for runtime |
-| `s1-l2` | Metricsの基本 | namespace、metric、dimension、statistic、periodを使ってメトリクスを探す考え方を説明できる | Metrics確認メモ | 5〜6分 | Produced - regenerate for runtime |
-| `s1-l3` | Logsの基本 | log group、log stream、ログイベントを区別し、Metricsとの違いを説明できる | Logs確認メモ | 5〜6分 | Produced - regenerate for runtime |
+| `s1-l1` | CloudWatchの地図 | Metrics、Logs、Alarm、Dashboardの違いと、障害調査での位置づけを説明できる | CloudWatch地図ワークシート | 5〜6分 | Produced - runtime remediated and uploaded 2026-05-17 |
+| `s1-l2` | Metricsの基本 | namespace、metric、dimension、statistic、periodを使ってメトリクスを探す考え方を説明できる | Metrics確認メモ | 5〜6分 | Produced - runtime remediated and uploaded 2026-05-17 |
+| `s1-l3` | Logsの基本 | log group、log stream、ログイベントを区別し、Metricsとの違いを説明できる | Logs確認メモ | 5〜6分 | Produced - runtime remediated and uploaded 2026-05-17 |
 
 ## Section 2: Logs Insightsでログを読む
 
@@ -39,8 +39,8 @@ Hands-on Resource Title: `Logs Insightsクエリ読解`
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
 | --- | --- | --- | --- | --- | --- |
-| `s2-l1` | Logs Insights入門 | `fields`、`filter`、`sort`、`limit`、`stats`、`bin`の基本形を読める | Logs Insightsクエリ読解 | 5〜6分 | Produced - regenerate for runtime |
-| `s2-l2` | Logs Insightsで障害調査 | 最近のエラー、エラー件数、遅延、リクエスト単位の追跡という調査の型を説明できる | 障害調査クエリ集 | 5〜6分 | Produced - regenerate for runtime |
+| `s2-l1` | Logs Insights入門 | `fields`、`filter`、`sort`、`limit`、`stats`、`bin`の基本形を読める | Logs Insightsクエリ読解 | 5〜6分 | Produced - runtime remediated and uploaded 2026-05-17 |
+| `s2-l2` | Logs Insightsで障害調査 | 最近のエラー、エラー件数、遅延、リクエスト単位の追跡という調査の型を説明できる | 障害調査クエリ集 | 5〜6分 | Produced - runtime remediated and uploaded 2026-05-17 |
 
 ## Section 3: Alarm/Dashboardと調査フロー
 
@@ -50,7 +50,7 @@ Hands-on Resource Title: `障害調査の見始め方チェック`
 
 | Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
 | --- | --- | --- | --- | --- | --- |
-| `s3-l1` | Alarm/Dashboardと次の一歩 | Alarm、Dashboard、Metrics、Logs Insightsを使った障害時の見始め方を説明できる | 障害調査の見始め方チェック | 5〜6分 | Produced - regenerate for runtime |
+| `s3-l1` | Alarm/Dashboardと次の一歩 | Alarm、Dashboard、Metrics、Logs Insightsを使った障害時の見始め方を説明できる | 障害調査の見始め方チェック | 5〜6分 | Produced - runtime remediated and uploaded 2026-05-17 |
 
 ## Hands-on Resources
 

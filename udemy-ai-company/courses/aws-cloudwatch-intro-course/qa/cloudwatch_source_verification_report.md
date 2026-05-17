@@ -62,3 +62,15 @@
 Status: Ready for handson README and script creation
 
 Approved By: AI-QA-01
+
+## 2026-05-17 Runtime Remediation Source Recheck
+
+| Source | URL | Course Use |
+| --- | --- | --- |
+| What is Amazon CloudWatch? | https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html | CloudWatch overview, metrics, logs, alarms, dashboards positioning |
+| Amazon CloudWatch concepts | https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html | namespace, metric, dimension, statistic, period, alarms |
+| CloudWatch Logs Insights query syntax | https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html | fields, filter, sort, limit, stats, bin, query cost cautions |
+| Using Amazon CloudWatch alarms | https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Alarms.html | metric alarms, alarm state, action positioning |
+| Using Amazon CloudWatch dashboards | https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html | dashboards as monitoring views, metrics/logs/alarm display positioning |
+
+Result: PASS for runtime-remediated narration wording. No AWS API, CloudFormation, or CloudWatch console mutation was executed during video production.

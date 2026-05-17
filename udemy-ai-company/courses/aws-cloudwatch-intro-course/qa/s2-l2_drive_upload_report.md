@@ -5,7 +5,7 @@
 - Course: `aws-cloudwatch-intro-course`
 - Lecture: `s2-l2`
 - Local file: `courses/aws-cloudwatch-intro-course/video/s2-l2/s2-l2.mp4`
-- Drive name: `vid001-cloudwatch-intro-s2-l2-logs-insights-troubleshooting-20260515.mp4`
+- Drive name: `cloudwatch-intro-s2-l2-runtime-remediated-20260517.mp4`
 
 ## Ownership
 
@@ -16,8 +16,8 @@
 ## Result
 
 - Status: PASS
-- Google Drive file ID: `1zqGYIMhWSOsgmsOT9CJYCvd7KG-mpZE1`
-- Size bytes: 6035099
+- Google Drive file ID: `1ilXGjzYPamdxdancHlyx2A1EFgdwWNs8`
+- Size bytes: 10407570
 - Trashed: false
 - Public permission: anyone reader
 - Metadata: `video/s2-l2/drive_upload.json`
@@ -25,7 +25,7 @@
 
 ## URL
 
-https://drive.google.com/file/d/1zqGYIMhWSOsgmsOT9CJYCvd7KG-mpZE1/view?usp=drivesdk
+https://drive.google.com/file/d/1ilXGjzYPamdxdancHlyx2A1EFgdwWNs8/view?usp=drivesdk
 
 ## Approval
 
