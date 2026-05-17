@@ -1,0 +1,24 @@
+{
+  "id": "1dfogS6mt5sBoKs7G4Ax6P0KrScK4cMhs",
+  "name": "aws-cloudwatch-application-signals-practical-course_promo_20260516.mp4",
+  "trashed": false,
+  "parents": [
+    "1emxiqW5p04dQ9TJ_Q1c1HNWCsmI2TKzv"
+  ],
+  "webViewLink": "https://drive.google.com/file/d/1dfogS6mt5sBoKs7G4Ax6P0KrScK4cMhs/view?usp=drivesdk",
+  "permissions": [
+    {
+      "type": "anyone",
+      "role": "reader"
+    },
+    {
+      "type": "user",
+      "role": "owner"
+    },
+    {
+      "type": "user",
+      "role": "writer"
+    }
+  ],
+  "size": "4268151"
+}

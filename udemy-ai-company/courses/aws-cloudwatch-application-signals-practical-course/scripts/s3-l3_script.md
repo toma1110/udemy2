@@ -1,0 +1,119 @@
+# Section 3 Lecture 3 台本
+
+### Title
+
+Service detailでLatency、Fault、Errorを読む
+
+## Slide 1
+
+### Slide Title
+
+Service detail
+
+### Slide Message
+
+詳細で時間の流れを見る
+
+### Narration
+
+サービスディテールでは、ひとつのサービスを詳しく見ます。ここでは、時間の流れに沿って、レイテンシ、可用性、フォルト、エラーを読みます。 サービスディテールでは、一覧や地図で選んだサービスを深掘りします。ここでは、時間の流れ、操作ごとの違い、失敗や遅延が出たタイミングを確認します。調査の目的は、次に見るログやトレースを選ぶことです。
+
+### Visual Notes
+
+- Service detail overview
+- Time-series panels
+
+## Slide 2
+
+### Slide Title
+
+Latency
+
+### Slide Message
+
+遅さのタイミングを見る
+
+### Narration
+
+レイテンシでは、いつ遅くなったのかを見ます。遅延シナリオの時間帯とグラフの上昇が合っているかを確認します。 レイテンシを見る時は、遅くなった時間帯とシナリオ変更の時間を比べます。すべてのリクエストが遅いのか、一部だけが遅いのかでも判断は変わります。利用者体験に効く操作かどうかも一緒に考えます。
+
+### Visual Notes
+
+- Latency time series
+- Slow scenario annotation
+
+## Slide 3
+
+### Slide Title
+
+Fault
+
+### Slide Message
+
+5系の失敗を見る
+
+### Narration
+
+フォルトは、主に5系の失敗を見る入口です。アプリが意図せず失敗している時、可用性にも影響します。 フォルトは、主にサーバー側の大きな失敗を見る入口として扱います。五百番台のような失敗が増えている場合、呼び出し先の例外、タイムアウト、依存先の問題などを候補にします。数字だけで終わらず、該当時間のログへ進みます。
+
+### Visual Notes
+
+- Fault count
+- Server failure marker
+
+## Slide 4
+
+### Slide Title
+
+Error
+
+### Slide Message
+
+失敗の種類を分ける
+
+### Narration
+
+エラーは、失敗を理解するためのもうひとつの入口です。フォルトや可用性と合わせて見て、何が悪化しているのかを切り分けます。 エラーは、失敗の種類を広めに見るための入口です。クライアント側の失敗、入力の問題、アプリケーション例外など、原因はさまざまです。フォルトとエラーを分けて見ることで、どちらの方向へ調査するかを決めやすくなります。
+
+### Visual Notes
+
+- Error trend
+- Comparison with availability
+
+## Slide 5
+
+### Slide Title
+
+ログとトレースへ
+
+### Slide Message
+
+数字から出来事へ進む
+
+### Narration
+
+メトリクスだけでは、何が起きたかまでは分かりません。数字で悪化を見つけたら、ログやトレースへ進み、具体的な出来事を確認します。 ログとトレースへ進む時は、見つけた時間帯とサービス名を持って移動します。メトリクスで異常を見つけ、ログで出来事を読み、トレースで呼び出しの流れを見る、という順番を作ると調査が安定します。
+
+### Visual Notes
+
+- Metric to logs and traces path
+- Event investigation
+
+## Slide 6
+
+### Slide Title
+
+運用判断
+
+### Slide Message
+
+見るだけで終わらせない
+
+### Narration
+
+サービスディテールを見る目的は、画面を眺めることではありません。遅いのか、失敗しているのか、依存関係なのかを分け、次に取る行動を決めることです。 運用判断では、画面を見たあとに行動を決めます。影響が続いているならきんきゅうどを上げる、回復しているなら再発防止の調査へ回す、依存先が怪しいなら担当者へつなぐ、というように次の一手へ変換します。
+
+### Visual Notes
+
+- Decision tree from metrics
+- Next action checklist

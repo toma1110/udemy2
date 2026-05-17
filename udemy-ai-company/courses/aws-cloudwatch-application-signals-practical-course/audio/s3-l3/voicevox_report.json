@@ -1,0 +1,45 @@
+{
+  "course_id": "aws-cloudwatch-application-signals-practical-course",
+  "lecture_id": "s3-l3",
+  "script_json": "udemy-ai-company/courses/aws-cloudwatch-application-signals-practical-course/scripts/s3-l3_script.json",
+  "audio_dir": "udemy-ai-company/courses/aws-cloudwatch-application-signals-practical-course/audio/s3-l3",
+  "started_at": "2026-05-17T09:18:06Z",
+  "ended_at": "2026-05-17T09:20:47Z",
+  "status": "pass",
+  "speaker_id": 3,
+  "speed_scale": 1.0,
+  "audio": [
+    {
+      "slide_number": 1,
+      "duration_seconds": 29.376,
+      "size_bytes": 1410092
+    },
+    {
+      "slide_number": 2,
+      "duration_seconds": 25.141,
+      "size_bytes": 1206828
+    },
+    {
+      "slide_number": 3,
+      "duration_seconds": 29.013,
+      "size_bytes": 1392684
+    },
+    {
+      "slide_number": 4,
+      "duration_seconds": 28.384,
+      "size_bytes": 1362476
+    },
+    {
+      "slide_number": 5,
+      "duration_seconds": 26.72,
+      "size_bytes": 1282604
+    },
+    {
+      "slide_number": 6,
+      "duration_seconds": 30.368,
+      "size_bytes": 1457708
+    }
+  ],
+  "audio_count": 6,
+  "total_duration_seconds": 169.003
+}

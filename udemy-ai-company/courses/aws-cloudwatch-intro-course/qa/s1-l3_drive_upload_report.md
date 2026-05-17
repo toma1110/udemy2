@@ -5,7 +5,7 @@
 - Course: `aws-cloudwatch-intro-course`
 - Lecture: `s1-l3`
 - Local file: `courses/aws-cloudwatch-intro-course/video/s1-l3/s1-l3.mp4`
-- Drive name: `vid001-cloudwatch-intro-s1-l3-logs-20260515.mp4`
+- Drive name: `cloudwatch-intro-s1-l3-runtime-remediated-20260517.mp4`
 
 ## Ownership
 
@@ -16,8 +16,8 @@
 ## Result
 
 - Status: PASS
-- Google Drive file ID: `1Fv1gD5oAWqtvEo8V6saUq8G_Qd3NnZ61`
-- Size bytes: 6224327
+- Google Drive file ID: `1xCHeW0stTUyF0MW_R9Q17cG74LSIIsMc`
+- Size bytes: 10530762
 - Trashed: false
 - Public permission: anyone reader
 - Metadata: `video/s1-l3/drive_upload.json`
@@ -25,7 +25,7 @@
 
 ## URL
 
-https://drive.google.com/file/d/1Fv1gD5oAWqtvEo8V6saUq8G_Qd3NnZ61/view?usp=drivesdk
+https://drive.google.com/file/d/1xCHeW0stTUyF0MW_R9Q17cG74LSIIsMc/view?usp=drivesdk
 
 ## Approval
 

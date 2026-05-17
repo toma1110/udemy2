@@ -1,0 +1,67 @@
+{
+  "title": "Application Signalsで何が見えるか",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "Application Signalsの入口",
+      "message": "アプリの状態をサービス単位で見る",
+      "narration": "このコースでは、クラウドウォッチアプリケーションシグナルズを、実アプリの通信で学びます。まずは、何を見るための機能なのかを整理します。入口は、サービス単位で状態を見ることです。 メトリクスだけを見る監視では、どのサービスのどの操作が利用者体験に効いているかを切り分けにくいことがあります。アプリケーションシグナルズでは、アプリをサービスとして見て、通信、遅さ、失敗、目標を同じ流れで確認します。まず全体を見てから、必要なサービスへ入る順番を作ります。",
+      "visual_notes": [
+        "Application Signals entry point",
+        "Service health overview",
+        "One service highlighted"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "4つの基本指標",
+      "message": "量、速さ、成功、失敗",
+      "narration": "アプリケーションシグナルズでは、通信量、レイテンシ、可用性、フォルト、エラーを確認します。数字を個別に見るだけでなく、サービスの健康状態としてまとめて見るのがポイントです。 ここでの通信量は、そもそも観測対象に呼び出しが来ているかを見る入口です。レイテンシは遅さ、可用性は成功割合、フォルトとエラーは失敗の種類を見るための指標です。単独の数字ではなく、同じ時間帯に何が一緒に変わったかを読むことが重要です。",
+      "visual_notes": [
+        "Call volume, latency, availability, fault, error tiles",
+        "Healthy and unhealthy state contrast"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "Services",
+      "message": "まず一覧で状態をつかむ",
+      "narration": "最初に見るのはサービス一覧です。どのサービスに通信が来ているか。レイテンシが悪化していないか。フォルトやエラーが増えていないか。調査の出発点をここで決めます。 サービス一覧では、いきなり詳細に入らず、どこから見るべきかを決めます。通信がないサービスは、計装や時間範囲を疑います。通信があるのに遅い、または失敗が増えているサービスは、詳細画面や地図へ進む候補になります。",
+      "visual_notes": [
+        "Service list abstraction",
+        "Status, latency, availability columns"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "Application Map",
+      "message": "依存関係を地図で見る",
+      "narration": "次に、アプリケーションマップで依存関係を見ます。サービス同士がどのようにつながり、どこで遅延や失敗が出ているかを、地図として確認します。 地図で見る利点は、自分が担当するサービスだけでなく、呼び出し先や呼び出し元も同時に意識できることです。障害は一つのサービスに見えても、実際には依存先の遅延や失敗が影響している場合があります。",
+      "visual_notes": [
+        "Abstract service map",
+        "Two Lambda nodes connected",
+        "Error marker on one node"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "Service detail",
+      "message": "原因へ近づく詳細画面",
+      "narration": "サービスディテールでは、レイテンシ、可用性、フォルト、エラーを時間の流れで見ます。ここからログやトレースへ進み、何が起きたのかを調べる流れを作ります。 詳細画面では、一覧で見つけた違和感を時間の流れで確認します。遅くなった時間、失敗が増えた時間、ログやトレースで深掘りすべき場所を決めます。ここで原因を断定するのではなく、次に見る証拠を選びます。",
+      "visual_notes": [
+        "Detailed metrics timeline",
+        "Link from metric to logs and traces"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "title": "SLOへつなげる",
+      "message": "重要な体験を目標にする",
+      "narration": "最後に、重要なサービス状態をエスエルオーへつなげます。ただし、短時間のハンズオンで十分な実運用データが集まるわけではありません。このコースでは、作り方と見方を分けて学びます。 エスエルオーは、監視を利用者体験の目標へ変えるための仕組みです。ただし、目標は思いつきで決めるものではありません。どの操作が重要か、どの遅さや失敗を許容できないかを考え、実データを見ながら調整します。",
+      "visual_notes": [
+        "SLO target connected to service health",
+        "Learning scope vs production data boundary"
+      ]
+    }
+  ]
+}

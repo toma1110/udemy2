@@ -1,0 +1,62 @@
+{
+  "title": "CloudWatch Application Signals実践プロモーション動画",
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "実アプリで学ぶAPM",
+      "message": "Application Signalsを体験する",
+      "narration": "メトリクスやログはある。でも、アプリケーション全体をどこから見ればよいか分からない。そんなかたむけに、クラウドウォッチアプリケーションシグナルズを実アプリの通信で体験する講座です。",
+      "visual_notes": [
+        "Application monitoring entry point",
+        "Service health overview",
+        "Premium AWS/SRE observability style"
+      ]
+    },
+    {
+      "slide_number": 2,
+      "title": "Lambdaと低頻度通信",
+      "message": "CloudFormationで作る",
+      "narration": "ハンズオンでは、クラウドフォーメーションでラムダのサンプルアプリと、低頻度の通信を作ります。高負荷テストではなく、停止できる小さな構成で安全に確認します。",
+      "visual_notes": [
+        "EventBridge Scheduler to traffic Lambda to sample Lambda",
+        "Low-frequency traffic indicator",
+        "Cost safety guardrail"
+      ]
+    },
+    {
+      "slide_number": 3,
+      "title": "状態、地図、詳細",
+      "message": "見る順番を作る",
+      "narration": "サービス一覧で状態を見て、アプリケーションマップで依存関係を見て、サービスディテールでレイテンシ、可用性、フォルト、エラーを確認します。",
+      "visual_notes": [
+        "Services list",
+        "Application map",
+        "Service detail metrics"
+      ]
+    },
+    {
+      "slide_number": 4,
+      "title": "正常、遅延、エラー",
+      "message": "変化を見て学ぶ",
+      "narration": "正常、遅延、エラー、回復のシナリオを切り替えます。画面がどう変わるかを見ながら、運用担当が次に何を確認するかまで整理します。",
+      "visual_notes": [
+        "Scenario switcher",
+        "Latency spike",
+        "Error signal",
+        "Recovery trend"
+      ]
+    },
+    {
+      "slide_number": 5,
+      "title": "SLO、停止、削除",
+      "message": "学んだ後に片付ける",
+      "narration": "最後に、アプリケーションシグナルズのエスエルオーへつなげます。通信を止め、スタックを削除し、コスト確認まで行うところまでを、ひとつの学習範囲にします。",
+      "visual_notes": [
+        "SLO health",
+        "Stop traffic",
+        "Delete stack",
+        "Cost check"
+      ]
+    }
+  ]
+}
