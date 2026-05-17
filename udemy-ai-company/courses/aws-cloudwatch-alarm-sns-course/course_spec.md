@@ -117,7 +117,7 @@ CloudWatch Alarm、SNS通知、CloudWatchの利用状況により料金が発生
 - プロモーション動画は30分要件に含めていない
 - 完成動画は既存のGPT-Image2由来スライドPNGとVOICEVOX音声で再生成した
 - MP4は全6本でfaststartとdecode検証に合格した
-- Google Driveアップロードは本依頼に含まれていないため未実施。別途CEO承認後に実行する
+- Google Driveアップロードは2026-05-17に完了し、URLを `qa/course_drive_upload_report.md` に記録した
 
 ## Promotion Video Scope
 
@@ -140,8 +140,7 @@ CloudWatch Alarm、SNS通知、CloudWatchの利用状況により料金が発生
 - `course_curriculum.md` にセクションタイトル、セクション学習目標、ハンズオンリソースタイトルがある
 - スライドと表示文字はGPT-Image2生成である
 - VID-001品質基準と比較し、品質低下がないことをQAで確認する
-- VOICEVOX音声、MP4、QAレポートが作成済みである
-- Drive URLはGoogle Driveアップロード承認後に追加する
+- VOICEVOX音声、MP4、Drive URL、QAレポートが作成済みである
 - プロモーション動画の台本、GPT-Image2素材、VOICEVOX音声、MP4、Drive URL、QAレポートが存在する
 - WorkerとReviewerが別AIである
 

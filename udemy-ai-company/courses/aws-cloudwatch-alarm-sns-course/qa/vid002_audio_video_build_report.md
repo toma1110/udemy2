@@ -42,8 +42,8 @@
 | Faststart | PASS | All build reports have `faststart: true`. |
 | Decode validation | PASS | Build tool validated decode for all six MP4 files. |
 | Frame check | PASS | Build tool extracted one frame check per lecture. |
-| Google Drive upload | NOT RUN | Not requested in this task; separate CEO approval required. |
+| Google Drive upload | PASS | Completed after follow-up CEO request; see `qa/course_drive_upload_report.md`. |
 
 ## Result
 
-Status: PASS for local MP4 production.
+Status: PASS for MP4 production and Google Drive upload.

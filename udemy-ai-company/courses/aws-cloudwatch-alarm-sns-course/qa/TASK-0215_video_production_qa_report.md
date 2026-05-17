@@ -8,7 +8,7 @@
 - Owner AI: AI-Production-01
 - Reviewer AI: AI-QA-01
 - Scope: local video generation only
-- Google Drive upload: not run
+- Google Drive upload: completed
 - AWS resource mutation: not run
 
 ## Runtime Result
@@ -36,8 +36,9 @@
 | Slide/audio count match | PASS | 49 slides and 49 WAV files. |
 | MP4 decode and faststart | PASS | Build reports passed for all six MP4s. |
 | Worker != Reviewer | PASS | Owner AI and Reviewer AI are separate. |
+| Google Drive upload | PASS | `video/*/drive_upload.json` and `qa/*_drive_metadata.json` saved. |
 
 ## Notes
 
-- The user requested video creation only. Google Drive upload remains pending separate CEO approval.
+- Google Drive upload was completed after the follow-up CEO request on 2026-05-17.
 - No AWS API, CloudFormation stack, SNS publish, or CloudWatch mutation was executed.

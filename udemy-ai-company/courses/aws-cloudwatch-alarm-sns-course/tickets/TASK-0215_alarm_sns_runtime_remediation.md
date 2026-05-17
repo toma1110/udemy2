@@ -13,9 +13,9 @@ Reviewer AI: AI-QA-01
 ## Execution
 
 Priority: high
-Status: Video Produced
-Auto Execute: completed for video generation after CEO request on 2026-05-17
-Requires CEO Approval: satisfied for video generation; Google Drive upload still requires separate approval
+Status: Done
+Auto Execute: completed for video generation and Google Drive upload after CEO requests on 2026-05-17
+Requires CEO Approval: satisfied for video generation and Google Drive upload
 Cost Impact: non-AWS content generation only
 
 ## Inputs
@@ -39,6 +39,7 @@ Expected Output:
 - updated `course_infomation.md`
 - revised scripts, GPT-Image2 slides, VOICEVOX audio, and MP4s after CEO approval
 - updated course-level QA report
+- Google Drive upload metadata and report
 
 ## Quality Gate
 
@@ -49,6 +50,7 @@ Definition of Done:
 - CloudWatch Alarm, SNS, threshold design, and cost warnings remain accurate
 - GPT-Image2 and VOICEVOX production rules are preserved
 - all MP4s pass faststart and decode checks
+- Google Drive upload completed for all 6 MP4s
 - Worker != Reviewer
 
 ## Constraints
@@ -58,14 +60,15 @@ Rules:
 - Worker != Reviewer
 - course_spec is source of truth
 - video generation was approved by CEO request on 2026-05-17
-- AWS and Google Drive mutations require separate CEO approval
+- AWS mutations require separate CEO approval
+- Google Drive upload was approved by CEO request on 2026-05-17
 
 ## Blocking
 
 Blocked By:
-- Google Drive upload approval, if Drive upload is requested
+- None
 
 Notes:
 - Previous audit: 6 lecture MP4s, about 13.3 minutes total.
 - Current production result: 6 lecture MP4s, 2115.726 seconds / 35.26 minutes total.
-- Google Drive upload was not performed in this task because the user requested video creation only.
+- Google Drive upload completed on 2026-05-17. URLs are recorded in `qa/course_drive_upload_report.md`.

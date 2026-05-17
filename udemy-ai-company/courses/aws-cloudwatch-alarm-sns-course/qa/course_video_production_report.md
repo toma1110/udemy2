@@ -23,7 +23,7 @@
 - Lecture count: 6
 - Total duration: 2115.726 seconds / 35.26 minutes
 - Total local MP4 size: 77673856 bytes
-- Google Drive upload: not run
+- Google Drive upload: completed
 
 ## Verification
 
@@ -33,3 +33,4 @@
 - MP4 faststart: PASS
 - MP4 decode validation: PASS
 - Frame extraction check: PASS
+- Google Drive upload: PASS

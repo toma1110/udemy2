@@ -2,13 +2,16 @@
 
 ## Upload Result
 
+- Course: `aws-cloudwatch-alarm-sns-course`
+- Lecture: `s1-l2`
+- Date: 2026-05-17
 - Status: PASS
-- File name: `vid002-cloudwatch-alarm-sns-s1-l2-course-20260515.mp4`
-- File ID: `17pM96Z2STnFuS9mDeFwQYFrx5Aw1nOYH`
-- Size bytes: 5844636
-- Web view link: https://drive.google.com/file/d/17pM96Z2STnFuS9mDeFwQYFrx5Aw1nOYH/view?usp=drivesdk
-- Metadata: `qa/s1-l2_drive_metadata_courseexpansion.json`
+- File name: `cloudwatch-alarm-sns-s1-l2-runtime-remediated-20260517.mp4`
+- File ID: `1ctb346ua2Ng1MNYITajyjK-SF2BoYOYK`
+- Size bytes: 12805540
+- Web view link: https://drive.google.com/file/d/1ctb346ua2Ng1MNYITajyjK-SF2BoYOYK/view?usp=drivesdk
+- Metadata: `video/s1-l2/drive_upload.json`
 
-## Result
+## Sharing Check
 
-Status: PASS
+Status: PASS. Metadata includes `type: anyone`, `role: reader`.

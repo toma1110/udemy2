@@ -9,7 +9,7 @@ Source of Truth: `course_spec.md`
 - Course Information: `course_infomation.md`
 - Target Lecture Count: 6
 - Target Main Lecture Runtime: 30〜42分
-- Current Audit Result: 2026-05-17に通常レクチャー6本を再生成済み。合計2115.726秒、35.26分でUdemy標準コースの30分要件を満たしている。Google Driveアップロードは未実施。
+- Current Audit Result: 2026-05-17に通常レクチャー6本を再生成し、Google Driveへアップロード済み。合計2115.726秒、35.26分でUdemy標準コースの30分要件を満たしている。
 
 ## Curriculum Review Gate
 
@@ -69,4 +69,4 @@ Hands-on Resource Title: `更新・削除・トラブルシュート確認リス
 - CEO依頼後に全レクチャーを再生成し、短尺版をそのまま完成扱いにしていない。
 - CloudFormation validate、create、update、smoke test、deleteの結果をQAに残す。
 - 台本、GPT-Image2スライド、VOICEVOX音声、MP4、QAレポートが各レクチャーに存在する。
-- Drive upload reportはGoogle Driveアップロード承認後に追加する。
+- Drive upload reportは `qa/course_drive_upload_report.md` に記録済み。

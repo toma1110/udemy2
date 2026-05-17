@@ -35,7 +35,7 @@
 | Check | Result | Notes |
 | --- | --- | --- |
 | AWS resource mutation | NOT RUN | No CloudFormation stack create/update/delete, SNS publish, or CloudWatch mutation was executed. |
-| Google Drive upload | NOT RUN | User requested video creation only; upload requires separate CEO approval. |
+| Google Drive upload | PASS | All six MP4s uploaded; metadata saved under `video/*/drive_upload.json` and `qa/*_drive_metadata.json`. |
 | README consistency | PASS | Videos explain create, confirm, test, update, delete flow aligned with the course handson. |
 | Production IaC positioning | PASS | CloudFormation is framed as教材ハンズオン; CDK/Terraform are recommended for実運用. |
 
