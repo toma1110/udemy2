@@ -7,6 +7,7 @@ Source of Truth: `course_spec.md`
 - Course ID: `aws-cloudwatch-application-signals-practical-course`
 - Course Title: `AWS CloudWatch Application Signals実践: サンプルアプリで学ぶAPM・Service Map・SLO監視`
 - Course Information: `course_infomation.md`
+- Public Repo: https://github.com/toma1110/cloudwatch-application-signals-practical-cfn
 - Target Lecture Count: 11
 - Target Main Lecture Runtime: 33〜44分
 - Current Audit Result: 2026-05-17時点で通常レクチャー11本、合計約13.2分。Udemy標準コースの30分要件を満たしていない。

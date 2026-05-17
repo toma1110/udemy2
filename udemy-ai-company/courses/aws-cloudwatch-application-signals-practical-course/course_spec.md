@@ -120,7 +120,7 @@ Publicリポジトリは `udemy-ai-company/public_repo/<repo-name>/` 配下で�
 
 - Repo name: `cloudwatch-application-signals-practical-cfn`
 - Local working copy: `udemy-ai-company/public_repo/cloudwatch-application-signals-practical-cfn/`
-- Public URL: 未公開。公開時に `course_curriculum.md` とREADMEへ反映する
+- Public URL: https://github.com/toma1110/cloudwatch-application-signals-practical-cfn
 - 内容:
   - CloudFormationテンプレート
   - `validate.sh`
