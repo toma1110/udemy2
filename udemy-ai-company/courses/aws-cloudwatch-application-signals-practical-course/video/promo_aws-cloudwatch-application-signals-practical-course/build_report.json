@@ -1,0 +1,13 @@
+{
+  "lecture": "promo_aws-cloudwatch-application-signals-practical-course",
+  "slides": 5,
+  "audios": 5,
+  "duration": 60.699229,
+  "size": 4268151,
+  "faststart": true,
+  "output": "udemy-ai-company/courses/aws-cloudwatch-application-signals-practical-course/video/promo_aws-cloudwatch-application-signals-practical-course/promo_aws-cloudwatch-application-signals-practical-course.mp4",
+  "dynamic": false,
+  "fps": 1,
+  "tail_pad_seconds": 2.0,
+  "segments": 6
+}

@@ -2,85 +2,84 @@
 
 Source of Truth: `course_spec.md`
 
+## Course Goal
+
+CloudWatch Application Signalsを、サンプルアプリの通信、APM、Service Map、SLO監視、停止・削除・コスト確認まで含めて体験できる状態にする。
+
 ## Course
 
 - Course ID: `aws-cloudwatch-application-signals-practical-course`
 - Course Title: `AWS CloudWatch Application Signals実践: サンプルアプリで学ぶAPM・Service Map・SLO監視`
-- Course Information: `course_infomation.md`
-- Public Repo: https://github.com/toma1110/cloudwatch-application-signals-practical-cfn
-- Target Lecture Count: 11
-- Target Main Lecture Runtime: 33〜44分
-- Current Audit Result: 2026-05-17時点で通常レクチャー11本、合計約13.2分。Udemy標準コースの30分要件を満たしていない。
-
-## Curriculum Review Gate
-
-- 動画再生成前にCEOが `course_spec.md`、`course_infomation.md`、この `course_curriculum.md` を確認・承認する。
-- プロモーション動画は通常レクチャーの30分要件に含めない。
-- CEO承認後は、全レクチャーの台本、GPT-Image2スライド、VOICEVOX音声、MP4を一括で再生成してよい。
-- CloudFormation stack作成、更新、削除、Application Signals有効化、AWS実行はCEO承認後にだけ実行する。
-- 完成動画のスライドと表示文字はGPT-Image2由来PNGに限定する。
-- WorkerとReviewerは分離する。
+- Hands-on Resource Title: `Application Signalsサンプルアプリ CloudFormationハンズオン`
+- PublicRepo local working copy: `udemy-ai-company/public_repo/cloudwatch-application-signals-practical-cfn/`
+- PublicRepo URL: 未公開。公開後にGitHub URLへ更新する
 
 ## Section 1: Application Signalsの地図
 
-Section Learning Goal: Application Signalsで何が見えるか、ハンズオン構成、コスト安全策を説明できる。
+### Section Learning Objectives
 
-Hands-on Resource Title: `Application Signalsハンズオン構成とコスト安全策`
+- Application Signalsで見えるサービス状態、依存関係、Latency、Availability、Fault、Errorを説明できる
+- 本講座で作るサンプルアプリ、自動トラフィック、コスト安全策を理解できる
 
-| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
-| --- | --- | --- | --- | --- | --- |
-| `s1-l1` | Application Signalsで何が見えるか | Services、Application Map、Service detail、Latency、Availability、Fault、Errorの関係を説明できる | Application Signals画面地図 | 3〜4分 | Produced - regenerate for runtime |
-| `s1-l2` | ハンズオン構成とコスト安全策 | サンプルアプリ、低頻度トラフィック、停止、削除、料金注意を説明できる | コスト安全策チェック | 3〜4分 | Produced - regenerate for runtime |
+| Lecture ID | Lecture Title | Learning Goal | Hands-on | Hands-on Resource |
+| --- | --- | --- | --- | --- |
+| `s1-l1` | Application Signalsで何が見えるか | Services、Application Map、Service detail、SLOの位置づけを説明できる | なし | なし |
+| `s1-l2` | ハンズオン構成とコスト安全策 | 作成するAWSリソース、低頻度通信、停止、削除、料金注意を説明できる | あり | `handson/README.md#実行前チェック` |
 
 ## Section 2: CloudFormationでサンプルアプリを作る
 
-Section Learning Goal: CloudFormationテンプレートを読み、サンプル通信、低頻度トラフィック、シナリオ切替を理解できる。
+### Section Learning Objectives
 
-Hands-on Resource Title: `Application Signals CloudFormationハンズオン`
+- CloudFormationテンプレートの全体像を読み、サンプルアプリとトラフィック生成の関係を説明できる
+- CEO承認後にREADME通りの作成、確認、シナリオ切り替えを再現できる
 
-| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
-| --- | --- | --- | --- | --- | --- |
-| `s2-l1` | テンプレート全体を読む | Lambda、IAM、Logs、Scheduler、Application Signals関連リソースの役割を説明できる | CloudFormationテンプレート読解 | 3〜4分 | Produced - regenerate for runtime |
-| `s2-l2` | サンプルアプリと低頻度トラフィックをデプロイする | READMEに沿った作成手順と、低頻度トラフィックの目的を説明できる | Stack作成手順 | 3〜4分 | Produced - regenerate for runtime |
-| `s2-l3` | 正常、遅延、エラーのシナリオを切り替える | 正常、遅延、エラーの通信を発生させ、画面変化につなげて説明できる | シナリオ切替手順 | 3〜4分 | Produced - regenerate for runtime |
+| Lecture ID | Lecture Title | Learning Goal | Hands-on | Hands-on Resource |
+| --- | --- | --- | --- | --- |
+| `s2-l1` | テンプレート全体を読む | Application Signals有効化、Lambda、Scheduler、SLOの関係を読める | あり | `cloudformation/README.md#テンプレートを読む` |
+| `s2-l2` | サンプルアプリと低頻度トラフィックをデプロイする | stack create後に低頻度通信が始まる流れを説明できる | あり | `cloudformation/README.md#作成する` |
+| `s2-l3` | 正常、遅延、エラーのシナリオを切り替える | 正常、遅延、エラーの通信パターンを切り替え、観測結果の違いを説明できる | あり | `cloudformation/README.md#シナリオを切り替える` |
 
 ## Section 3: Application Signalsで見る
 
-Section Learning Goal: Services、Application Map、Service detailからサービス状態、依存関係、Latency/Fault/Errorを読み取れる。
+### Section Learning Objectives
 
-Hands-on Resource Title: `Application Signals画面確認手順`
+- Application Signalsの画面を使い、サービス状態、依存関係、詳細メトリクスを順番に確認できる
 
-| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
-| --- | --- | --- | --- | --- | --- |
-| `s3-l1` | Servicesで状態を見る | Services一覧でサービス状態、呼び出し量、Latency、Availabilityを確認できる | Services確認手順 | 3〜4分 | Produced - regenerate for runtime |
-| `s3-l2` | Application Mapで依存関係を見る | Application Mapで呼び出し関係と障害箇所の入口を説明できる | Application Map確認手順 | 3〜4分 | Produced - regenerate for runtime |
-| `s3-l3` | Service detailでLatency、Fault、Errorを読む | Service detailでLatency、Fault、Error、ログへの深掘りを説明できる | Service detail確認手順 | 3〜4分 | Produced - regenerate for runtime |
+| Lecture ID | Lecture Title | Learning Goal | Hands-on | Hands-on Resource |
+| --- | --- | --- | --- | --- |
+| `s3-l1` | Servicesで状態を見る | Services画面でサービス、Latency、Availability、Fault、Errorを見る順番を説明できる | あり | `handson/README.md#servicesを確認する` |
+| `s3-l2` | Application Mapで依存関係を見る | Application Mapでサービス間の関係と異常箇所を見る考え方を説明できる | あり | `handson/README.md#application-mapを確認する` |
+| `s3-l3` | Service detailでLatency、Fault、Errorを読む | Service detailから原因調査へ進む観点を説明できる | あり | `handson/README.md#service-detailを確認する` |
 
 ## Section 4: SLOと運用判断につなげる
 
-Section Learning Goal: Application Signals SLO、Recommendations、Performance Report、停止、削除、コスト確認の前提を説明できる。
+### Section Learning Objectives
 
-Hands-on Resource Title: `Application Signals SLOと後片付け手順`
+- Application Signals SLOの位置づけを理解し、短時間ハンズオンで確認できる範囲と実運用データが必要な範囲を分けられる
+- 自動トラフィック停止、削除、コスト確認まで実行できる
 
-| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
-| --- | --- | --- | --- | --- | --- |
-| `s4-l1` | Application Signals SLOを作る | Application Signals SLOを1つ作成し、SLIとSLOの関係を説明できる | SLO作成手順 | 3〜4分 | Produced - regenerate for runtime |
-| `s4-l2` | SLO RecommendationsとPerformance Reportの前提 | 30日データや実運用データが必要な機能を短時間ハンズオンと分けて説明できる | Recommendations前提メモ | 3〜4分 | Produced - regenerate for runtime |
-| `s4-l3` | 後片付け、停止、コスト確認 | 自動トラフィック停止、stack delete、ログ、SLO、料金確認を説明できる | 停止・削除・コスト確認手順 | 3〜4分 | Produced - regenerate for runtime |
+| Lecture ID | Lecture Title | Learning Goal | Hands-on | Hands-on Resource |
+| --- | --- | --- | --- | --- |
+| `s4-l1` | Application Signals SLOを作る | Application Signals SLOとSLIの関係を説明できる | あり | `cloudformation/README.md#sloを確認する` |
+| `s4-l2` | RecommendationsとPerformance Reportの前提 | 30日データや実運用トラフィックが必要な機能を説明できる | なし | なし |
+| `s4-l3` | 停止、削除、コスト確認 | 自動トラフィック停止、stack delete、Cost Explorer確認の流れを説明できる | あり | `cloudformation/README.md#停止と削除` |
 
-## Hands-on Resources
+## Final Deliverables
 
-| Resource Title | Location | Required AWS Resources | Notes |
-| --- | --- | --- | --- |
-| Application Signalsハンズオン構成とコスト安全策 | `handson/README.md` | なし | 実行前に読む |
-| Application Signals CloudFormationハンズオン | `cloudformation/README.md` | Lambda、IAM、Logs、Scheduler、Application Signals | CEO承認後のみ実行 |
-| Application Signals画面確認手順 | `handson/README.md` | 作成済みサンプルアプリ | 短時間・低頻度で確認 |
-| Application Signals SLOと後片付け手順 | `handson/README.md` | Application Signals SLO | 停止と削除を必須にする |
-
-## Definition of Done
-
-- 通常レクチャー11本が存在する。
-- 講義本編の合計動画尺が30分以上である。
-- CEO承認後に全レクチャーを再生成し、短尺版をそのまま完成扱いにしない。
-- CloudFormation validate、create、update、smoke test、deleteの結果をQAに残す。
-- 台本、GPT-Image2スライド、VOICEVOX音声、MP4、QAレポート、Drive upload reportが各レクチャーに存在する。
+- `course_spec.md`
+- `course_infomation.md`
+- `course_curriculum.md`
+- `udemy-ai-company/public_repo/cloudwatch-application-signals-practical-cfn/README.md`
+- `cloudformation/template.yaml`
+- `cloudformation/validate.sh`
+- `cloudformation/smoke_test.sh`
+- `cloudformation/stop_traffic.sh`
+- `handson/README.md`
+- `scripts/*_script.md`
+- `scripts/*_script.json`
+- GPT-Image2 source PNG and fitted final PNG
+- VOICEVOX WAV
+- MP4 video
+- QA report
+- Google Drive upload report
+- Promotion video package

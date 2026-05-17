@@ -12,10 +12,10 @@ Reviewer AI: AI-QA-01
 
 ## Execution
 
-Priority: medium
-Status: Blocked
-Auto Execute: spec/course info drafting only; pause before video generation
-Requires CEO Approval: yes, before video generation
+Priority: high
+Status: Done
+Auto Execute: completed after CEO request
+Requires CEO Approval: satisfied on 2026-05-17 before video generation and Drive upload
 Cost Impact: non-AWS content generation only
 
 ## Inputs
@@ -39,6 +39,8 @@ Expected Output:
 - updated `course_infomation.md`
 - revised scripts, GPT-Image2 slides, VOICEVOX audio, and MP4s after CEO approval
 - updated course-level QA report
+- regenerated 11 normal lecture MP4s totaling 34.16 minutes
+- uploaded 11 remediated lecture MP4s to Google Drive
 
 ## Quality Gate
 
@@ -63,8 +65,11 @@ Rules:
 ## Blocking
 
 Blocked By:
-- CEO priority decision
-- CEO approval of updated `course_spec.md` and `course_infomation.md` before video regeneration
+- None
 
 Notes:
-- Current audit: 11 lecture MP4s, about 13.2 minutes total. This likely needs deeper restructuring rather than only small narration padding.
+- CEO requested Application Signals video creation through Drive upload on 2026-05-17.
+- Regenerated 11 normal lecture MP4s with GPT-Image2-derived slides and VOICEVOX audio.
+- Final local lecture runtime: 2049.580 seconds, about 34.16 minutes.
+- Uploaded 11 normal lecture MP4s to Google Drive with anyone-reader sharing.
+- No AWS CloudFormation create/update/delete/full, Application Signals activation, or AWS resource mutation was performed in this ticket.

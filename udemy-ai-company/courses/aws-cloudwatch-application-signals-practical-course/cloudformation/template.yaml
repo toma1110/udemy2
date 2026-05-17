@@ -1,0 +1,458 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudWatch Application Signals hands-on sample app with low-frequency Lambda traffic.
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Project
+        Parameters:
+          - ProjectName
+      - Label:
+          default: Traffic
+        Parameters:
+          - TrafficEnabled
+          - TrafficScheduleExpression
+          - Scenario
+          - RequestCountPerRun
+          - SlowDelayMs
+          - ErrorRatePercent
+      - Label:
+          default: Application Signals SLO
+        Parameters:
+          - CreateApplicationSignalsSlo
+          - AvailabilitySloTarget
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: appsignals-demo
+    Description: Prefix for sample resources.
+    AllowedPattern: '^[a-z][a-z0-9-]{2,30}[a-z0-9]$'
+    ConstraintDescription: Use 4-32 lowercase letters, numbers, and hyphens. Start with a letter.
+  TrafficEnabled:
+    Type: String
+    Default: 'true'
+    Description: Enable the EventBridge Scheduler traffic generator.
+    AllowedValues:
+      - 'true'
+      - 'false'
+  TrafficScheduleExpression:
+    Type: String
+    Default: rate(1 minute)
+    Description: EventBridge Scheduler expression. Keep this low frequency for the hands-on.
+  Scenario:
+    Type: String
+    Default: normal
+    Description: Sample API behavior used by the traffic generator.
+    AllowedValues:
+      - normal
+      - slow
+      - error
+      - recovery
+  RequestCountPerRun:
+    Type: Number
+    Default: 1
+    Description: Requests sent by each scheduled traffic run.
+    MinValue: 1
+    MaxValue: 5
+  SlowDelayMs:
+    Type: Number
+    Default: 1200
+    Description: Delay in milliseconds for the slow scenario.
+    MinValue: 100
+    MaxValue: 5000
+  ErrorRatePercent:
+    Type: Number
+    Default: 100
+    Description: Percentage of requests that fail in the error scenario. Keep 100 for deterministic hands-on demos.
+    MinValue: 0
+    MaxValue: 100
+  CreateApplicationSignalsSlo:
+    Type: String
+    Default: 'false'
+    Description: Create the Application Signals SLO after the service has reported metrics.
+    AllowedValues:
+      - 'true'
+      - 'false'
+  AvailabilitySloTarget:
+    Type: Number
+    Default: 95
+    Description: Request-based availability SLO target percentage.
+    MinValue: 90
+    MaxValue: 99.9
+
+Mappings:
+  PythonOtelLayer:
+    af-south-1:
+      Arn: arn:aws:lambda:af-south-1:904233096616:layer:AWSOpenTelemetryDistroPython:19
+    ap-east-1:
+      Arn: arn:aws:lambda:ap-east-1:888577020596:layer:AWSOpenTelemetryDistroPython:19
+    ap-northeast-1:
+      Arn: arn:aws:lambda:ap-northeast-1:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    ap-northeast-2:
+      Arn: arn:aws:lambda:ap-northeast-2:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    ap-northeast-3:
+      Arn: arn:aws:lambda:ap-northeast-3:615299751070:layer:AWSOpenTelemetryDistroPython:21
+    ap-south-1:
+      Arn: arn:aws:lambda:ap-south-1:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    ap-south-2:
+      Arn: arn:aws:lambda:ap-south-2:796973505492:layer:AWSOpenTelemetryDistroPython:19
+    ap-southeast-1:
+      Arn: arn:aws:lambda:ap-southeast-1:615299751070:layer:AWSOpenTelemetryDistroPython:21
+    ap-southeast-2:
+      Arn: arn:aws:lambda:ap-southeast-2:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    ap-southeast-3:
+      Arn: arn:aws:lambda:ap-southeast-3:039612877180:layer:AWSOpenTelemetryDistroPython:19
+    ap-southeast-4:
+      Arn: arn:aws:lambda:ap-southeast-4:713881805771:layer:AWSOpenTelemetryDistroPython:19
+    ap-southeast-5:
+      Arn: arn:aws:lambda:ap-southeast-5:152034782359:layer:AWSOpenTelemetryDistroPython:10
+    ap-southeast-7:
+      Arn: arn:aws:lambda:ap-southeast-7:980416031188:layer:AWSOpenTelemetryDistroPython:10
+    ca-central-1:
+      Arn: arn:aws:lambda:ca-central-1:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    ca-west-1:
+      Arn: arn:aws:lambda:ca-west-1:595944127152:layer:AWSOpenTelemetryDistroPython:10
+    eu-central-1:
+      Arn: arn:aws:lambda:eu-central-1:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    eu-central-2:
+      Arn: arn:aws:lambda:eu-central-2:156041407956:layer:AWSOpenTelemetryDistroPython:19
+    eu-north-1:
+      Arn: arn:aws:lambda:eu-north-1:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    eu-south-1:
+      Arn: arn:aws:lambda:eu-south-1:257394471194:layer:AWSOpenTelemetryDistroPython:19
+    eu-south-2:
+      Arn: arn:aws:lambda:eu-south-2:490004653786:layer:AWSOpenTelemetryDistroPython:19
+    eu-west-1:
+      Arn: arn:aws:lambda:eu-west-1:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    eu-west-2:
+      Arn: arn:aws:lambda:eu-west-2:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    eu-west-3:
+      Arn: arn:aws:lambda:eu-west-3:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    il-central-1:
+      Arn: arn:aws:lambda:il-central-1:746669239226:layer:AWSOpenTelemetryDistroPython:19
+    me-central-1:
+      Arn: arn:aws:lambda:me-central-1:739275441131:layer:AWSOpenTelemetryDistroPython:19
+    me-south-1:
+      Arn: arn:aws:lambda:me-south-1:980921751758:layer:AWSOpenTelemetryDistroPython:19
+    mx-central-1:
+      Arn: arn:aws:lambda:mx-central-1:610118373846:layer:AWSOpenTelemetryDistroPython:10
+    sa-east-1:
+      Arn: arn:aws:lambda:sa-east-1:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    us-east-1:
+      Arn: arn:aws:lambda:us-east-1:615299751070:layer:AWSOpenTelemetryDistroPython:25
+    us-east-2:
+      Arn: arn:aws:lambda:us-east-2:615299751070:layer:AWSOpenTelemetryDistroPython:22
+    us-west-1:
+      Arn: arn:aws:lambda:us-west-1:615299751070:layer:AWSOpenTelemetryDistroPython:29
+    us-west-2:
+      Arn: arn:aws:lambda:us-west-2:615299751070:layer:AWSOpenTelemetryDistroPython:29
+
+Conditions:
+  EnableTraffic: !Equals [!Ref TrafficEnabled, 'true']
+  CreateSlo: !Equals [!Ref CreateApplicationSignalsSlo, 'true']
+
+Resources:
+  ApplicationSignalsDiscovery:
+    Type: AWS::ApplicationSignals::Discovery
+
+  SampleApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ProjectName}-sample-api
+      RetentionInDays: 7
+
+  TrafficGeneratorLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ProjectName}-traffic-generator
+      RetentionInDays: 7
+
+  SampleApiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/CloudWatchLambdaApplicationSignalsExecutionRolePolicy
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+
+  TrafficGeneratorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/CloudWatchLambdaApplicationSignalsExecutionRolePolicy
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+      Policies:
+        - PolicyName: InvokeSampleApi
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !GetAtt SampleApiFunction.Arn
+
+  SchedulerInvokeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: InvokeTrafficGenerator
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !GetAtt TrafficGeneratorFunction.Arn
+
+  SampleApiFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+      - SampleApiLogGroup
+      - ApplicationSignalsDiscovery
+    Properties:
+      FunctionName: !Sub ${ProjectName}-sample-api
+      Description: Sample API Lambda for CloudWatch Application Signals hands-on.
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt SampleApiRole.Arn
+      Timeout: 10
+      MemorySize: 256
+      TracingConfig:
+        Mode: Active
+      Layers:
+        - !FindInMap [PythonOtelLayer, !Ref AWS::Region, Arn]
+      Environment:
+        Variables:
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/otel-instrument
+          LAMBDA_APPLICATION_SIGNALS_REMOTE_ENVIRONMENT: lambda:default
+          OTEL_SERVICE_NAME: !Sub ${ProjectName}-sample-api
+          OTEL_TRACES_SAMPLER: traceidratio
+          OTEL_TRACES_SAMPLER_ARG: '1.0'
+          SCENARIO: !Ref Scenario
+          SLOW_DELAY_MS: !Ref SlowDelayMs
+          ERROR_RATE_PERCENT: !Ref ErrorRatePercent
+      Code:
+        ZipFile: |
+          import hashlib
+          import json
+          import os
+          import time
+
+          def _event_value(event, name, default):
+              if isinstance(event, dict) and name in event:
+                  return event[name]
+              return default
+
+          def _should_fail(request_id, error_rate):
+              digest = hashlib.sha256(str(request_id).encode("utf-8")).hexdigest()
+              bucket = int(digest[:8], 16) % 100
+              return bucket < error_rate
+
+          def handler(event, context):
+              scenario = _event_value(event, "scenario", os.environ.get("SCENARIO", "normal"))
+              request_id = _event_value(event, "request_id", "manual")
+              slow_delay_ms = int(os.environ.get("SLOW_DELAY_MS", "1200"))
+              error_rate = int(os.environ.get("ERROR_RATE_PERCENT", "100"))
+
+              if scenario == "slow":
+                  time.sleep(slow_delay_ms / 1000.0)
+
+              if scenario == "error" and _should_fail(request_id, error_rate):
+                  raise RuntimeError(f"intentional demo failure for request_id={request_id}")
+
+              body = {
+                  "service": os.environ.get("OTEL_SERVICE_NAME", "sample-api"),
+                  "scenario": scenario,
+                  "request_id": request_id,
+                  "status": "ok",
+              }
+              return {
+                  "statusCode": 200,
+                  "headers": {"content-type": "application/json"},
+                  "body": json.dumps(body),
+              }
+
+  TrafficGeneratorFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+      - TrafficGeneratorLogGroup
+      - ApplicationSignalsDiscovery
+    Properties:
+      FunctionName: !Sub ${ProjectName}-traffic-generator
+      Description: Low-frequency traffic generator for Application Signals hands-on.
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt TrafficGeneratorRole.Arn
+      Timeout: 30
+      MemorySize: 256
+      TracingConfig:
+        Mode: Active
+      Layers:
+        - !FindInMap [PythonOtelLayer, !Ref AWS::Region, Arn]
+      Environment:
+        Variables:
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/otel-instrument
+          LAMBDA_APPLICATION_SIGNALS_REMOTE_ENVIRONMENT: lambda:default
+          OTEL_SERVICE_NAME: !Sub ${ProjectName}-traffic-generator
+          OTEL_TRACES_SAMPLER: traceidratio
+          OTEL_TRACES_SAMPLER_ARG: '1.0'
+          SAMPLE_FUNCTION_NAME: !Ref SampleApiFunction
+          SCENARIO: !Ref Scenario
+          REQUEST_COUNT_PER_RUN: !Ref RequestCountPerRun
+      Code:
+        ZipFile: |
+          import boto3
+          import json
+          import os
+          import time
+          import uuid
+
+          lambda_client = boto3.client("lambda")
+
+          def handler(event, context):
+              sample_function = os.environ["SAMPLE_FUNCTION_NAME"]
+              scenario = os.environ.get("SCENARIO", "normal")
+              count = int(os.environ.get("REQUEST_COUNT_PER_RUN", "1"))
+              run_id = str(uuid.uuid4())[:8]
+              results = []
+
+              for index in range(count):
+                  request_id = f"{run_id}-{index}"
+                  payload = {
+                      "scenario": scenario,
+                      "request_id": request_id,
+                      "source": "traffic-generator",
+                  }
+                  response = lambda_client.invoke(
+                      FunctionName=sample_function,
+                      InvocationType="RequestResponse",
+                      Payload=json.dumps(payload).encode("utf-8"),
+                  )
+                  response_payload = response["Payload"].read().decode("utf-8")
+                  function_error = response.get("FunctionError")
+                  results.append({
+                      "request_id": request_id,
+                      "status_code": response.get("StatusCode"),
+                      "function_error": function_error,
+                      "payload": response_payload[:300],
+                  })
+                  time.sleep(0.2)
+
+              print(json.dumps({
+                  "scenario": scenario,
+                  "sample_function": sample_function,
+                  "request_count": count,
+                  "results": results,
+              }))
+              return {
+                  "scenario": scenario,
+                  "request_count": count,
+                  "errors": [item for item in results if item["function_error"]],
+              }
+
+  TrafficScheduleGroup:
+    Type: AWS::Scheduler::ScheduleGroup
+    Properties:
+      Name: !Sub ${ProjectName}-traffic
+
+  TrafficSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: !Sub ${ProjectName}-traffic
+      GroupName: !Ref TrafficScheduleGroup
+      Description: Low-frequency traffic for the Application Signals hands-on.
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      ScheduleExpression: !Ref TrafficScheduleExpression
+      State: !If [EnableTraffic, ENABLED, DISABLED]
+      Target:
+        Arn: !GetAtt TrafficGeneratorFunction.Arn
+        RoleArn: !GetAtt SchedulerInvokeRole.Arn
+        Input: !Sub |
+          {
+            "source": "eventbridge-scheduler",
+            "project": "${ProjectName}"
+          }
+
+  ApplicationSignalsAvailabilitySlo:
+    Type: AWS::ApplicationSignals::ServiceLevelObjective
+    Condition: CreateSlo
+    DependsOn:
+      - ApplicationSignalsDiscovery
+      - SampleApiFunction
+    Properties:
+      Name: !Sub ${ProjectName}-availability-slo
+      Description: Request-based availability SLO for the sample API Lambda service.
+      RequestBasedSli:
+        RequestBasedSliMetric:
+          KeyAttributes:
+            Environment: lambda:default
+            Name: !Sub ${ProjectName}-sample-api
+            Type: Service
+          MetricType: AVAILABILITY
+      Goal:
+        Interval:
+          RollingInterval:
+            DurationUnit: DAY
+            Duration: 1
+        AttainmentGoal: !Ref AvailabilitySloTarget
+        WarningThreshold: 80
+      Tags:
+        - Key: Course
+          Value: aws-cloudwatch-application-signals-practical-course
+        - Key: Project
+          Value: !Ref ProjectName
+
+Outputs:
+  SampleApiFunctionName:
+    Description: Sample API Lambda function name.
+    Value: !Ref SampleApiFunction
+  TrafficGeneratorFunctionName:
+    Description: Traffic generator Lambda function name.
+    Value: !Ref TrafficGeneratorFunction
+  TrafficScheduleName:
+    Description: EventBridge Scheduler schedule name.
+    Value: !Ref TrafficSchedule
+  TrafficScheduleState:
+    Description: Current traffic schedule state.
+    Value: !If [EnableTraffic, ENABLED, DISABLED]
+  SampleApiLogGroupName:
+    Description: Sample API Lambda log group.
+    Value: !Ref SampleApiLogGroup
+  TrafficGeneratorLogGroupName:
+    Description: Traffic generator Lambda log group.
+    Value: !Ref TrafficGeneratorLogGroup
+  ApplicationSignalsSampleServiceKeyAttributes:
+    Description: Key attributes for aws application-signals get-service.
+    Value: !Sub Environment=lambda:default,Name=${ProjectName}-sample-api,Type=Service
+  ApplicationSignalsConsoleUrl:
+    Description: CloudWatch Application Signals Services console URL.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#application-signals:services
+  ApplicationSignalsSloArn:
+    Condition: CreateSlo
+    Description: Application Signals SLO ARN.
+    Value: !GetAtt ApplicationSignalsAvailabilitySlo.Arn
