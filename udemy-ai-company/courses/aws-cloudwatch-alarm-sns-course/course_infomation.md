@@ -1,43 +1,120 @@
-# Course Information
+# udemy登録情報
 
-## Course Title
+## 想定する学習者
 
-CloudFormationで作るCloudWatch Alarm + SNS通知
+### コースで受講生は何を学びますか？
+※コースを修了後に学習者が達成できると期待できる学習目的や成果を4つ以上入力する必要があります。（160文字以内）
 
-## Subtitle
+CloudWatch Alarmの条件、状態、アクションを説明できる
+しきい値、期間、評価回数、Datapoints to Alarmを使ってAlarm条件を読める
+SNS TopicとEmail Subscriptionの役割を理解し、メール通知の確認手順を説明できる
+CloudFormationでAlarm + SNS通知の最小構成を作成、更新、削除できる
+通知が届かない時に、SNS購読確認、Alarm状態、メール設定の基本確認ができる
 
-AWS初学者向けに、CloudWatch Alarmの評価条件からSNSメール通知、CloudFormationでの作成、更新、削除までを再現します。
+### コースを受講するための要件や前提条件は何ですか?
+コースを受講する学習者に求められるスキル、経験、ツール、機器をリストアップします。
+そのような要件がない場合は、その点を初心者にとってのハードルを下げるチャンスとして利用しましょう。
 
-## Description
+- AWSアカウントを持っている
+- CloudFormation、CloudWatch、SNSを利用できる権限がある
+- 通知確認用のメールアドレスを用意できる
+- AWSマネジメントコンソールの基本操作を知っている
+- AWS CLIは任意。READMEの手順に従えると理解しやすい
+- ハンズオン後にCloudFormation stackを削除し、コスト確認できる
 
-CloudWatch AlarmとSNS通知は、AWS監視の最初の実践ステップです。
-
-この講座では、CloudWatch Alarmの評価条件、SNS Topicとメール確認、CloudFormationテンプレートの読み方、通知確認、更新、削除までをREADME通りに進めます。
-
-CloudFormationは教材ハンズオンで追加ツールを減らすために使います。実運用では、保守性やチーム開発を考慮してCDKまたはTerraformを推奨する位置づけも説明します。
-
-## Learning Goals
-
-- CloudWatch Alarmの条件、状態、アクションを説明できる
-- しきいち、期間、評価回数、データポイントを説明できる
-- SNS TopicとEmail Subscriptionの役割を説明できる
-- CloudFormationテンプレートでAlarm + SNS通知の最小構成を読める
-- メール確認、通知テスト、削除までの流れを再現できる
-- 通知が届かない時の基本確認ポイントを説明できる
-
-## Target Students
+### 誰に向けたコースですか?
+コースの内容が必ず役に立つ、想定する学習者を明確に示します。
+そうすることで、最適な学習者にコースをアピールすることができます。
 
 - CloudWatch Alarmを初めて作るAWS初学者
 - 監視通知のハンズオンを小さく安全に試したい人
+- SNSメール通知の流れをREADME通りに再現したい人
+- CloudFormationで作成、更新、削除まで試したい人
 - SREやクラウド運用へ進む前にAlarm通知の基本を押さえたい人
 
-## Requirements
+## コース紹介ページ
 
-- AWSアカウント
-- CloudFormation、CloudWatch、SNSを利用できる権限
-- 通知確認用メールアドレス
-- AWS CLIは任意
+### コースタイトル
+CloudFormationで作るCloudWatch Alarm + SNS通知
 
-## AI/Voice Disclosure
+※タイトルは、目立ち、わかりやすく、検索エンジン用に最適化されている必要があります
 
-本講座のスライドはGPT-Image2で生成し、ナレーション素材はVOICEVOXを使用します。
+### コースのサブタイトル
+AWS初学者向けに、CloudWatch Alarmの評価条件からSNSメール通知、CloudFormationでの作成、更新、削除までを再現します。
+
+※関連するキーワードを1つまたは2つ使用し、コースで取り上げた最も重要な分野を3～4つ挙げてください。
+
+### コースの説明
+※本コースにはAIの使用が含まれています。
+本コースのナレーションには、VOICEVOXの「ずんだもん」を使用しています。VOICEVOX利用規約に基づき商用利用しています。
+
+■ このコースはこんな悩みを解決します
+・CloudWatch Alarmを作りたいが、評価条件の意味が曖昧
+・SNS Topicとメール購読確認の流れが分からない
+・通知が届かない時に、何を確認すればよいか分からない
+・手作業だけでなく、CloudFormationテンプレートでも再現したい
+・作成だけでなく、更新、削除、コスト確認まで含めて安全に練習したい
+
+---
+
+■ このコースで学べること
+CloudWatch AlarmとSNS通知は、AWS監視の最初の実践ステップです。
+
+・CloudWatch Alarmの条件、状態、アクション
+・しきい値、Period、Evaluation Periods、Datapoints to Alarmの考え方
+・SNS Topic、Email Subscription、購読確認メールの流れ
+・CloudFormationテンプレートでAlarm + SNS通知を作る方法
+・stack create、update、deleteの基本フロー
+・通知テストと、通知が届かない場合の確認ポイント
+・教材ハンズオン用CloudFormationと実運用IaCの位置づけ
+
+---
+
+■ このコースの特徴
+【特徴1】Alarm通知を小さく再現する
+複雑な監視基盤ではなく、CloudWatch Alarm + SNSメール通知の最小構成に絞って理解します。
+
+【特徴2】README通りに作成から削除まで進める
+「作って終わり」ではなく、メール確認、通知確認、更新、削除までを一連の流れで扱います。
+
+【特徴3】CloudFormationの位置づけを明確にする
+CloudFormationは教材ハンズオンで追加ツールを減らすために使います。実運用ではCDKまたはTerraformを推奨する位置づけも説明します。
+
+---
+
+■ ハンズオンとコストについて
+本コースではCloudWatch Alarm、SNS Topic、Email SubscriptionなどのAWSリソースを作成します。
+料金が発生する可能性があるため、READMEのコスト注意と削除手順を確認し、学習後はCloudFormation stackを削除してください。
+
+---
+
+■ 想定受講時間
+約1〜2時間（講義＋CloudFormationハンズオン）
+
+## コース画像
+ここにコース画像をアップロードしてください。使用する画像は、Udemyのコース画像品質基準に適合している必要があります。重要なガイドライン: 750x422ピクセル、.jpg、.jpeg、.gif、または.png形式、テキストを含む画像は不可。
+
+本コースの画像方針:
+
+- 登録候補: `course_image.png`
+- GPT-Image2生成元: `course_image_gpt_image2_source.png`
+- テキストを含めない
+- Alarm、通知、メール、監視状態を連想できるビジュアルにする
+- AWSやCloudWatchの公式ロゴ、公式UIの模写、読めない文字列を避ける
+
+## コースメッセージ
+受講生がコースに参加したときやコースを修了したときに自動的に送信するメッセージを設定して、コースで学ぶ受講生を励ましましょう（設定は任意です）。コースに参加したときの歓迎のメッセージやコースを修了したときのお祝いのメッセージを送信しない場合は、テキストボックスを空白のままにしておきます。
+
+### 歓迎のメッセージ
+ご受講ありがとうございます。
+
+このコースでは、CloudWatch AlarmとSNS通知を小さく安全に作り、評価条件、通知先、メール確認、更新、削除までをREADME通りに確認します。
+
+通知確認ではメール購読の承認が必要です。ハンズオンを実行する場合は、作成するAWSリソース、料金注意、削除手順を確認しながら進めてください。
+
+### お祝いのメッセージ
+コース修了お疲れさまでした。
+
+CloudWatch Alarmの条件、SNS Topic、Email Subscription、CloudFormationでの作成から削除までの基本フローを確認できました。
+
+次の一歩として、自分の環境で「何を通知すべきか」「誰に通知すべきか」「通知が届かなかった時に何を確認するか」を整理してみてください。Alarmは作るだけでなく、運用で使える通知設計にして初めて役に立ちます。
