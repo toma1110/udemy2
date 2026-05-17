@@ -1,64 +1,58 @@
-# Course Curriculum
+# AWS CloudWatch Logs Insights実践 カリキュラム
+
+Source of Truth: `course_spec.md`
 
 ## Course
 
 - Course ID: `aws-cloudwatch-logs-insights-practical-course`
 - Course Title: `AWS CloudWatch Logs Insights実践: 障害調査クエリ集`
-- Source Candidate: `VID-004`
-- Source of Truth: `course_spec.md`
+- Course Information: `course_infomation.md`
+- Target Lecture Count: 8
+- Target Main Lecture Runtime: 32〜40分
+- Current Audit Result: 2026-05-17時点で通常レクチャー8本、合計約11.7分。Udemy標準コースの30分要件を満たしていない。
+
+## Curriculum Review Gate
+
+- 動画再生成前にCEOが `course_spec.md`、`course_infomation.md`、この `course_curriculum.md` を確認・承認する。
+- プロモーション動画は通常レクチャーの30分要件に含めない。
+- CEO承認後は、全レクチャーの台本、GPT-Image2スライド、VOICEVOX音声、MP4を一括で再生成してよい。
+- 完成動画のスライドと表示文字はGPT-Image2由来PNGに限定する。
+- WorkerとReviewerは分離する。
 
 ## Section 1: クエリの安全運転と基本形
 
-### Section Learning Objectives
+Section Learning Goal: Logs Insightsで調査を始める前に、ロググループ、時間範囲、基本構文、スキャン量を安全に扱える。
 
-- Logs Insightsでロググループと時間範囲を絞る理由を説明できる
-- `@timestamp`、`@message`、`@logStream`、`@log` を使ってログを読む入口を作れる
-- `fields`、`filter`、`sort`、`limit` の基本形を読める
+Hands-on Resource Title: `Logs Insights安全運転チェック`
 
-### Hands-on Resource Title
-
-`Logs Insights安全運転チェック`
-
-| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Production Status |
-| --- | --- | --- | --- | --- |
-| `s1-l1` | Logs Insights実践の地図 | 障害調査でLogs Insightsが担当する範囲を説明できる | 調査フロー地図 | Produced |
-| `s1-l2` | ロググループと時間範囲 | スキャン量を抑える実行前チェックを説明できる | Logs Insights安全運転チェック | Produced |
-| `s1-l3` | 基本構文: fields/filter/sort/limit | 直近ログとエラー検索の基本クエリを読める | 基本クエリ読解 | Produced |
+| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
+| --- | --- | --- | --- | --- | --- |
+| `s1-l1` | Logs Insights実践の地図 | 障害調査でLogs Insightsが担当する範囲と、Metrics/Alarmとの違いを説明できる | 調査フロー地図 | 4〜5分 | Produced - regenerate for runtime |
+| `s1-l2` | ロググループと時間範囲 | スキャン量を抑えるために、対象ロググループと時間範囲を絞る理由を説明できる | Logs Insights安全運転チェック | 4〜5分 | Produced - regenerate for runtime |
+| `s1-l3` | 基本構文: fields/filter/sort/limit | 直近ログを見る基本形、並び替え、件数制限、料金注意を説明できる | 基本クエリ読解 | 4〜5分 | Produced - regenerate for runtime |
 
 ## Section 2: 障害調査クエリ集
 
-### Section Learning Objectives
+Section Learning Goal: エラー、例外、傾向、遅延、requestId追跡を、実務で使うクエリの型として選べる。
 
-- エラー、例外、タイムアウトを探すクエリを選べる
-- `stats` と `bin()` で時間帯ごとの傾向を集計できる
-- JSONフィールド、`parse`、requestId、`dedup` を使った追跡の考え方を説明できる
+Hands-on Resource Title: `障害調査クエリ集`
 
-### Hands-on Resource Title
-
-`障害調査クエリ集`
-
-| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Production Status |
-| --- | --- | --- | --- | --- |
-| `s2-l1` | エラーと例外を探す | ERROR、Exception、timeout、5xxの探し方を説明できる | エラー検索クエリ | Produced |
-| `s2-l2` | stats/binで傾向を見る | 時間ごとの件数、上位エラー、遅延パーセンタイルを集計できる | 傾向集計クエリ | Produced |
-| `s2-l3` | parseとrequestId追跡 | 非構造ログから値を取り出し、requestIdで一連の出来事を追える | requestId追跡クエリ | Produced |
+| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
+| --- | --- | --- | --- | --- | --- |
+| `s2-l1` | エラーと例外を探す | ERROR、Exception、timeout、5xxを探すクエリと、誤検知しやすい条件を説明できる | エラー検索クエリ | 4〜5分 | Produced - regenerate for runtime |
+| `s2-l2` | stats/binで傾向を見る | `stats` と `bin()` で時間ごとの件数、上位エラー、遅延傾向を集計できる | 傾向集計クエリ | 4〜5分 | Produced - regenerate for runtime |
+| `s2-l3` | parseとrequestId追跡 | JSONログ、非構造ログ、`parse`、requestId、`dedup` の使い分けを説明できる | requestId追跡クエリ | 4〜5分 | Produced - regenerate for runtime |
 
 ## Section 3: 2026年版の発展機能
 
-### Section Learning Objectives
+Section Learning Goal: `pattern`、`anomaly`、`JOIN`、subquery、`SOURCE` を、無理に実行せず読み方と使いどころから判断できる。
 
-- `pattern` と `anomaly` の使いどころを説明できる
-- `JOIN`、subquery、`SOURCE` の対象と制約を説明できる
-- 実務で「まず小さく、必要な時だけ広げる」クエリ設計を選べる
+Hands-on Resource Title: `2026年版Logs Insights発展機能メモ`
 
-### Hands-on Resource Title
-
-`2026年版Logs Insights発展機能メモ`
-
-| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Production Status |
-| --- | --- | --- | --- | --- |
-| `s3-l1` | pattern/anomalyで未知の変化を見る | ログパターンと異常検知を調査入口として説明できる | pattern/anomaly読解 | Produced |
-| `s3-l2` | JOIN/subquery/SOURCEの入口 | 複数ロググループ相関、入れ子クエリ、タグ指定の位置づけを説明できる | JOIN/subquery/SOURCEメモ | Produced |
+| Lecture ID | Lecture Title | Learning Goal | Hands-on Resource Title | Target Runtime | Production Status |
+| --- | --- | --- | --- | --- | --- |
+| `s3-l1` | pattern/anomalyで未知の変化を見る | ログパターンと異常検知を、未知の変化を見つける入口として説明できる | pattern/anomaly読解 | 4〜5分 | Produced - regenerate for runtime |
+| `s3-l2` | JOIN/subquery/SOURCEの入口 | 複数ロググループ相関、入れ子クエリ、タグ指定クエリの位置づけと注意点を説明できる | JOIN/subquery/SOURCEメモ | 4〜5分 | Produced - regenerate for runtime |
 
 ## Hands-on Resources
 
@@ -71,13 +65,9 @@
 | requestId追跡クエリ | `handson/queries/06_request_trace.sql` | requestIdを含むログ | サンプルログで読解可能 |
 | 2026年版発展機能メモ | `handson/README.md#2026年版の発展機能` | 任意 | 実行は上級者向け |
 
-## Final Deliverables
+## Definition of Done
 
-- `scripts/*_script.md`
-- `scripts/*_script.json`
-- `slides/*_gpt_image_prompts.md`
-- GPT-Image2 source PNG and fitted final PNG
-- VOICEVOX WAV
-- MP4 video
-- QA report
-- Google Drive upload report
+- 通常レクチャー8本が存在する。
+- 講義本編の合計動画尺が30分以上である。
+- CEO承認後に全レクチャーを再生成し、短尺版をそのまま完成扱いにしない。
+- 台本、GPT-Image2スライド、VOICEVOX音声、MP4、QAレポート、Drive upload reportが各レクチャーに存在する。
