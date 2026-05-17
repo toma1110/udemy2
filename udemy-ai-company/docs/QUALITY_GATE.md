@@ -61,8 +61,10 @@
 
 - 動画制作前に対象講座の `course_infomation.md` が存在する
 - 動画制作前に対象講座の `course_curriculum.md` が存在する
-- `course_infomation.md` にUdemy登録時に必要なコースタイトル、サブタイトル、説明、学習目標、前提条件、対象者、コース画像方針が記載されている
+- `course_infomation.md` は `templates/course_infomation_template.md` のUdemy登録情報フォーマットに準拠している
+- `course_infomation.md` にUdemy登録時に必要なコースタイトル、サブタイトル、説明、学習目標、前提条件、対象者、コース画像方針、歓迎メッセージ、修了/お祝いメッセージが記載されている
 - `course_infomation.md` の内容が `course_spec.md`、動画内容、ハンズオン範囲、VOICEVOX/AI利用表記と矛盾していない
+- `tools/check_course_information.py` で対象講座の `course_infomation.md` がPASSしている
 - `course_curriculum.md` に全レクチャーのセクション番号、レクチャー番号、タイトル、レクチャー完了後に身についていること、ハンズオン有無が記載されている
 - ハンズオンがあるレクチャーでは `course_curriculum.md` にPublicRepo URLが記載され、READMEまたは配布物と一致している
 - `course_curriculum.md` が `docs/CURRICULUM_RULES.md` に従っている
@@ -83,7 +85,22 @@
 - `tools/narration_checker.py` でナレーション品質を確認している
 - VOICEVOXで不自然な空白読みが起きやすい表記を避けている
 - 英字、カッコふりがな、伏字記号が読み上げ本文に残っていない
+- 完成MP4の末尾には、Udemy終端切れ対策として最終スライドの短い無音保持が入っている
+- 末尾の無音保持は約1秒を標準とし、長すぎる空白として目立たない
 - 台本に未検証の技術説明がない
+
+## プロモーション動画
+
+- 公開対象コースでは通常レクチャーとは別にプロモーション動画が存在する
+- `course_spec.md` に `Promotion Video Scope` が明記されている
+- プロモーション動画台本が `course_spec.md`、`course_infomation.md`、`course_curriculum.md` と矛盾していない
+- 通常レクチャー動画をプロモーション動画の代用にしていない
+- 解決する悩み、対象者、受講後の状態、主要トピック、ハンズオン有無が短く伝わる
+- Out of Scopeを超える成果、未検証の収益表現、保証表現を含まない
+- 完成動画に使う最終スライドPNGと表示文字はGPT-Image2由来である
+- VOICEVOX音声、MP4、Drive URL、共有状態、QAレポートが存在する
+- `build_report.json` に末尾余白秒数が記録されている
+- `docs/PROMOTION_VIDEO_RULES.md` に従っている
 
 ## 量産判断
 

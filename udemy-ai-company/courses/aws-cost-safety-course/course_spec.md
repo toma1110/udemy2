@@ -161,6 +161,19 @@ CloudFormation対象候補:
 - Budget Actionsなど強い制御は初学者向け標準手順に含めない
 - CloudFormation検証やAWS実行はCEO承認後にだけ行う
 
+## Udemy成立尺是正方針
+
+2026-05-17の既存コース動画監査では、course spec上は12レクチャー構成だが、通常レクチャーMP4は未作成である。プロモーション動画は存在しても、通常レクチャーの30分要件には含めない。
+
+是正後の制作方針:
+
+- レクチャー数は現行の12本を維持する
+- 各レクチャーをおおむね3〜4分に設計し、講義本編の計画尺を36〜48分にする
+- Budgets、Cost Explorer、Cost Anomaly Detection、削除チェック、月次レビューを、初学者が安全に実行または読解できる粒度に分ける
+- プロモーション動画は30分要件に含めない
+- 動画生成前に、CEOが更新後の `course_spec.md` と `course_infomation.md` を確認・承認する
+- CEO承認後は、全レクチャーの台本、GPT-Image2スライド、VOICEVOX音声、MP4を一括で生成してよい
+
 ## Production Rules
 
 - 完成動画のスライドPNGは必ずGPT-Image2由来にする
@@ -186,6 +199,8 @@ CloudFormation対象候補:
 ## Definition of Done
 
 - `course_spec.md` がSource of Truthとして成立している
+- 通常レクチャーが5本以上、講義本編の合計動画尺が30分以上である
+- 動画生成前にCEOが `course_spec.md` と `course_infomation.md` を確認・承認している
 - AWS公式ドキュメントに基づく仕様確認レポートが存在する
 - `course_curriculum.md` にセクションタイトル、セクション学習目標、ハンズオンリソースタイトルがある
 - `README.md` と `handson/README.md` が存在し、標準手順が低リスクで再現できる
