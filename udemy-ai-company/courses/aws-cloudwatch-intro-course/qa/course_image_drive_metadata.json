@@ -1,0 +1,25 @@
+{
+  "id": "12Q8yIvHA86DKeNuy2VLs-jg9SXIN9hjC",
+  "name": "aws-cloudwatch-intro-course-image-20260518.png",
+  "mimeType": "image/png",
+  "trashed": false,
+  "parents": [
+    "1emxiqW5p04dQ9TJ_Q1c1HNWCsmI2TKzv"
+  ],
+  "webViewLink": "https://drive.google.com/file/d/12Q8yIvHA86DKeNuy2VLs-jg9SXIN9hjC/view?usp=drivesdk",
+  "permissions": [
+    {
+      "type": "anyone",
+      "role": "reader"
+    },
+    {
+      "type": "user",
+      "role": "owner"
+    },
+    {
+      "type": "user",
+      "role": "writer"
+    }
+  ],
+  "size": "382144"
+}
